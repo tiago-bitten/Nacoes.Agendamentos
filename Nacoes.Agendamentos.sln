@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nacoes.Agendamentos.Domain", "Nacoes.Agendamentos.Domain\Nacoes.Agendamentos.Domain.csproj", "{CA710A68-E055-4B28-B1C3-75652FA3A28C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nacoes.Agendamentos.Infra", "Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj", "{1D34C5C2-54C3-48EA-B333-62E5775718AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA710A68-E055-4B28-B1C3-75652FA3A28C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA710A68-E055-4B28-B1C3-75652FA3A28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA710A68-E055-4B28-B1C3-75652FA3A28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA710A68-E055-4B28-B1C3-75652FA3A28C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FBF35E6B-C994-412C-B680-41448D3E7845}
+	EndGlobalSection
+EndGlobal
