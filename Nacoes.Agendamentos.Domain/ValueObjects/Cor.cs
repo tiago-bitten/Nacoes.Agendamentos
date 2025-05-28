@@ -23,6 +23,9 @@ public readonly struct Cor
         Tipo = tipo;
     }
 
+    // the default color is pastel blue #1F77B4
+    public static Cor Default => new("#1F77B4", ETipoCor.Hex);
+
     public Cor ConverterPara(ETipoCor novoTipo)
     {
         if (novoTipo == Tipo)

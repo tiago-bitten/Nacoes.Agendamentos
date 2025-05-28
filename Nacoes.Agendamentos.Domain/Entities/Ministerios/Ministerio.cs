@@ -3,20 +3,39 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Ministerios;
 
-public sealed class Ministerio : BaseEntity<Ministerio>, IAggregateRoot
+public sealed class Ministerio : EntityId<Ministerio>, IAggregateRoot
 {
-    #region Ctor
+    #region Construtores
     internal Ministerio() { }
 
-    public Ministerio(string nome, string descricao, Cor cor)
+    public Ministerio(string nome, string descricao, Cor? cor = default)
     {
+        if (string.IsNullOrWhiteSpace(nome))
+        {
+            throw new ArgumentNullException(nameof(nome), "O nome do ministerio é obrigatorio.");
+        }
+
         Nome = nome;
         Descricao = descricao;
-        Cor = cor;
+        Cor = cor ?? Cor.Default;
     }
     #endregion
 
     public string Nome { get; private set; }
-    public string Descricao { get; private set; }
+    public string? Descricao { get; private set; }
     public Cor Cor { get; private set; }
+
+    private IList<Atividade> _atividades = [];
+    public IReadOnlyCollection<Atividade> Atividades => _atividades.AsReadOnly();
+
+    public void AtualizarNome(string nome) => Nome = nome;
+    
+    public void AtualizarDescricao(string descricao) => Descricao = descricao;
+    
+    public void AtualizarCor(Cor cor) => Cor = cor;
+
+    public void AdicionarAtividade(string nome, string descricao)
+    {
+        _atividades.Add(new Atividade(nome, descricao));
+    }
 }

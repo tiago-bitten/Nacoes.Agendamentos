@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Infra.Abstracts;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity<T>, IAggregateRoot
+public class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>, IAggregateRoot
 {
     #region Ctor
     private readonly DbContext _dbContext;

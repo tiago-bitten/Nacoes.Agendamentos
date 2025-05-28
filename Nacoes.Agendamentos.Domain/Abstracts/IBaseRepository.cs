@@ -2,7 +2,7 @@
 
 namespace Nacoes.Agendamentos.Domain.Abstracts;
 
-public interface IBaseRepository<T> where T : BaseEntity<T>, IAggregateRoot
+public interface IBaseRepository<T> where T : EntityId<T>, IAggregateRoot
 {
     Task AddAsync(T entidade);
     Task UpdateAsync(T entidade);
