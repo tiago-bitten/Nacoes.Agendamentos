@@ -2,7 +2,7 @@
 
 namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
-public readonly struct Celular : IEquatable<Celular>
+public sealed record class Celular : IEquatable<Celular>
 {
     public string Ddd { get; }
     public string Numero { get; }
@@ -35,12 +35,6 @@ public readonly struct Celular : IEquatable<Celular>
     public bool Equals(Celular other) =>
         Ddd == other.Ddd && Numero == other.Numero;
 
-    public override bool Equals(object? obj) =>
-        obj is Celular other && Equals(other);
-
     public override int GetHashCode() =>
         HashCode.Combine(Ddd, Numero);
-
-    public static bool operator ==(Celular left, Celular right) => left.Equals(right);
-    public static bool operator !=(Celular left, Celular right) => !(left == right);
 }

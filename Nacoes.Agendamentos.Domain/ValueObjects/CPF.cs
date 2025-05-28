@@ -2,7 +2,7 @@
 
 namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
-public readonly struct CPF : IEquatable<CPF>
+public sealed record class CPF : IEquatable<CPF>
 {
     public string Numero { get; }
 
@@ -58,9 +58,5 @@ public readonly struct CPF : IEquatable<CPF>
     public override string ToString() => Convert.ToUInt64(Numero).ToString(@"000\.000\.000\-00");
 
     public bool Equals(CPF other) => Numero == other.Numero;
-    public override bool Equals(object? obj) => obj is CPF other && Equals(other);
     public override int GetHashCode() => Numero.GetHashCode();
-
-    public static bool operator ==(CPF left, CPF right) => left.Equals(right);
-    public static bool operator !=(CPF left, CPF right) => !(left == right);
 }

@@ -1,6 +1,6 @@
 ﻿using Nacoes.Agendamentos.Domain.ValueObjects;
 
-namespace Nacoes.Agendamentos.Domain.Abstracts;
+namespace Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 
 public interface IBaseRepository<T> where T : EntityId<T>, IAggregateRoot
 {

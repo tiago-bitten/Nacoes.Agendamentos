@@ -7,7 +7,7 @@ public enum ETipoCor
     Hsl
 }
 
-public readonly struct Cor
+public sealed record class Cor
 {
     public string Valor { get; }
     public ETipoCor Tipo { get; }
@@ -191,9 +191,5 @@ public readonly struct Cor
     }
 
     public override string ToString() => $"{Tipo}: {Valor}";
-
-    public override bool Equals(object? obj) =>
-        obj is Cor other && other.Valor == Valor && other.Tipo == Tipo;
-
     public override int GetHashCode() => HashCode.Combine(Valor, Tipo);
 }

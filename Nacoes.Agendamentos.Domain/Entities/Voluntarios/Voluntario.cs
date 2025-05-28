@@ -1,4 +1,5 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
+using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios;
@@ -31,5 +32,4 @@ public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
 
     public int Idade => DataNascimento?.Idade ?? 0;
     public bool MenorDeIdade => DataNascimento?.MenorDeIdade ?? false;
-
 }

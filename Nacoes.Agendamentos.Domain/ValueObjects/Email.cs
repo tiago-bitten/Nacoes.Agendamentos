@@ -2,7 +2,7 @@
 
 namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
-public readonly struct Email : IEquatable<Email>
+public sealed record class Email : IEquatable<Email>
 {
     public string Address { get; }
     public bool IsConfirmed { get; }
@@ -38,16 +38,10 @@ public readonly struct Email : IEquatable<Email>
     public bool Equals(Email other) =>
         Address.Equals(other.Address, StringComparison.OrdinalIgnoreCase);
 
-    public override bool Equals(object? obj) =>
-        obj is Email other && Equals(other);
-
     public override int GetHashCode() =>
         Address.ToLowerInvariant().GetHashCode();
 
     public override string ToString() => Address;
-
-    public static bool operator ==(Email left, Email right) => left.Equals(right);
-    public static bool operator !=(Email left, Email right) => !(left == right);
 
     public Email Confirm(string code)
     {
