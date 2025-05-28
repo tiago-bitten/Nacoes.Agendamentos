@@ -2,10 +2,10 @@
 
 namespace Nacoes.Agendamentos.Domain.Abstracts;
 
-public abstract class BaseEntity<T> where T : class
+public abstract class EntityId<T> where T : class
 {
     #region Ctor
-    protected BaseEntity()
+    protected EntityId()
     {
         Id = Id<T>.Novo();
         DataCriacao = DateTime.UtcNow;
