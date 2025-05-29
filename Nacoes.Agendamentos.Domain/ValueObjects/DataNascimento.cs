@@ -1,6 +1,6 @@
 ﻿namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
-public readonly struct DataNascimento : IEquatable<DataNascimento>
+public sealed record class DataNascimento : IEquatable<DataNascimento>
 {
     public DateOnly Valor { get; }
     public int Idade => CalcularIdade(Valor);
@@ -41,9 +41,5 @@ public readonly struct DataNascimento : IEquatable<DataNascimento>
     public override string ToString() => Valor.ToString("dd/MM/yyyy");
 
     public bool Equals(DataNascimento other) => Valor == other.Valor;
-    public override bool Equals(object? obj) => obj is DataNascimento other && Equals(other);
     public override int GetHashCode() => Valor.GetHashCode();
-
-    public static bool operator ==(DataNascimento left, DataNascimento right) => left.Equals(right);
-    public static bool operator !=(DataNascimento left, DataNascimento right) => !(left == right);
 }

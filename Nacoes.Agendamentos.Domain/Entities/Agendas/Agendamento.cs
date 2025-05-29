@@ -4,6 +4,7 @@ using Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Agendas;
+
 public sealed class Agendamento : EntityId<Agendamento>
 {
     #region Constructors

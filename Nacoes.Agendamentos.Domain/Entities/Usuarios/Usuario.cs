@@ -1,4 +1,5 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
+using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -45,7 +46,7 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
             throw new Exception("Não é possível solicitar aprovação neste momento.");
         }
 
-        _solicitacoes.Add(new UsuarioAprovacao(this));
+        _solicitacoes.Add(new UsuarioAprovacao());
     }
     #endregion
 

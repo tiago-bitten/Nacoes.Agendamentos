@@ -1,6 +1,6 @@
 ﻿namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
-public readonly struct Horario : IEquatable<Horario>
+public sealed record class Horario : IEquatable<Horario>
 {
     public DateTime DataInicial { get; }
     public DateTime? DataFinal { get; }
@@ -27,9 +27,6 @@ public readonly struct Horario : IEquatable<Horario>
     public bool Equals(Horario other) =>
         DataInicial.Equals(other.DataInicial) && Nullable.Equals(DataFinal, other.DataFinal);
 
-    public override bool Equals(object? obj) =>
-        obj is Horario other && Equals(other);
-
     public override int GetHashCode() =>
         HashCode.Combine(DataInicial, DataFinal);
 
@@ -39,8 +36,6 @@ public readonly struct Horario : IEquatable<Horario>
         return $"{DataInicial:dd/MM/yyyy HH:mm}{finalStr}";
     }
 
-    public static bool operator ==(Horario left, Horario right) => left.Equals(right);
-    public static bool operator !=(Horario left, Horario right) => !(left == right);
     public static bool operator >(Horario left, Horario right) => left.DataInicial > right.DataInicial;
     public static bool operator <(Horario left, Horario right) => left.DataInicial < right.DataInicial;
     public static bool operator >=(Horario left, Horario right) => left.DataInicial >= right.DataInicial;

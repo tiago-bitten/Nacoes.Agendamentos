@@ -5,15 +5,13 @@ namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
 public sealed class UsuarioAprovacao : EntityId<UsuarioAprovacao>
 {
     #region Construtor
-    internal UsuarioAprovacao(Usuario solicitante)
+    internal UsuarioAprovacao()
     {
         Status = EStatusAprovacao.Aguardando;
-        Solicitante = solicitante;
     }
     #endregion
 
     public Usuario? Aprovador { get; private set; }
-    public Usuario Solicitante { get; private set; }
     public EStatusAprovacao Status { get; private set; }
     public DateTime? DataAprovacao { get; private set; }
 
@@ -28,11 +26,6 @@ public sealed class UsuarioAprovacao : EntityId<UsuarioAprovacao>
             throw new Exception("O usuário já foi avaliado");
         }
 
-        if (aprovador.Equals(Solicitante))
-        {
-            throw new Exception("O usuário solicitante não pode aprovar");
-        }
-
         Status = EStatusAprovacao.Aprovado;
         Aprovador = aprovador;
         DataAprovacao = DateTime.UtcNow;
@@ -45,11 +38,6 @@ public sealed class UsuarioAprovacao : EntityId<UsuarioAprovacao>
         if (FoiAvaliado)
         {
             throw new Exception("O usuário já foi avaliado");
-        }
-
-        if (aprovador.Equals(Solicitante))
-        {
-            throw new Exception("O usuário solicitante não pode reprovar");
         }
 
         Status = EStatusAprovacao.Reprovado;

@@ -1,4 +1,5 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
+using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Agendas;
@@ -21,6 +22,9 @@ public sealed class Agenda : EntityId<Agenda>, IAggregateRoot
 
     public string Descricao { get; private set; }
     public Horario Horario { get; private set; }
+
+    private IList<Agendamento> _agendamentos = [];
+    public IReadOnlyCollection<Agendamento> Agendamentos => _agendamentos.AsReadOnly();
 
     #region AtualizarHorario
     public void AtualizarHorario(Horario horario, bool forcar = false)
