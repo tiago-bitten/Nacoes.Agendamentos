@@ -2,16 +2,17 @@
 using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.ValueObjects;
+using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Abstracts;
 
 public class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>, IAggregateRoot
 {
     #region Ctor
-    private readonly DbContext _dbContext;
+    private readonly NacoesDbContext _dbContext;
     private readonly DbSet<T> _entities;
 
-    public BaseRepository(DbContext dbContext)
+    public BaseRepository(NacoesDbContext dbContext)
     {
         _dbContext = dbContext;
         _entities = _dbContext.Set<T>();
@@ -81,6 +82,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>, IAggr
     public async Task UpdateAsync(T entidade)
     {
         await Task.FromResult(_entities.Update(entidade));
+    }
+    #endregion
+
+    #region FindAsync
+    public Task<bool> FindAsync(ISpecification<T> spec)
+    {
+        return _entities.AnyAsync(spec.ToExpression());
     }
     #endregion
 }

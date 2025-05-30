@@ -18,5 +18,9 @@ public class UsuarioAprovacaoConfiguration : EntityIdConfiguration<UsuarioAprova
         builder.HasOne(u => u.Aprovador)
                .WithMany()
                .HasForeignKey("usuario_aprovador_id");
+
+        builder.HasMany(u => u.Ministerios)
+            .WithOne()
+            .HasForeignKey("usuario_aprovacao_id");
     }
 }

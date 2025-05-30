@@ -1,12 +1,13 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
+using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
 {
-    #region Ctor
+    #region Construtor
     internal Usuario() { }
 
     public Usuario(string nome, Email email, Celular celular, EAuthType authType, string? senha = null)
@@ -37,7 +38,7 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
 
 
     #region SolicitarAprovacao
-    public void SolicitarAprovacao()
+    public void SolicitarAprovacao(IList<Id<Ministerio>> ministerios)
     {
         var ultima = _solicitacoes.LastOrDefault();
 
@@ -46,12 +47,15 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
             throw new Exception("Não é possível solicitar aprovação neste momento.");
         }
 
-        _solicitacoes.Add(new UsuarioAprovacao());
+        var novaSolicitacao = new UsuarioAprovacao();
+        novaSolicitacao.AdicionarMinisterios(ministerios);
+
+        _solicitacoes.Add(novaSolicitacao);
     }
     #endregion
 
     #region AprovarUsuario
-    public void AprovarUsuario(Usuario usuarioSolicitante)
+    public void AprovarUsuario(Usuario usuarioSolicitante, IList<Id<Ministerio>> ministerios)
     {
         if (!EstaAprovado)
         {
@@ -65,7 +69,7 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
             throw new Exception("Nenhuma solicitação pendente encontrada.");
         }
 
-        solicitacao.Aprovar(this);
+        solicitacao.Aprovar(this, ministerios);
     }
     #endregion
 

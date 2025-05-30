@@ -1,9 +1,14 @@
 ﻿using FluentValidation;
 using Nacoes.Agendamentos.Application.Abstracts;
+using Nacoes.Agendamentos.Application.Common.Results;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.Errors;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.Mappings;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
+using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
+using Nacoes.Agendamentos.Domain.Entities.Usuarios.Specifications;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
@@ -14,10 +19,27 @@ public sealed class AdicionarUsuarioHandler(IUnitOfWork uow,
     : BaseHandler(uow), IAdicionarUsuarioHandler
 {
 
-    public async Task<Id<Usuario>> ExecutarAsync(AdicionarUsuarioCommand command)
+    public async Task<Result<Id<Usuario>, Error>> ExecutarAsync(AdicionarUsuarioCommand command, CancellationToken cancellation = default)
     {
         await usuarioValidator.CheckAsync(command);
 
-        throw new NotImplementedException();
+        var usuario = command.GetEntidade();
+        var ministerios = command.Ministerios.Select(x => new Id<Ministerio>(x.Id)).ToList();
+
+        var emailExistente = await GetSpecification(new UsuarioComEmailExistenteSpecification(usuario.Email),
+                                                    usuarioRepository);
+        if (emailExistente)
+        {
+            return UsuarioErrors.UsuarioComEmailExistente;
+        }
+
+        await Uow.BeginAsync();
+        
+        await usuarioRepository.AddAsync(usuario);
+        usuario.SolicitarAprovacao(ministerios);
+
+        await Uow.CommitAsync(cancellation);
+
+        return usuario.Id;
     }
 }

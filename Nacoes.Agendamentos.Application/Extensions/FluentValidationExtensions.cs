@@ -4,9 +4,9 @@ namespace Nacoes.Agendamentos.Application.Extensions;
 
 public static class FluentValidationExtensions
 {
-    public static async Task CheckAsync<T>(this IValidator<T> validator, T intsance)
+    public static async Task CheckAsync<T>(this IValidator<T> validator, T instance)
     {
-        var resultado = await validator.ValidateAsync(intsance);
+        var resultado = await validator.ValidateAsync(instance);
 
         if (!resultado.IsValid)
         {
