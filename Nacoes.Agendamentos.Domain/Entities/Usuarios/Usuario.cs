@@ -1,6 +1,7 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
+using Nacoes.Agendamentos.Domain.Exceptions;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -44,7 +45,7 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
 
         if (ultima != null && !ultima.PodeSolicitar)
         {
-            throw new Exception("Não é possível solicitar aprovação neste momento.");
+            Throw.UsuarioNaoPodeSolicitarPoisUltimaSolicitacaoNaoFoiReprovada();
         }
 
         var novaSolicitacao = new UsuarioAprovacao();
@@ -59,17 +60,17 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
     {
         if (!EstaAprovado)
         {
-            throw new Exception("Usuário não pode aprovar pois ainda não foi aprovado.");
+            Throw.UsuarioNaoPodeAprovarPoisSuaContaNaoFoiAprovada();
         }
 
         var solicitacao = usuarioSolicitante.Solicitacoes.LastOrDefault(s => s.Status == EStatusAprovacao.Aguardando);
 
         if (solicitacao == null)
         {
-            throw new Exception("Nenhuma solicitação pendente encontrada.");
+            Throw.UsuarioNenhumaSolicitacaoPendenteEncontrada();
         }
 
-        solicitacao.Aprovar(this, ministerios);
+        solicitacao!.Aprovar(this, ministerios);
     }
     #endregion
 
@@ -78,17 +79,17 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
     {
         if (!EstaAprovado)
         {
-            throw new Exception("Usuário não pode reprovar pois ainda não foi aprovado.");
+            Throw.UsuarioNaoPodeReprovarPoisSuaContaNaoFoiAprovada();
         }
 
         var solicitacao = usuarioSolicitante.Solicitacoes.LastOrDefault(s => s.Status == EStatusAprovacao.Aguardando);
 
         if (solicitacao == null)
         {
-            throw new Exception("Nenhuma solicitação pendente encontrada.");
+            Throw.UsuarioNenhumaSolicitacaoPendenteEncontrada();
         }
 
-        solicitacao.Reprovar(this);
+        solicitacao!.Reprovar(this);
     }
     #endregion
 }

@@ -2,6 +2,7 @@
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
+using Nacoes.Agendamentos.Domain.Exceptions;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
@@ -28,7 +29,7 @@ public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>, IAggr
     {
         if (Status == EVoluntarioMinisterioStatus.Ativo)
         {
-            throw new Exception("Voluntário já está ativo");
+            Throw.VoluntarioJaEstaAtivo();
         }
 
         Status = EVoluntarioMinisterioStatus.Ativo;
@@ -40,7 +41,7 @@ public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>, IAggr
     {
         if (Status == EVoluntarioMinisterioStatus.Suspenso)
         {
-            throw new Exception("Voluntário já está suspenso");
+            Throw.VoluntarioJaEstaSuspenso();
         }
 
         Status = EVoluntarioMinisterioStatus.Suspenso;

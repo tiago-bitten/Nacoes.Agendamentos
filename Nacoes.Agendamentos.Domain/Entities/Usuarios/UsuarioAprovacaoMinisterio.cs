@@ -1,5 +1,6 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
+using Nacoes.Agendamentos.Domain.Exceptions;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -24,7 +25,7 @@ public sealed class UsuarioAprovacaoMinisterio : EntityId<UsuarioAprovacaoMinist
     {
         if (Aprovado)
         {
-            throw new Exception("Ministério já foi aprovado.");
+            Throw.MinisterioSolicitanteJaFoiAprovado();
         }
 
         Aprovado = true;

@@ -1,0 +1,6 @@
+@Nacoes.Agendamentos.API_HostAddress = http://localhost:5171
+
+GET {{Nacoes.Agendamentos.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

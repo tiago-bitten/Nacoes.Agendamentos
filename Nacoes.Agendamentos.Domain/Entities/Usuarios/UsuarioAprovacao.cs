@@ -1,5 +1,6 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
+using Nacoes.Agendamentos.Domain.Exceptions;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -28,7 +29,7 @@ public sealed class UsuarioAprovacao : EntityId<UsuarioAprovacao>
     {
         if (FoiAvaliado)
         {
-            throw new Exception("O usuário já foi avaliado");
+            Throw.UsuarioJaFoiAvaliado();
         }
 
         Status = EStatusAprovacao.Aprovado;
@@ -50,7 +51,7 @@ public sealed class UsuarioAprovacao : EntityId<UsuarioAprovacao>
     {
         if (FoiAvaliado)
         {
-            throw new Exception("O usuário já foi avaliado");
+            Throw.UsuarioJaFoiAvaliado();
         }
 
         Status = EStatusAprovacao.Reprovado;

@@ -5,7 +5,6 @@ using Nacoes.Agendamentos.Application.Entities.Usuarios.Errors;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Mappings;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Specifications;
@@ -24,7 +23,6 @@ public sealed class AdicionarUsuarioHandler(IUnitOfWork uow,
         await usuarioValidator.CheckAsync(command);
 
         var usuario = command.GetEntidade();
-        var ministerios = command.Ministerios.Select(x => new Id<Ministerio>(x.Id)).ToList();
 
         var emailExistente = await GetSpecification(new UsuarioComEmailExistenteSpecification(usuario.Email),
                                                     usuarioRepository);
@@ -36,7 +34,7 @@ public sealed class AdicionarUsuarioHandler(IUnitOfWork uow,
         await Uow.BeginAsync();
         
         await usuarioRepository.AddAsync(usuario);
-        usuario.SolicitarAprovacao(ministerios);
+        usuario.SolicitarAprovacao(command.MinisteriosIds);
 
         await Uow.CommitAsync(cancellation);
 

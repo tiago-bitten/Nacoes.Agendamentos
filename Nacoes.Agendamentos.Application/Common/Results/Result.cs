@@ -23,17 +23,12 @@ public class Result<TValue, TError>
         Error = error;
     }
 
-    public static implicit operator Result<TValue, TError>(TValue value) => new Result<TValue, TError>(value);
+    public static implicit operator Result<TValue, TError>(TValue value) => new(value);
 
-    public static implicit operator Result<TValue, TError>(TError error) => new Result<TValue, TError>(error);
+    public static implicit operator Result<TValue, TError>(TError error) => new(error);
 
-    public Result<TValue, TError> Match(Func<TValue, Result<TValue, TError>> success, Func<TError, Result<TValue, TError>> failure)
+    public TResult Match<TResult>(Func<TValue, TResult> success, Func<TError, TResult> failure)
     {
-        if (_isSuccess)
-        {
-            return success(Value!);
-        }
-
-        return failure(Error!);
+        return _isSuccess ? success(Value!) : failure(Error!);
     }
 }
