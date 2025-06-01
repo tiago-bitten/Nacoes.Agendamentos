@@ -3,4 +3,9 @@
 GET {{Nacoes.Agendamentos.API_HostAddress}}/weatherforecast/
 Accept: application/json
 
+
+Send request | Debug
+POST {{Nacoes.Agendamentos.API_HostAddress}}/api/Usuarios
+Accept: application/json
+
 ###

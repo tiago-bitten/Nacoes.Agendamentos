@@ -12,6 +12,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>, IAggr
     private readonly NacoesDbContext _dbContext;
     private readonly DbSet<T> _entities;
 
+    protected DbSet<TEntidade> Escolher<TEntidade>() where TEntidade : EntityId<TEntidade>
+        => _dbContext.Set<TEntidade>();
+
     public BaseRepository(NacoesDbContext dbContext)
     {
         _dbContext = dbContext;

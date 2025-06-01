@@ -2,9 +2,9 @@
 
 namespace Nacoes.Agendamentos.API.Extensions;
 
-public static class ActionResultExtensions
+public static class ObjectResultExtensions
 {
-    public static IActionResult ComStatusCode(this IActionResult result, int statusCode)
+    public static ObjectResult ComStatusCode(this ObjectResult result, int statusCode)
     {
         if (result is ObjectResult objectResult)
         {
@@ -13,5 +13,4 @@ public static class ActionResultExtensions
 
         return result;
     }
-
 }

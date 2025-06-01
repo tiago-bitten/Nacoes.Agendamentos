@@ -4,7 +4,7 @@ namespace Nacoes.Agendamentos.Application.Common.Responses;
 
 public static class ApiResponseExtensions
 {
-    public static ApiResponse<T> Build<T>(this Result<T, Error> resultado, string? mensagem = default) where T : class
+    public static ApiResponse<T> Montar<T>(this Result<T, Error> resultado, string? mensagem = default) where T : class
     {
         return resultado.Match(
             sucesso => new ApiResponse<T>

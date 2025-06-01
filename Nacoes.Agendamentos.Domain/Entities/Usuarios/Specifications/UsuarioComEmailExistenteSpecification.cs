@@ -7,5 +7,5 @@ namespace Nacoes.Agendamentos.Domain.Entities.Usuarios.Specifications;
 public sealed class UsuarioComEmailExistenteSpecification(Email email) : Specification<Usuario>
 {
     public override Expression<Func<Usuario, bool>> ToExpression() 
-        => u => u.Email == email;
+        => u => u.Email.Address == email.Address;
 }

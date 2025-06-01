@@ -4,6 +4,7 @@ using Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
+using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Infra.Contexts;
 
@@ -25,6 +26,9 @@ public class NacoesDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(NacoesDbContext).Assembly);
+
+        modelBuilder.ApplyValueObjectConverters();
+
         base.OnModelCreating(modelBuilder);
     }
 }
