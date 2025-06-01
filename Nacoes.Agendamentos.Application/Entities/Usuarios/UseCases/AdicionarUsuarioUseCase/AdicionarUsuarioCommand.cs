@@ -1,4 +1,6 @@
-﻿using Nacoes.Agendamentos.Domain.Entities.Usuarios;
+﻿using Nacoes.Agendamentos.Domain.Entities.Ministerios;
+using Nacoes.Agendamentos.Domain.Entities.Usuarios;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
 
@@ -10,6 +12,8 @@ public record AdicionarUsuarioCommand
     public EAuthType AuthType { get; set; }
     public string? Senha { get; set; }
     public IList<MinisterioItem> Ministerios { get; set; } = [];
+
+    public IList<Id<Ministerio>> MinisteriosIds => Ministerios.Select(x => new Id<Ministerio>(x.Id)).ToList();
 
     public record CelularItem
     {
