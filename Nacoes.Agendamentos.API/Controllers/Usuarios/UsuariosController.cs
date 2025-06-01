@@ -5,7 +5,6 @@ using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuari
 
 namespace Nacoes.Agendamentos.API.Controllers.Usuarios;
 
-[Route("api/[controller]")]
 public class UsuariosController : NacoesAuthenticatedController
 {
     #region Adicionar
@@ -15,7 +14,7 @@ public class UsuariosController : NacoesAuthenticatedController
     {
         var resposta = await handler.ExecutarAsync(command);
 
-        return Responder(resposta.Build());
+        return Responder(resposta.Montar());
     }
     #endregion
 }

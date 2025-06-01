@@ -14,6 +14,14 @@ builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddAppHandlers();
 builder.Services.AddValidators();
+builder.Services.AddFactories();
+
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.LowercaseUrls = true;
+});
+
+builder.Services.AddJwt("nacoes", "nacoes", "nacoes");
 
 var app = builder.Build();
 

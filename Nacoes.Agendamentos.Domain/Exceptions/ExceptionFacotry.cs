@@ -41,4 +41,19 @@ public static class Throw
     public static DomainException VoluntarioJaEstaSuspenso()
         => new("Voluntario.Suspender", "O voluntario já está suspenso.");
     #endregion
+
+    #region UsuarioNaoEncontrado
+    public static DomainException UsuarioNaoEncontrado()
+        => new("Login.Local", "E-mail inválido.");
+    #endregion
+
+    #region AutenticacaoInvalida
+    public static DomainException AutenticacaTipoInvalido(string contaExterna)
+        => new("Login.Local", $"Você precisa entrar com sua conta {contaExterna}.");
+    #endregion
+
+    #region SenhaInvalida
+    public static DomainException SenhaInvalida()
+        => new("Login.Local", "Senha inválida.");
+    #endregion
 }

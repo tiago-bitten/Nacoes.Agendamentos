@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Infra.Abstracts;
 
@@ -13,5 +14,9 @@ public sealed class UsuarioAprovacaoMinisterioConfiguration : EntityIdConfigurat
         builder.Property(u => u.MinisterioId);
 
         builder.Property(u => u.Aprovado);
+
+        builder.HasOne<Ministerio>()
+            .WithMany()
+            .HasForeignKey(u => u.MinisterioId);
     }
 }
