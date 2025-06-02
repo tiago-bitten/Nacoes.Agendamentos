@@ -15,6 +15,7 @@ builder.Services.AddRepositories();
 builder.Services.AddAppHandlers();
 builder.Services.AddValidators();
 builder.Services.AddFactories();
+builder.Services.AddServices();
 
 builder.Services.Configure<RouteOptions>(options =>
 {

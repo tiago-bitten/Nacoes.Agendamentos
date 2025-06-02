@@ -8,7 +8,7 @@ public static class UsuarioMapper
     public static Usuario GetEntidade(this AdicionarUsuarioCommand command)
         => new(command.Nome, 
                new Email(command.Email),
-               new Celular(command.Celular.Ddd, command.Celular.Numero),
                command.AuthType,
+               command.Celular != null ? new Celular(command.Celular.Ddd, command.Celular.Numero) : null,
                command.Senha);
 }

@@ -5,9 +5,13 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
+using Nacoes.Agendamentos.Application.Authentication.TokenGenerator;
+using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
+using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Validators;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.AdicionarVoluntario;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
@@ -83,6 +87,8 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IAdicionarUsuarioHandler, AdicionarUsuarioHandler>();
         services.AddScoped<IAdicionarMinisterioHandler, AdicionarMinisterioHandler>();
         services.AddScoped<ILoginHandler, LoginHandler>();
+        services.AddScoped<IAdicionarVoluntarioHandler, AdicionarVoluntarioHandler>();
+        services.AddScoped<IAdicionarAtivdadeHandler, AdicionarAtividadeHandler>();
 
         return services;
     }
@@ -101,6 +107,15 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddFactories(this IServiceCollection services)
     {
         services.AddScoped<IAuthStrategyFactory, AuthStrategyFactory>();
+
+        return services;
+    }
+    #endregion
+
+    #region AddServices
+    public static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddScoped<ITokenGenerator, TokenGenerator>();
 
         return services;
     }

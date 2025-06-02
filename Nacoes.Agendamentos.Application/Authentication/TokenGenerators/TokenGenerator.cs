@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Infra.Helpers;
@@ -10,9 +11,9 @@ using System.Text;
 
 namespace Nacoes.Agendamentos.Application.Authentication.TokenGenerator;
 
-public sealed class TokenGenerator(AuthenticationSettings authenticationSettings) : ITokenGenerator
+public sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings) : ITokenGenerator
 {
-    private readonly JwtSettings _jwtSettings = authenticationSettings.Jwt;
+    private readonly JwtSettings _jwtSettings = authSettings.Value.Jwt;
 
     private DateTime DurationAuth => DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes);
     private byte[] Secret => Encoding.UTF8.GetBytes(_jwtSettings.Secret);

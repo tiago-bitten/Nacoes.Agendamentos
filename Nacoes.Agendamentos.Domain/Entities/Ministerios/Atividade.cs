@@ -6,7 +6,7 @@ public sealed class Atividade : EntityId<Atividade>
     #region Constructors
     internal Atividade() { }
 
-    internal Atividade(string nome, string descricao)
+    internal Atividade(string nome, string? descricao = default)
     {
         if (string.IsNullOrWhiteSpace(nome))
         {
@@ -19,5 +19,5 @@ public sealed class Atividade : EntityId<Atividade>
     #endregion
 
     public string Nome { get; private set; }
-    public string Descricao { get; private set; }
+    public string? Descricao { get; private set; }
 }
