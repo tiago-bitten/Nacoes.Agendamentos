@@ -35,7 +35,7 @@ public sealed class Ministerio : EntityId<Ministerio>, IAggregateRoot
     
     public void AtualizarCor(Cor cor) => Cor = cor;
 
-    public void AdicionarAtividade(string nome, string descricao)
+    public void AdicionarAtividade(string nome, string? descricao)
     {
         _atividades.Add(new Atividade(nome, descricao));
     }

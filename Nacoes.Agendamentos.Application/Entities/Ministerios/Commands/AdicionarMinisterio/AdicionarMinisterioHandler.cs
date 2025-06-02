@@ -3,7 +3,6 @@ using Nacoes.Agendamentos.Application.Abstracts;
 using Nacoes.Agendamentos.Application.Common.Results;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Errors;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Mappings;
-using Nacoes.Agendamentos.Application.Entities.Ministerios.Validators;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;

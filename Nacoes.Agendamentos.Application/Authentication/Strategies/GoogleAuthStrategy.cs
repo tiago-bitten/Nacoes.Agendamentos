@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Exceptions;
-using Nacoes.Agendamentos.Infra.Extensions;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 using Nacoes.Agendamentos.Infra.Settings;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Strategies;
@@ -18,8 +18,10 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
         {
             var payload = await GoogleJsonWebSignature.ValidateAsync(command.TokenExterno!, GoogleSettings);
 
-            var usuario = await usuarioRepository.RecuperarPorEmailAddress(payload.Email!)
-                                                .OrElse(Throw.UsuarioNaoEncontrado);
+            var usuario = await usuarioRepository.RecuperarPorEmailAddress(payload.Email!);
+
+            usuario ??= new Usuario(payload.Name, new Email(payload.Email), EAuthType.Google);
+
             if (usuario.AuthType != EAuthType.Google)
             {
                 Throw.AutenticacaTipoInvalido(usuario.AuthType.ToString());

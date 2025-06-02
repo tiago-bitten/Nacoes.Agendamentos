@@ -4,10 +4,10 @@ namespace Nacoes.Agendamentos.Domain.Abstracts;
 
 public abstract class EntityId<T> where T : class
 {
-    #region Ctor
+    #region Construtor
     protected EntityId()
     {
-        Id = Id<T>.Novo();
+        Id = new Id<T>(Guid.Empty.ToString());
         DataCriacao = DateTime.UtcNow;
         Inativo = false;
     }
@@ -16,6 +16,15 @@ public abstract class EntityId<T> where T : class
     public Id<T> Id { get; private set; }
     public DateTime DataCriacao { get; private set; }
     public bool Inativo { get; private set; }
+
+    // USAR ISSO APENAS NO SAVECHANGES
+    // Quando eu encontrar um jeito melhor de fazer isso, eu altero
+    public EntityId<T> Salvar()
+    {
+        Id = Id<T>.Novo();
+
+        return this;
+    }
 
     public void Inativar() => Inativo = true;
 }

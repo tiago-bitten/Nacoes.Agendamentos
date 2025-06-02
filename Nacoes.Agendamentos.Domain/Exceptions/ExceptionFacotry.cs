@@ -56,4 +56,14 @@ public static class Throw
     public static DomainException SenhaInvalida()
         => new("Login.Local", "Senha inválida.");
     #endregion
+
+    #region ErroSalvarDynamic
+    public static DomainException ErroSalvarDynamic()
+        => new("SaveChanges.SaveAdded", "Ocorreu um erro ao salvar.");
+    #endregion
+
+    #region MinisterioNaoEncontrado
+    public static DomainException MinisterioNaoEncontrado()
+        => new("Ministerio.GetById", "Ministerio não encontrado.");
+    #endregion
 }

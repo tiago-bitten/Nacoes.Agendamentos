@@ -11,7 +11,7 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
     #region Construtor
     internal Usuario() { }
 
-    public Usuario(string nome, Email email, Celular celular, EAuthType authType, string? senha = null)
+    public Usuario(string nome, Email email, EAuthType authType, Celular? celular = default, string? senha = null)
     {
         if (string.IsNullOrWhiteSpace(nome))
         {
@@ -29,7 +29,7 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
     public string Nome { get; private set; }
     public Email Email { get; private set; }
     public string? Senha { get; private set; }
-    public Celular Celular { get; private set; }
+    public Celular? Celular { get; private set; }
     public EAuthType AuthType { get; private set; }
 
     private readonly List<UsuarioAprovacao> _solicitacoes = [];
