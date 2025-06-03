@@ -1,4 +1,5 @@
 using Nacoes.Agendamentos.API.IoC;
+using Nacoes.Agendamentos.Infra.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,8 @@ builder.Services.Configure<RouteOptions>(options =>
     options.LowercaseUrls = true;
 });
 
-builder.Services.AddJwt("nacoes", "nacoes", "nacoes");
+var authSettings = builder.Configuration.GetSection("Authentication").Get<AuthenticationSettings>();
+builder.Services.AddJwt(authSettings!.Jwt.Issuer, authSettings.Jwt.Audience, authSettings.Jwt.Secret);
 
 var app = builder.Build();
 
