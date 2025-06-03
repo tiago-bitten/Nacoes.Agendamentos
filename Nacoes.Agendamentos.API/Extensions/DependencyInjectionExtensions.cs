@@ -7,6 +7,7 @@ using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerator;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
+using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
@@ -89,6 +90,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<ILoginHandler, LoginHandler>();
         services.AddScoped<IAdicionarVoluntarioHandler, AdicionarVoluntarioHandler>();
         services.AddScoped<IAdicionarAtivdadeHandler, AdicionarAtividadeHandler>();
+        services.AddScoped<IAdicionarAgendaHandler, AdicionarAgendaHandler>();
 
         return services;
     }
