@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
+using Nacoes.Agendamentos.Application.Authentication.Strategies;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerator;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
@@ -118,6 +119,8 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<ITokenGenerator, TokenGenerator>();
+        services.AddScoped<GoogleAuthStrategy>();
+        services.AddScoped<LocalAuthStrategy>();
 
         return services;
     }

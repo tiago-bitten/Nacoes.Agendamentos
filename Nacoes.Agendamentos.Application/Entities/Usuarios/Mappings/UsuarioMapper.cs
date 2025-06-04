@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
+﻿using Nacoes.Agendamentos.Application.Authentication.PasswordVerifiers;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
@@ -10,5 +11,5 @@ public static class UsuarioMapper
                new Email(command.Email),
                command.AuthType,
                command.Celular != null ? new Celular(command.Celular.Ddd, command.Celular.Numero) : null,
-               command.Senha);
+               string.IsNullOrEmpty(command.Senha) ? null : PasswordVerifier.HashPassword(command.Senha));
 }

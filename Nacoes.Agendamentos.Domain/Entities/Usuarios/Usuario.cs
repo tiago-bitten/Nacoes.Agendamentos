@@ -18,6 +18,16 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
             throw new ArgumentNullException(nameof(nome), "O nome do usuário é obrigatório.");
         }
 
+        if (authType == EAuthType.Local && string.IsNullOrEmpty(senha))
+        {
+            Throw.UsuarioSenhaObrigatoriaParaAuthLocal();
+        }
+
+        if (!string.IsNullOrEmpty(senha))
+        {
+            AtualizarSenha(senha);
+        }
+
         Nome = nome;
         Email = email;
         Celular = celular;
@@ -34,9 +44,6 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
 
     private readonly List<UsuarioAprovacao> _solicitacoes = [];
     public IReadOnlyCollection<UsuarioAprovacao> Solicitacoes => _solicitacoes.AsReadOnly();
-
-    public bool EstaAprovado => _solicitacoes.Any(s => s.Status == EStatusAprovacao.Aprovado);
-
 
     #region SolicitarAprovacao
     public void SolicitarAprovacao(IList<Id<Ministerio>> ministerios)
@@ -56,40 +63,28 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
     #endregion
 
     #region AprovarUsuario
-    public void AprovarUsuario(Usuario usuarioSolicitante, IList<Id<Ministerio>> ministerios)
+    public void AprovarUsuario(Usuario usuarioSolicitante, UsuarioAprovacao solicitacao, IList<Id<Ministerio>> ministerios)
     {
-        if (!EstaAprovado)
-        {
-            Throw.UsuarioNaoPodeAprovarPoisSuaContaNaoFoiAprovada();
-        }
-
-        var solicitacao = usuarioSolicitante.Solicitacoes.LastOrDefault(s => s.Status == EStatusAprovacao.Aguardando);
-
-        if (solicitacao == null)
-        {
-            Throw.UsuarioNenhumaSolicitacaoPendenteEncontrada();
-        }
-
         solicitacao!.Aprovar(this, ministerios);
     }
     #endregion
 
     #region ReprovarUsuario
-    public void ReprovarUsuario(Usuario usuarioSolicitante)
+    public void ReprovarUsuario(Usuario usuarioSolicitante, UsuarioAprovacao solicitacao)
     {
-        if (!EstaAprovado)
-        {
-            Throw.UsuarioNaoPodeReprovarPoisSuaContaNaoFoiAprovada();
-        }
-
-        var solicitacao = usuarioSolicitante.Solicitacoes.LastOrDefault(s => s.Status == EStatusAprovacao.Aguardando);
-
-        if (solicitacao == null)
-        {
-            Throw.UsuarioNenhumaSolicitacaoPendenteEncontrada();
-        }
-
         solicitacao!.Reprovar(this);
+    }
+    #endregion
+
+    #region AtualizarSenha
+    public void AtualizarSenha(string senha)
+    {
+        if (senha.Length < 6)
+        {
+            Throw.UsuarioSenhaInferiorSeisDigitos();
+        }
+
+        Senha = senha;
     }
     #endregion
 }

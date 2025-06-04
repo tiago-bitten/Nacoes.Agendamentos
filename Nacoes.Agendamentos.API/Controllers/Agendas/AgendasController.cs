@@ -8,6 +8,7 @@ namespace Nacoes.Agendamentos.API.Controllers.Agendas;
 public class AgendasController : NacoesController
 {
     #region Adicionar
+    [HttpPost]
     public async Task<IActionResult> Adicionar([FromServices] IAdicionarAgendaHandler handler,
                                                [FromBody] AdicionarAgendaCommand command)
     {
