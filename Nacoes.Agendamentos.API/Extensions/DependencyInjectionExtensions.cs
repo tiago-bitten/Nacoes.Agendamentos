@@ -28,6 +28,7 @@ using Nacoes.Agendamentos.Infra.Entities.Voluntarios;
 using Nacoes.Agendamentos.Infra.Entities.VoluntariosMinisterios;
 using Nacoes.Agendamentos.Infra.Persistence;
 using Nacoes.Agendamentos.Infra.Settings;
+using Nacoes.Agendamentos.ReadModels.Entities.Usuarios.Queries.RecuperarUsuarios;
 using System.Text;
 
 namespace Nacoes.Agendamentos.API.IoC;
@@ -92,6 +93,15 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IAdicionarVoluntarioHandler, AdicionarVoluntarioHandler>();
         services.AddScoped<IAdicionarAtivdadeHandler, AdicionarAtividadeHandler>();
         services.AddScoped<IAdicionarAgendaHandler, AdicionarAgendaHandler>();
+
+        return services;
+    }
+    #endregion
+
+    #region AddAppQueries
+    public static IServiceCollection AddAppQueries(this IServiceCollection services)
+    {
+        services.AddScoped<IRecuperarUsuarioQuery, RecuperarUsuarioQuery>();
 
         return services;
     }

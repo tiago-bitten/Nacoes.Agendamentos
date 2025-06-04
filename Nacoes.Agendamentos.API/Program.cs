@@ -18,6 +18,7 @@ builder.Services.AddAppConfiguration(builder.Configuration);
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddAppHandlers();
+builder.Services.AddAppQueries();
 builder.Services.AddValidators();
 builder.Services.AddFactories();
 builder.Services.AddServices();
