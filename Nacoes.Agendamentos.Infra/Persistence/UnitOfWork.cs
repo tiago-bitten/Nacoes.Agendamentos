@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
+using Nacoes.Agendamentos.Infra.Abstracts;
 using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Persistence;
@@ -66,6 +68,13 @@ public class UnitOfWork : IUnitOfWork
     {
         _context.Dispose();
         _transaction?.Dispose();
+    }
+    #endregion
+
+    #region GetRepository
+    public IBaseRepository<T> GetRepository<T>() where T : EntityId<T>, IAggregateRoot
+    {
+        return new BaseRepository<T>(_context);
     }
     #endregion
 }

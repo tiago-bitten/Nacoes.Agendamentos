@@ -64,4 +64,7 @@ public sealed record class Email : IEquatable<Email>
         var expiration = DateTimeOffset.UtcNow.AddHours(6);
         return new Email(address, false, code, expiration);
     }
+
+    public static implicit operator Email(string value) => new(value);
+    public static implicit operator string(Email value) => value.Address;
 }

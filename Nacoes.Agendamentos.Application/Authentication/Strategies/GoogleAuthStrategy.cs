@@ -36,8 +36,8 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
     }
 
     private GoogleJsonWebSignature.ValidationSettings GoogleSettings
-    => new()
-    {
-        Audience = [authSettings.Value.Google.ClientId]
-    };
+        => new()
+        {
+            Audience = [authSettings.Value.Google.ClientId]
+        };
 }

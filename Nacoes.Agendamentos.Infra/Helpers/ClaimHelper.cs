@@ -12,7 +12,6 @@ public static class ClaimHelper
     public static string IsAutenticado = "IsAutenticado";
     public static string UsuarioId = "UsuarioId";
     public static string UsuarioEmailAddress = "UsuarioEmailAddress";
-    public static string IsContaAprovada = "IsContaAprovada";
     public static string Environment = "Environment";
     public static string IsBot = "IsBot";
     #endregion
@@ -24,7 +23,6 @@ public static class ClaimHelper
         [
             new Claim(UsuarioId, usuario.Id.ToString()),
             new Claim(UsuarioEmailAddress, usuario.Email.Address.ToString()),
-            new Claim(IsContaAprovada, usuario.EstaAprovado.ToString()),
             new Claim(IsBot, bool.FalseString)
         ];
     }
@@ -53,13 +51,6 @@ public static class ClaimHelper
     public static string GetUsusarioEmailAddress(IHttpContextAccessor context)
     {
         return context.GetClaim(UsuarioEmailAddress).Value;
-    }
-    #endregion
-
-    #region GetIsAccountConfirmed
-    public static bool GetIsContaAprovada(IHttpContextAccessor context)
-    {
-        return bool.Parse(context.GetClaim(IsContaAprovada).Value);
     }
     #endregion
 

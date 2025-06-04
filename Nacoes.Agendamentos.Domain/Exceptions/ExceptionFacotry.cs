@@ -1,4 +1,6 @@
-﻿namespace Nacoes.Agendamentos.Domain.Exceptions;
+﻿using System.ComponentModel;
+
+namespace Nacoes.Agendamentos.Domain.Exceptions;
 
 public static class Throw
 {
@@ -65,5 +67,20 @@ public static class Throw
     #region MinisterioNaoEncontrado
     public static DomainException MinisterioNaoEncontrado()
         => new("Ministerio.GetById", "Ministerio não encontrado.");
+    #endregion
+
+    #region UsuarioSenhaInferiorSeisDigitos
+    public static DomainException UsuarioSenhaInferiorSeisDigitos()
+        => new("Usuario.Senha", "A senha deve ter pelo menos 6 digitos.");
+    #endregion
+
+    #region UsuarioSenhaObrigatoriaParaAuthLocal
+    public static DomainException UsuarioSenhaObrigatoriaParaAuthLocal()
+        => new("Usuario.Senha", "A senha é obrigatoria para autenticacao local.");
+    #endregion
+
+    #region UsuarioContaNaoEstaAprovada
+    public static DomainException UsuarioContaNaoEstaAprovada()
+        => new("Usuario.IsContaAprovada", "Sua conta não está aprovada. Aguarde uma avaliação");
     #endregion
 }
