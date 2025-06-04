@@ -21,9 +21,26 @@ public static class ApiResponseExtensions
             });
     }
 
+    public static ApiResponse<T> Montar<T>(this T lista, string? mensagem = default) where T : class
+    {
+        return new ApiResponse<T>
+        {
+            Sucesso = true,
+            Mensagem = mensagem ?? "Listagem realizada com sucesso.",
+            Dados = lista
+        };
+    }
+
     public static ApiResponse<T> ComTotal<T>(this ApiResponse<T> resposta, int total) where T : class
     {
         resposta.Total = total;
+        return resposta;
+    }
+
+    public static ApiResponse<T> DefinirProximaPagina<T>(this ApiResponse<T> resposta, string? ultimoId, DateTime? ultimaDataCriacao) where T : class
+    {
+        resposta.UltimoId = ultimoId;
+        resposta.UltimaDataCriacao = ultimaDataCriacao;
         return resposta;
     }
 }

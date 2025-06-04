@@ -16,5 +16,11 @@ public sealed record ApiResponse<T> where T : class
     public int? Total { get; set; } = default;
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? UltimoId { get; set; } = default;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public DateTime? UltimaDataCriacao { get; set; } = default;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Error? Erro { get; set; } = default;
 }
