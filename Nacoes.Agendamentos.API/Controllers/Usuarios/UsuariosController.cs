@@ -29,7 +29,7 @@ public class UsuariosController : NacoesAuthenticatedController
         var response = await query.ExecutarAsync(@params);
 
         return Responder(response.Items.Montar().ComTotal(response.Total)
-                                                .DefinirProximaPagina(response.UltimoId, response.UltimaDataCriacao));
+                                                .DefinirProximaPagina(response));
     }
     #endregion
 }

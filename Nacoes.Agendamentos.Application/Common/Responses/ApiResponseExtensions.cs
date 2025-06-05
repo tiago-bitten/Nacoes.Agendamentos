@@ -1,4 +1,5 @@
 ﻿using Nacoes.Agendamentos.Application.Common.Results;
+using Nacoes.Agendamentos.ReadModels.Abstracts;
 
 namespace Nacoes.Agendamentos.Application.Common.Responses;
 
@@ -37,10 +38,10 @@ public static class ApiResponseExtensions
         return resposta;
     }
 
-    public static ApiResponse<T> DefinirProximaPagina<T>(this ApiResponse<T> resposta, string? ultimoId, DateTime? ultimaDataCriacao) where T : class
+    public static ApiResponse<T> DefinirProximaPagina<T>(this ApiResponse<T> resposta, BaseQueryListResponse response) where T : class
     {
-        resposta.UltimoId = ultimoId;
-        resposta.UltimaDataCriacao = ultimaDataCriacao;
+        resposta.UltimoId = response.UltimoId;
+        resposta.UltimaDataCriacao = response.UltimaDataCriacao;
         return resposta;
     }
 }
