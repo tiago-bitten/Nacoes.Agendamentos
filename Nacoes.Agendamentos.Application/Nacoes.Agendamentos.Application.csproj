@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Nacoes.Agendamentos.Domain\Nacoes.Agendamentos.Domain.csproj" />
     <ProjectReference Include="..\Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj" />
+    <ProjectReference Include="..\Nacoes.Agendamentos.ReadModels\Nacoes.Agendamentos.ReadModels.csproj" />
   </ItemGroup>
 
 </Project>
