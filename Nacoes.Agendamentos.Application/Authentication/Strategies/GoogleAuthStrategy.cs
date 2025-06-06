@@ -29,8 +29,9 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
 
             return usuario;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine($"Erro ao autenticar com Google: {ex.Message}");
             throw Throw.SenhaInvalida();
         }
     }
