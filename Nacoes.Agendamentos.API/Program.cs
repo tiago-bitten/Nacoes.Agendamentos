@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
-using Nacoes.Agendamentos.API.IoC;
+using Microsoft.OpenApi.Models;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Nacoes.Agendamentos.Infra.Settings;
 
@@ -12,7 +14,7 @@ builder.Services.AddControllers()
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(x => x.CustomSchemaIds(type => type.FullName?.Replace("+", ".")));
+builder.Services.AddHealthChecks();
 
 builder.Services.AddAppConfiguration(builder.Configuration);
 builder.Services.AddDatabase(builder.Configuration);
@@ -28,14 +30,58 @@ builder.Services.Configure<RouteOptions>(x => x.LowercaseUrls = true);
 var authSettings = builder.Configuration.GetSection("Authentication").Get<AuthenticationSettings>();
 builder.Services.AddJwt(authSettings!.Jwt.Issuer, authSettings.Jwt.Audience, authSettings.Jwt.Secret);
 
+builder.Services.AddCors(x => x.AddDefaultPolicy(option =>
+    option.AllowAnyMethod()
+        .AllowAnyHeader()
+        .SetIsOriginAllowed(_ => true)
+        .AllowCredentials()
+));
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Loote API", Version = "v1" });
+    c.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            []
+        }
+    });
+});
+
 var app = builder.Build();
+
+app.UseHealthChecks("/health", new HealthCheckOptions
+{
+    Predicate = _ => true,
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
-
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nacoes.Agendamentos API v1");
+        c.RoutePrefix = string.Empty;
+    });
     var devSettings = app.Configuration.GetSection("Dev").Get<DevSettings>() ?? new DevSettings();
 
     if (devSettings.RecriarBanco)
@@ -56,6 +102,8 @@ if (app.Environment.IsDevelopment())
         context.SaveChanges();
     }
 }
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 
