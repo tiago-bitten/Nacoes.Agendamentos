@@ -3,6 +3,7 @@ using Nacoes.Agendamentos.Application.Abstracts;
 using Nacoes.Agendamentos.Application.Common.Results;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Errors;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Mappings;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -10,7 +11,7 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Specifications;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
-namespace Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
+namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
 
 public sealed class AdicionarUsuarioHandler(IUnitOfWork uow,
                                             IValidator<AdicionarUsuarioCommand> usuarioValidator,

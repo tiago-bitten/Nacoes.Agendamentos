@@ -1,23 +1,23 @@
-# Use a imagem oficial do .NET Core 3.1 como base
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1
-
-# Defina o diretório de trabalho
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
-# Copie os arquivos do projeto para o diretório de trabalho
-COPY *.csproj ./
+COPY . . 
 
-# Restaure as dependências do projeto
-RUN dotnet restore
+# Publica o projeto da API
+RUN dotnet restore "Nacoes.Agendamentos.API/Nacoes.Agendamentos.API.csproj"
+RUN dotnet publish "Nacoes.Agendamentos.API/Nacoes.Agendamentos.API.csproj" -c Release -o /App
 
-# Copie o restante dos arquivos do projeto para o diretório de trabalho
-COPY . .
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /App
 
-# Compile o projeto
-RUN dotnet build -c Release -o out
+# Instala pacotes adicionais
+RUN apt-get update && apt-get install -y libgdiplus
+RUN sed -i 's/^Components: main$/& contrib/' /etc/apt/sources.list.d/debian.sources
+RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 
-# Exponha a porta 80 para o container
-EXPOSE 80
+# Copia a aplicaÃ§Ã£o do build
+COPY --from=build-env /App .
 
-# Defina o comando para executar o aplicativo
-CMD ["dotnet", "out/Nacoes.Agendamentos.API.dll"]
+# Define o ponto de entrada da API
+ENTRYPOINT ["dotnet", "Nacoes.Agendamentos.API.dll"]

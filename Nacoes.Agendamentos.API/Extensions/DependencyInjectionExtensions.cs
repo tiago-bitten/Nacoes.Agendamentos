@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,7 @@ using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Validators;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.AdicionarVoluntario;
@@ -29,9 +31,8 @@ using Nacoes.Agendamentos.Infra.Entities.VoluntariosMinisterios;
 using Nacoes.Agendamentos.Infra.Persistence;
 using Nacoes.Agendamentos.Infra.Settings;
 using Nacoes.Agendamentos.ReadModels.Entities.Usuarios.Queries.RecuperarUsuarios;
-using System.Text;
 
-namespace Nacoes.Agendamentos.API.IoC;
+namespace Nacoes.Agendamentos.API.Extensions;
 
 public static class DependencyInjectionExtensions
 {

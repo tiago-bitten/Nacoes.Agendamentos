@@ -7,9 +7,22 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: nacoes
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dockerfile
+    container_name: nacoes-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Postgres=Host=postgres;Database=nacoesagendamentos;Username=postgres;Password=nacoes
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
 
 volumes:
   mongo-data:
