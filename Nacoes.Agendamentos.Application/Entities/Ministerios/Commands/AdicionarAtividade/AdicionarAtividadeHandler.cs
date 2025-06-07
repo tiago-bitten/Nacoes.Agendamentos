@@ -23,7 +23,7 @@ public sealed class AdicionarAtividadeHandler(IUnitOfWork uow,
         await atividadeValidator.CheckAsync(command);
 
         var ministerio = await ministerioRepository.GetByIdAsync(ministerioId)
-                                                   .OrElse(Throw.MinisterioNaoEncontrado);
+                                                   .OrElse(ExceptionFactory.MinisterioNaoEncontrado);
 
         var nomeExistente = await GetSpecification(new AtividadeComNomeExistenteSpecification(command.Nome, ministerioId),
                                                    ministerioRepository);

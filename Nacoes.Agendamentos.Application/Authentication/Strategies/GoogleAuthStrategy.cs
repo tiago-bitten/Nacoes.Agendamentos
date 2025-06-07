@@ -24,7 +24,7 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
 
             if (usuario.AuthType != EAuthType.Google)
             {
-                Throw.AutenticacaTipoInvalido(usuario.AuthType.ToString());
+                throw ExceptionFactory.AutenticacaTipoInvalido(usuario.AuthType.ToString());
             }
 
             return usuario;
@@ -32,7 +32,7 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
         catch (Exception ex)
         {
             Console.WriteLine($"Erro ao autenticar com Google: {ex.Message}");
-            throw Throw.SenhaInvalida();
+            throw ExceptionFactory.SenhaInvalida();
         }
     }
 

@@ -25,7 +25,7 @@ public sealed class UsuarioAprovacaoMinisterio : EntityId<UsuarioAprovacaoMinist
     {
         if (Aprovado)
         {
-            Throw.MinisterioSolicitanteJaFoiAprovado();
+            throw ExceptionFactory.MinisterioSolicitanteJaFoiAprovado();
         }
 
         Aprovado = true;

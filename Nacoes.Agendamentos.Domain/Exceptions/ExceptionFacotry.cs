@@ -1,8 +1,6 @@
-﻿using System.ComponentModel;
+﻿namespace Nacoes.Agendamentos.Domain.Exceptions;
 
-namespace Nacoes.Agendamentos.Domain.Exceptions;
-
-public static class Throw
+public static class ExceptionFactory
 {
     #region UsuarioJaFoiAvaliado
     public static DomainException UsuarioJaFoiAvaliado()

@@ -29,7 +29,7 @@ public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>, IAggr
     {
         if (Status == EVoluntarioMinisterioStatus.Ativo)
         {
-            Throw.VoluntarioJaEstaAtivo();
+            throw ExceptionFactory.VoluntarioJaEstaAtivo();
         }
 
         Status = EVoluntarioMinisterioStatus.Ativo;
@@ -41,7 +41,7 @@ public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>, IAggr
     {
         if (Status == EVoluntarioMinisterioStatus.Suspenso)
         {
-            Throw.VoluntarioJaEstaSuspenso();
+            throw ExceptionFactory.VoluntarioJaEstaSuspenso();
         }
 
         Status = EVoluntarioMinisterioStatus.Suspenso;

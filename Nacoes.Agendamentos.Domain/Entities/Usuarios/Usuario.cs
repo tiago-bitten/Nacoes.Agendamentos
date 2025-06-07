@@ -20,7 +20,7 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
 
         if (authType == EAuthType.Local && string.IsNullOrEmpty(senha))
         {
-            Throw.UsuarioSenhaObrigatoriaParaAuthLocal();
+            throw ExceptionFactory.UsuarioSenhaObrigatoriaParaAuthLocal();
         }
 
         if (!string.IsNullOrEmpty(senha))
@@ -52,7 +52,7 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
 
         if (ultima != null && !ultima.PodeSolicitar)
         {
-            Throw.UsuarioNaoPodeSolicitarPoisUltimaSolicitacaoNaoFoiReprovada();
+            throw ExceptionFactory.UsuarioNaoPodeSolicitarPoisUltimaSolicitacaoNaoFoiReprovada();
         }
 
         var novaSolicitacao = new UsuarioAprovacao();
@@ -81,7 +81,7 @@ public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
     {
         if (senha.Length < 6)
         {
-            Throw.UsuarioSenhaInferiorSeisDigitos();
+            throw ExceptionFactory.UsuarioSenhaInferiorSeisDigitos();
         }
 
         Senha = senha;
