@@ -12,18 +12,18 @@ public class LocalAuthStrategy(IUsuarioRepository usuarioRepository) : IAuthStra
     public async Task<Usuario> AutenticarAsync(LoginCommand command)
     {
         var usuario = await usuarioRepository.RecuperarPorEmailAddress(command.Email)
-                                             .OrElse(Throw.UsuarioNaoEncontrado);
+                                             .OrElse(ExceptionFactory.UsuarioNaoEncontrado);
 
         if (usuario.AuthType != EAuthType.Local)
         {
-            Throw.AutenticacaTipoInvalido(usuario.AuthType.ToString());
+            throw ExceptionFactory.AutenticacaTipoInvalido(usuario.AuthType.ToString());
         }
 
         var senhaValida = PasswordVerifier.Execute(command.Senha!, usuario.Senha!);
 
         if (!senhaValida)
         {
-            Throw.SenhaInvalida();
+            throw ExceptionFactory.SenhaInvalida();
         }
 
         return usuario;

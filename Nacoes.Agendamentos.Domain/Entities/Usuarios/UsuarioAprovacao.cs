@@ -29,7 +29,7 @@ public sealed class UsuarioAprovacao : EntityId<UsuarioAprovacao>
     {
         if (FoiAvaliado)
         {
-            Throw.UsuarioJaFoiAvaliado();
+            throw ExceptionFactory.UsuarioJaFoiAvaliado();
         }
 
         Status = EStatusAprovacao.Aprovado;
@@ -51,7 +51,7 @@ public sealed class UsuarioAprovacao : EntityId<UsuarioAprovacao>
     {
         if (FoiAvaliado)
         {
-            Throw.UsuarioJaFoiAvaliado();
+            throw ExceptionFactory.UsuarioJaFoiAvaliado();
         }
 
         Status = EStatusAprovacao.Reprovado;
