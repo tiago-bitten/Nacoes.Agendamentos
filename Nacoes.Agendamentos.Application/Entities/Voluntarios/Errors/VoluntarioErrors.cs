@@ -9,4 +9,7 @@ public static class VoluntarioErrors
 
     public readonly static Error VoluntarioComEmailExistente
         = new("Voluntario.Adicionar.EmailExistente", "Voluntário já cadastrado com o email informado.");
+
+    public readonly static Error VoluntarioJaPossuiMinisterioAtivo
+        = new("Voluntario.VincularMinisterio.MinisterioJaAtivo", "Voluntário já está vinculado a esse ministério.");
 }

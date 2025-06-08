@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.AdicionarVoluntario;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Validators;
 

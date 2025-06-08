@@ -2,7 +2,7 @@
 using Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
 using Nacoes.Agendamentos.Infra.Abstracts;
 
-namespace Nacoes.Agendamentos.Infra.Entities.VoluntariosMinisterios.Configurations;
+namespace Nacoes.Agendamentos.Infra.Entities.Voluntarios.Configurations;
 
 public class VoluntarioMinisterioConfiguration : EntityIdConfiguration<VoluntarioMinisterio>
 {

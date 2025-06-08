@@ -1,4 +1,4 @@
-﻿using Nacoes.Agendamentos.Application.Entities.Voluntarios.AdicionarVoluntario;
+﻿using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 

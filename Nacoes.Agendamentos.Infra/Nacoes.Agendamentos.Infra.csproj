@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Nacoes.Agendamentos.Domain\Nacoes.Agendamentos.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\VoluntariosMinisterios\Configurations\" />
+  </ItemGroup>
+
 </Project>

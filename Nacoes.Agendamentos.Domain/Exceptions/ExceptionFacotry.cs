@@ -81,4 +81,14 @@ public static class ExceptionFactory
     public static DomainException UsuarioContaNaoEstaAprovada()
         => new("Usuario.IsContaAprovada", "Sua conta não está aprovada. Aguarde uma avaliação");
     #endregion
+
+    #region VoluntarioNaoEncontrado
+    public static DomainException VoluntarioNaoEncontrado()
+        => new("Voluntario.GetById", "Voluntário não encontrado.");
+    #endregion
+
+    #region VoluntarioJaEstaVinculadoMinisterio
+    public static DomainException VoluntarioJaEstaVinculadoMinisterio()
+        => new ("Voluntario.VincularMinisterio.MinisterioJaAtivo", "Voluntário já está vinculado a esse ministério.");
+    #endregion
 }
