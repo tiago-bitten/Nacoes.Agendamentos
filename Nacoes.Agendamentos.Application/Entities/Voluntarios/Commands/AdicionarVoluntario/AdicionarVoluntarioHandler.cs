@@ -10,7 +10,7 @@ using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Specifications;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
-namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.AdicionarVoluntario;
+namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 
 public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
                                                IValidator<AdicionarVoluntarioCommand> voluntarioValidator,

@@ -15,22 +15,22 @@ using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMin
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Validators;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.AdicionarVoluntario;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.VincularVoluntarioMinisterio;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios.Interfaces;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Nacoes.Agendamentos.Infra.Entities.Agendas;
 using Nacoes.Agendamentos.Infra.Entities.Ministerios;
 using Nacoes.Agendamentos.Infra.Entities.Usuarios;
 using Nacoes.Agendamentos.Infra.Entities.Voluntarios;
-using Nacoes.Agendamentos.Infra.Entities.VoluntariosMinisterios;
 using Nacoes.Agendamentos.Infra.Persistence;
 using Nacoes.Agendamentos.Infra.Settings;
 using Nacoes.Agendamentos.ReadModels.Entities.Usuarios.Queries.RecuperarUsuarios;
+using Nacoes.Agendamentos.ReadModels.Entities.Voluntarios.Queries.RecuperarVoluntario;
 
 namespace Nacoes.Agendamentos.API.Extensions;
 
@@ -79,7 +79,6 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<IMinisterioRepository, MinisterioRepository>();
         services.AddScoped<IVoluntarioRepository, VoluntarioRepository>();
-        services.AddScoped<IVoluntarioMinisterioRepository, VoluntarioMinisterioRepository>();
 
         return services;
     }
@@ -94,6 +93,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IAdicionarVoluntarioHandler, AdicionarVoluntarioHandler>();
         services.AddScoped<IAdicionarAtivdadeHandler, AdicionarAtividadeHandler>();
         services.AddScoped<IAdicionarAgendaHandler, AdicionarAgendaHandler>();
+        services.AddScoped<IVincularVoluntarioMinisterioHandler, VincularVoluntarioMinisterioHandler>();
 
         return services;
     }
@@ -103,6 +103,7 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddAppQueries(this IServiceCollection services)
     {
         services.AddScoped<IRecuperarUsuarioQuery, RecuperarUsuarioQuery>();
+        services.AddScoped<IRecuperarVoluntarioQuery, RecuperarVoluntarioQuery>();
 
         return services;
     }

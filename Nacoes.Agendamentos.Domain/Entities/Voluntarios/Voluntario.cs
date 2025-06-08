@@ -1,11 +1,16 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
+using Nacoes.Agendamentos.Domain.Entities.Ministerios;
+using Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
+using Nacoes.Agendamentos.Domain.Exceptions;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 
 public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
 {
+    private List<VoluntarioMinisterio> _ministerios = [];
+
     #region Constructor
     internal Voluntario() { }
 
@@ -30,6 +35,22 @@ public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
     public CPF? Cpf { get; private set; }
     public DataNascimento? DataNascimento { get; private set; }
 
+    public IReadOnlyCollection<VoluntarioMinisterio> Ministerios => _ministerios.AsReadOnly();
+
     public int Idade => DataNascimento?.Idade ?? 0;
     public bool MenorDeIdade => DataNascimento?.MenorDeIdade ?? false;
+
+    #region VincularMinisterio
+    public void VincularMinisterio(Id<Ministerio> ministerioId)
+    {
+        var existeVinculo = _ministerios.FirstOrDefault(x => x.MinisterioId == ministerioId);
+        if (existeVinculo is null)
+        {
+            _ministerios.Add(new VoluntarioMinisterio(ministerioId));
+            return;
+        }
+
+        existeVinculo.Ativar();
+    }
+    #endregion
 }

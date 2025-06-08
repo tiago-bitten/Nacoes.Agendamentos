@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Nacoes.Agendamentos.API.Extensions;
+using Nacoes.Agendamentos.API.Json;
 using Nacoes.Agendamentos.API.Middlewares;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Nacoes.Agendamentos.Infra.Settings;
@@ -11,7 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers()
-                .AddJsonOptions(x => x.JsonSerializerOptions.PropertyNamingPolicy = null);
+                .AddJsonOptions(x =>
+                {
+                    x.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    x.JsonSerializerOptions.Converters.Add(new IdJsonConverterFactory());
+                });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

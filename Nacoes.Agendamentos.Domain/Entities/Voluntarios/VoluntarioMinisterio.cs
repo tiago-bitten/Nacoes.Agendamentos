@@ -1,5 +1,4 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
-using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.Exceptions;
@@ -7,20 +6,18 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
 
-public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>, IAggregateRoot
+public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>
 {
     #region Constructors
     internal VoluntarioMinisterio() { }
 
-    public VoluntarioMinisterio(Id<Voluntario> voluntarioId, Id<Ministerio> ministerioId)
+    internal VoluntarioMinisterio(Id<Ministerio> ministerioId)
     {
-        VoluntarioId = voluntarioId;
         MinisterioId = ministerioId;
         Status = EVoluntarioMinisterioStatus.Ativo;
     }
     #endregion
 
-    public Id<Voluntario> VoluntarioId { get; private set; }
     public Id<Ministerio> MinisterioId { get; private set; }
     public EVoluntarioMinisterioStatus Status { get; private set; }
 

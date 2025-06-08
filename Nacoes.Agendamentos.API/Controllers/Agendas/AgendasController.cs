@@ -17,4 +17,12 @@ public class AgendasController : NacoesController
         return Responder(resposta.Montar());
     }
     #endregion
+
+    #region Agendar
+    [HttpPost("{agendaId:guid}/agendar")]
+    public async Task<IActionResult> Agendar()
+    {
+        throw new NotImplementedException();
+    }
+    #endregion
 }

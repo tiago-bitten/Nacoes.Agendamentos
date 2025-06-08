@@ -1,6 +1,6 @@
 ﻿using Nacoes.Agendamentos.Domain.ValueObjects;
 
-namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.AdicionarVoluntario;
+namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 
 public record AdicionarVoluntarioCommand
 {
