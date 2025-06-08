@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
-using Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
+using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Agendas.Configurations;

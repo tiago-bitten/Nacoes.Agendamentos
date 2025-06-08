@@ -2,6 +2,7 @@
 using Nacoes.Agendamentos.API.Controllers.Abstracts;
 using Nacoes.Agendamentos.Application.Common.Responses;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
+using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
 
 namespace Nacoes.Agendamentos.API.Controllers.Agendas;
 
@@ -20,9 +21,13 @@ public class AgendasController : NacoesController
 
     #region Agendar
     [HttpPost("{agendaId:guid}/agendar")]
-    public async Task<IActionResult> Agendar()
+    public async Task<IActionResult> Agendar([FromServices] IAgendarHandler handler,
+                                             [FromBody] AgendarCommand command,
+                                             [FromRoute] Guid agendaId)
     {
-        throw new NotImplementedException();
+        var resposta = await handler.ExcutarAsync(command, agendaId);
+
+        return Responder(resposta.Montar());
     }
     #endregion
 }

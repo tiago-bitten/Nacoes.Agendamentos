@@ -1,16 +1,15 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios;
-using Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
-using Nacoes.Agendamentos.Domain.ValueObjects;
+using AtividadeId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Atividade>;
+using VoluntarioMinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Voluntarios.VoluntarioMinisterio>;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Agendas;
 
 public sealed class Agendamento : EntityId<Agendamento>
 {
     #region Constructors
-    internal Agendamento() { }
+    private Agendamento() { }
 
-    internal Agendamento(Id<VoluntarioMinisterio> voluntarioMinisterioId, Id<Atividade> atividadeId, EOrigemAgendamento origem)
+    internal Agendamento(VoluntarioMinisterioId voluntarioMinisterioId, AtividadeId atividadeId, EOrigemAgendamento origem)
     {
         VoluntarioMinisterioId = voluntarioMinisterioId;
         AtividadeId = atividadeId;
@@ -19,14 +18,14 @@ public sealed class Agendamento : EntityId<Agendamento>
     }
     #endregion
 
-    public Id<VoluntarioMinisterio> VoluntarioMinisterioId { get; private set; }
-    public Id<Atividade> AtividadeId { get; private set; }
+    public VoluntarioMinisterioId VoluntarioMinisterioId { get; private set; }
+    public AtividadeId AtividadeId { get; private set; }
     public EStatusAgendamento Status { get; private set; }
     public EOrigemAgendamento Origem { get; private set; }
 
     public void Cancelar()
     {
-        if (Status != EStatusAgendamento.Agendado)
+        if (Status is not EStatusAgendamento.Agendado)
         {
             throw new InvalidOperationException("Apenas é possível cancelar agendamentos com a situação 'Agendado'.");
         }

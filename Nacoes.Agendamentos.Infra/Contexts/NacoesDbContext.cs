@@ -6,7 +6,6 @@ using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
-using Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
 using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Infra.Contexts;
