@@ -1,7 +1,6 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
-using Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
 using Nacoes.Agendamentos.Domain.Exceptions;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 

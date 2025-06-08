@@ -1,30 +1,28 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios;
-using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.Exceptions;
-using Nacoes.Agendamentos.Domain.ValueObjects;
+using MinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio>;
 
-namespace Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios;
+namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 
 public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>
 {
-    #region Constructors
-    internal VoluntarioMinisterio() { }
+    #region Construtores
+    private VoluntarioMinisterio() { }
 
-    internal VoluntarioMinisterio(Id<Ministerio> ministerioId)
+    internal VoluntarioMinisterio(MinisterioId ministerioId)
     {
         MinisterioId = ministerioId;
         Status = EVoluntarioMinisterioStatus.Ativo;
     }
     #endregion
 
-    public Id<Ministerio> MinisterioId { get; private set; }
+    public MinisterioId MinisterioId { get; private set; }
     public EVoluntarioMinisterioStatus Status { get; private set; }
 
     #region Ativar
     public void Ativar()
     {
-        if (Status == EVoluntarioMinisterioStatus.Ativo)
+        if (Status is EVoluntarioMinisterioStatus.Ativo)
         {
             throw ExceptionFactory.VoluntarioJaEstaAtivo();
         }
@@ -36,7 +34,7 @@ public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>
     #region Suspender
     public void Suspender()
     {
-        if (Status == EVoluntarioMinisterioStatus.Suspenso)
+        if (Status is EVoluntarioMinisterioStatus.Suspenso)
         {
             throw ExceptionFactory.VoluntarioJaEstaSuspenso();
         }

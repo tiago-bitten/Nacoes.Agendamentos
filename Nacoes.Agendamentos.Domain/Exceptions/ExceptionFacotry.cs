@@ -91,4 +91,14 @@ public static class ExceptionFactory
     public static DomainException VoluntarioJaEstaVinculadoMinisterio()
         => new ("Voluntario.VincularMinisterio.MinisterioJaAtivo", "Voluntário já está vinculado a esse ministério.");
     #endregion
+
+    #region VoluntarioJaEstaAgendado
+    public static DomainException VoluntarioJaAgendado()
+        => new("Agenda.Agendar", "Voluntário já está agendado nessa agenda.");
+    #endregion
+
+    #region AgendaNaoEncontrada
+    public static DomainException AgendaNaoEncontrada()
+        => new("Agenda.GetById", "Agenda não encontrada.");
+    #endregion
 }
