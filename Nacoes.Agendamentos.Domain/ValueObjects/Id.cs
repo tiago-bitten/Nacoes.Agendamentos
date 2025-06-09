@@ -33,6 +33,7 @@ public sealed record class Id<T> : IEquatable<Id<T>>, IComparable<Id<T>>
     public static implicit operator Id<T>(string value) => new(value);
 
     public static implicit operator string(Id<T> value) => value.ToString();
+    public static implicit operator Guid(Id<T> value) => value.ToGuid();
 
     public int CompareTo(Id<T>? other)
     {
