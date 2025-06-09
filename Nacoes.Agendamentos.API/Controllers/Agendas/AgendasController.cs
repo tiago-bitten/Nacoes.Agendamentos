@@ -30,4 +30,12 @@ public class AgendasController : NacoesController
         return Responder(resposta.Montar());
     }
     #endregion
+
+    #region Recuperar Agendamentos
+    [HttpGet("{agendaId:guid}/agendamentos")]
+    public async Task<IActionResult> RecuperarAgendamentos()
+    {
+        throw new NotImplementedException();
+    }
+    #endregion
 }

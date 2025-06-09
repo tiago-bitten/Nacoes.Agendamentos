@@ -7,7 +7,6 @@ public sealed class AgendarCommandValidator : AbstractValidator<AgendarCommand>
 {
     public AgendarCommandValidator()
     {
-        RuleFor(x => x.AgendaId).NotEmpty();
         RuleFor(x => x.VoluntarioMinisterioId).NotEmpty();
         RuleFor(x => x.AtividadeId).NotEmpty();
     }

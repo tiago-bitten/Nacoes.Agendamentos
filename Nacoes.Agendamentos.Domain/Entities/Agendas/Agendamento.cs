@@ -23,6 +23,7 @@ public sealed class Agendamento : EntityId<Agendamento>
     public EStatusAgendamento Status { get; private set; }
     public EOrigemAgendamento Origem { get; private set; }
 
+    #region Cancelar
     public void Cancelar()
     {
         if (Status is not EStatusAgendamento.Agendado)
@@ -32,6 +33,7 @@ public sealed class Agendamento : EntityId<Agendamento>
 
         Status = EStatusAgendamento.Cancelado;
     }
+    #endregion
 }
 
 public enum EStatusAgendamento

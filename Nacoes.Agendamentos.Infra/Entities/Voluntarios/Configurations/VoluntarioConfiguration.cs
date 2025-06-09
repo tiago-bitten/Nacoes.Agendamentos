@@ -47,5 +47,9 @@ public class VoluntarioConfiguration : EntityIdConfiguration<Voluntario>
             dataNascimentoBuilder.Property(d => d.Valor)
                                  .HasColumnName("data_nascimento");
         });
+
+        builder.HasMany(v => v.Ministerios)
+               .WithOne()
+               .HasForeignKey("voluntario_id");
     }
 }
