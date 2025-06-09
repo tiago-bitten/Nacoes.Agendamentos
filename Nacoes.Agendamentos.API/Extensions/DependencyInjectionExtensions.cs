@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Nacoes.agendamentos.application.entities.agendas.commands.agendar;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
 using Nacoes.Agendamentos.Application.Authentication.Strategies;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerator;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
+using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
@@ -94,6 +96,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IAdicionarAtivdadeHandler, AdicionarAtividadeHandler>();
         services.AddScoped<IAdicionarAgendaHandler, AdicionarAgendaHandler>();
         services.AddScoped<IVincularVoluntarioMinisterioHandler, VincularVoluntarioMinisterioHandler>();
+        services.AddScoped<IAgendarHandler, AgendarHandler>();
 
         return services;
     }

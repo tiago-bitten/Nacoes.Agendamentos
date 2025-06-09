@@ -10,8 +10,6 @@ public class VoluntarioMinisterioConfiguration : EntityIdConfiguration<Voluntari
     {
         base.Configure(builder);
 
-        builder.Property(v => v.VoluntarioId);
-
         builder.Property(v => v.MinisterioId);
 
         builder.Property(v => v.Status)

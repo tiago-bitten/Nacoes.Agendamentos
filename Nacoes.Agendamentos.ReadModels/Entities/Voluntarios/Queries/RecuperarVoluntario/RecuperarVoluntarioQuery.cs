@@ -39,17 +39,12 @@ public sealed class RecuperarVoluntarioQuery(NacoesDbContext dbContext)
                 Nome = x.Nome,
                 Email = x.Email != null ? x.Email.Address : string.Empty,
                 DataCriacao = x.DataCriacao,
-                Ministerios = DbContext.Ministerios
-                                .Join(x.Ministerios,
-                                      mi => mi.Id,
-                                      vm => vm.MinisterioId,
-                                      (mi, vm) => new { mi, vm })
-                                .Where(joined => joined.vm.VoluntarioId == x.Id)
-                                .Select(joined => new RecuperarVoluntarioResponse.MinisterioItem
-                                {
-                                    Nome = joined.mi.Nome
-                                })
-                                .ToList()
+                Ministerios = (from mi in DbContext.Ministerios
+                               join vm in x.Ministerios on mi.Id equals vm.MinisterioId
+                               select new RecuperarVoluntarioResponse.MinisterioItem
+                               {
+                                   Nome = mi.Nome,
+                               }).ToList()
             })
             .ToListAsync();
 
