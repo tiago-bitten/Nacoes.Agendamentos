@@ -101,4 +101,10 @@ public static class ExceptionFactory
     public static DomainException AgendaNaoEncontrada()
         => new("Agenda.GetById", "Agenda não encontrada.");
     #endregion
+    
+    #region AtividadeNaoEncontrada
+    public static DomainException AtividadeNaoEncontrada()
+        => new("Atividade.GetById", "Atividade não encontrada.");
+
+    #endregion
 }

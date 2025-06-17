@@ -81,7 +81,10 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<IMinisterioRepository, MinisterioRepository>();
         services.AddScoped<IVoluntarioRepository, VoluntarioRepository>();
-
+        services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
+        services.AddScoped<IVoluntarioMinisterioRepository, VoluntarioMinisterioRepository>();
+        services.AddScoped<IAtividadeRepository, AtividadeRepository>();
+        
         return services;
     }
     #endregion

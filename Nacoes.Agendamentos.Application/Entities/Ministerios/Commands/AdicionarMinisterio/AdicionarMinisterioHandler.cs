@@ -7,7 +7,6 @@ using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios.Specifications;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
@@ -23,12 +22,12 @@ public sealed class AdicionarMinisterioHandler(IUnitOfWork uow,
 
         var ministerio = command.GetEntidade();
 
-        var nomeExistente = await GetSpecification(new MinisterioComNomeExistenteSpecification(ministerio.Nome),
+        /*var nomeExistente = await GetSpecification(new MinisterioComNomeExistenteSpecification(ministerio.Nome),
                                                    ministerioRepository);
         if (nomeExistente)
         {
             return MinisterioErrors.MinisterioComNomeExistente;
-        }
+        }*/
 
         await Uow.BeginAsync();
         await ministerioRepository.AddAsync(ministerio);

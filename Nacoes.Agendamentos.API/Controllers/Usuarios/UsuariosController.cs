@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Nacoes.Agendamentos.API.Controllers.Abstracts;
 using Nacoes.Agendamentos.Application.Common.Responses;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
 using Nacoes.Agendamentos.ReadModels.Entities.Usuarios.Queries.RecuperarUsuarios;
 

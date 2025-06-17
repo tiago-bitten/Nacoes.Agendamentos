@@ -6,7 +6,6 @@ using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios.Specifications;
 using Nacoes.Agendamentos.Domain.Exceptions;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 using Nacoes.Agendamentos.Infra.Extensions;
@@ -25,12 +24,12 @@ public sealed class AdicionarAtividadeHandler(IUnitOfWork uow,
         var ministerio = await ministerioRepository.GetByIdAsync(ministerioId)
                                                    .OrElse(ExceptionFactory.MinisterioNaoEncontrado);
 
-        var nomeExistente = await GetSpecification(new AtividadeComNomeExistenteSpecification(command.Nome, ministerioId),
+        /*var nomeExistente = await GetSpecification(new AtividadeComNomeExistenteSpecification(command.Nome, ministerioId),
                                                    ministerioRepository);
         if (nomeExistente)
         {
             return AtividadeErrors.AtividadeComNomeExistente;
-        }
+        }*/
 
         await Uow.BeginAsync();
         ministerio.AdicionarAtividade(command.Nome, command.Descricao);

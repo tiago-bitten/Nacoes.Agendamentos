@@ -1,4 +1,5 @@
 ﻿using Nacoes.Agendamentos.Application.Common.Results;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 

@@ -6,7 +6,7 @@ using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Abstracts;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>, IAggregateRoot
+public class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>
 {
     #region Ctor
     private readonly NacoesDbContext _dbContext;
@@ -79,6 +79,17 @@ public class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>, IAggr
         var query = _entities.AsNoTracking();
         return query.Where(e => e.Id == id);
     }
+    #endregion
+    
+    #region GetOnlyIdAsync
+
+    public Task<Id<T>?> GetOnlyIdAsync(Id<T> id)
+    {
+        return GetByIdToProject(id)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync();
+    }
+
     #endregion
 
     #region UpdateAsync

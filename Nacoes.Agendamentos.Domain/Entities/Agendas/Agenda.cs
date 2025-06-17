@@ -38,18 +38,4 @@ public sealed class Agenda : EntityId<Agenda>, IAggregateRoot
         Horario = horario;
     }
     #endregion
-
-    #region Agendar
-    public void Agendar(VoluntarioMinisterioId voluntarioMinisterioId, AtividadeId atividadeId, EOrigemAgendamento origem)
-    {
-        var voluntarioJaAgendado = _agendamentos.Any(a => a.VoluntarioMinisterioId == voluntarioMinisterioId);
-        if (voluntarioJaAgendado)
-        {
-            throw ExceptionFactory.VoluntarioJaAgendado();
-        }
-
-        var agendamento = new Agendamento(voluntarioMinisterioId, atividadeId, origem);
-        _agendamentos.Add(agendamento);
-    }
-    #endregion
 }
