@@ -2,15 +2,16 @@
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
-namespace Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
+namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
 
 public record AdicionarUsuarioCommand
 {
-    public string Nome { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
+    public string? Nome { get; set; } = string.Empty;
+    public string? Email { get; set; } = string.Empty;
     public CelularItem? Celular { get; set; } = new();
     public EAuthType AuthType { get; set; }
     public string? Senha { get; set; }
+    public string? TokenExterno { get; set; }
     public IList<MinisterioItem> Ministerios { get; set; } = [];
 
     public IList<Id<Ministerio>> MinisteriosIds => Ministerios.Select(x => new Id<Ministerio>(x.Id)).ToList();

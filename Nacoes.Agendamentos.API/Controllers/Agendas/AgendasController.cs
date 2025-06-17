@@ -19,18 +19,6 @@ public class AgendasController : NacoesController
     }
     #endregion
 
-    #region Agendar
-    [HttpPost("{agendaId:guid}/agendar")]
-    public async Task<IActionResult> Agendar([FromServices] IAgendarHandler handler,
-                                             [FromBody] AgendarCommand command,
-                                             [FromRoute] Guid agendaId)
-    {
-        var resposta = await handler.ExcutarAsync(command, agendaId);
-
-        return Responder(resposta.Montar());
-    }
-    #endregion
-
     #region Recuperar Agendamentos
     [HttpGet("{agendaId:guid}/agendamentos")]
     public async Task<IActionResult> RecuperarAgendamentos()

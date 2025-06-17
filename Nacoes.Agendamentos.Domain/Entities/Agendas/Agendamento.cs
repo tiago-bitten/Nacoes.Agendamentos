@@ -1,4 +1,5 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
+using AgendaId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Agendas.Agenda>;
 using AtividadeId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Atividade>;
 using VoluntarioMinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Voluntarios.VoluntarioMinisterio>;
 
@@ -6,11 +7,15 @@ namespace Nacoes.Agendamentos.Domain.Entities.Agendas;
 
 public sealed class Agendamento : EntityId<Agendamento>
 {
-    #region Constructors
+    #region Construtores
     private Agendamento() { }
 
-    internal Agendamento(VoluntarioMinisterioId voluntarioMinisterioId, AtividadeId atividadeId, EOrigemAgendamento origem)
+    public Agendamento(AgendaId agendaId, 
+                       VoluntarioMinisterioId voluntarioMinisterioId,
+                       AtividadeId atividadeId,
+                       EOrigemAgendamento origem)
     {
+        AgendaId = agendaId;
         VoluntarioMinisterioId = voluntarioMinisterioId;
         AtividadeId = atividadeId;
         Origem = origem;
@@ -18,6 +23,7 @@ public sealed class Agendamento : EntityId<Agendamento>
     }
     #endregion
 
+    public AgendaId AgendaId { get; private set; }
     public VoluntarioMinisterioId VoluntarioMinisterioId { get; private set; }
     public AtividadeId AtividadeId { get; private set; }
     public EStatusAgendamento Status { get; private set; }

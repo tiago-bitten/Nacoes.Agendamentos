@@ -1,13 +1,11 @@
 ﻿using FluentValidation;
 using Nacoes.Agendamentos.Application.Abstracts;
 using Nacoes.Agendamentos.Application.Common.Results;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.Errors;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Mappings;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Specifications;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
@@ -23,7 +21,7 @@ public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
 
         var voluntario = command.GetEntidade();
 
-        var cpfExistente = await CpfExistenteSpecification(voluntario.Cpf);
+        /*var cpfExistente = await CpfExistenteSpecification(voluntario.Cpf);
         if (cpfExistente)
         {
             return VoluntarioErrors.VoluntarioComCpfExistente;
@@ -33,7 +31,7 @@ public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
         if (emailExistente) 
         {
             return VoluntarioErrors.VoluntarioComEmailExistente;
-        }
+        }*/
 
         await Uow.BeginAsync();
         await voluntarioRepository.AddAsync(voluntario);
@@ -42,7 +40,7 @@ public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
         return voluntario.Id;
     }
 
-    #region CpfExistenteSpecification
+    /*#region CpfExistenteSpecification
     private async Task<bool> CpfExistenteSpecification(CPF? cpf)
     {
         if (cpf is null)
@@ -66,5 +64,5 @@ public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
         return await GetSpecification(new VoluntarioComEmailExistenteSpecification(email!),
                                       voluntarioRepository);
     }
-    #endregion
+    #endregion*/
 }

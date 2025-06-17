@@ -1,4 +1,5 @@
 ﻿using Nacoes.Agendamentos.Application.Authentication.PasswordVerifiers;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;

@@ -4,6 +4,7 @@ using Nacoes.Agendamentos.API.Controllers.Abstracts;
 using Nacoes.Agendamentos.Application.Common.Responses;
 using Nacoes.Agendamentos.Application.Common.Results;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;

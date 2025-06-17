@@ -13,12 +13,22 @@ public sealed class RecuperarAgendamentoQuery(NacoesDbContext dbContext)
     {
         throw new NotImplementedException();
 
-        var queryAgendamentos = DbContext.Agendamentos.AsNoTracking();
-
-        //queryAgendamentos = (from ag in DbContext.Agendas.AsNoTracking()
-        //                     where ag.Id == agendaId
-        //                      && ag.Agendamentos.Any(x => )
+        var queryAgendamentos = DbContext.Agendas.AsNoTracking()
+            .Where(a => a.Id == agendaId)
+            .SelectMany(a => a.Agendamentos);
 
         queryAgendamentos = queryAgendamentos.PaginarPorKeyset(param.Take, param.UltimoId, param.UltimaDataCriacao);
+
+        var response = new RecuperarAgendamentoResponse();
+
+        //response.Items = await queryAgendamentos
+        //    .Select(a => new RecuperarAgendamentoResponse.Item
+        //    {
+        //        Id = a.Id,
+        //        DataCriacao = a.DataCriacao,
+        //        VoluntarioNome = ,
+        //        MinisterioNome = ,
+        //        AtividadeNome =
+        //    });
     }
 }
