@@ -4,12 +4,14 @@ namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
 public sealed record Email : IEquatable<Email>
 {
-    public string Address { get; }
+    public string Address { get; } = null!;
     public bool IsConfirmed { get; }
     public string? ConfirmationCode { get; }
     public DateTimeOffset? ConfirmationCodeExpiration { get; }
 
-    private Email(string address,
+    private Email() { }
+    
+    public Email(string address,
                  bool isConfirmed = false,
                  string? confirmationCode = null,
                  DateTimeOffset? confirmationCodeExpiration = null)

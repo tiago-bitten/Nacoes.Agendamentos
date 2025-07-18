@@ -10,7 +10,6 @@ public class AuthStrategyFactory(IServiceProvider serviceProvider) : IAuthStrate
     {
         EAuthType.Local => serviceProvider.GetRequiredService<LocalAuthStrategy>(),
         EAuthType.Google => serviceProvider.GetRequiredService<GoogleAuthStrategy>(),
-        //EAuthType.Apple => serviceProvider.GetRequiredService<AppleAuthStrategy>(),
         _ => throw new NotImplementedException()
     };
 }
