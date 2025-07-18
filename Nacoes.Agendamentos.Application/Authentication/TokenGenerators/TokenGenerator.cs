@@ -1,15 +1,14 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
-using Nacoes.Agendamentos.Domain.Entities.Usuarios;
-using Nacoes.Agendamentos.Infra.Helpers;
-using Nacoes.Agendamentos.Infra.Settings;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Nacoes.Agendamentos.Domain.Entities.Usuarios;
+using Nacoes.Agendamentos.Infra.Helpers;
+using Nacoes.Agendamentos.Infra.Settings;
 
-namespace Nacoes.Agendamentos.Application.Authentication.TokenGenerator;
+namespace Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 
 public sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings) : ITokenGenerator
 {

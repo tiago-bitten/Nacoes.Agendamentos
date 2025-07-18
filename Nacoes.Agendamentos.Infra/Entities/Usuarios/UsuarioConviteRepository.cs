@@ -5,11 +5,7 @@ using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Usuarios;
 
-public sealed class UsuarioAprovacaoRepository : BaseRepository<UsuarioAprovacao>, IUsuarioAprovacaoRepository
+public sealed class UsuarioConviteRepository(NacoesDbContext dbContext) 
+    : BaseRepository<UsuarioConvite>(dbContext), IUsuarioConviteRepository
 {
-    #region Construtores
-    public UsuarioAprovacaoRepository(NacoesDbContext dbContext) : base(dbContext)
-    {
-    }
-    #endregion
 }

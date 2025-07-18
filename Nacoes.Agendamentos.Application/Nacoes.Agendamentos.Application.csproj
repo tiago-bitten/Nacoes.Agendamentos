@@ -16,7 +16,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Nacoes.Agendamentos.Domain\Nacoes.Agendamentos.Domain.csproj" />
     <ProjectReference Include="..\Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj" />
-    <ProjectReference Include="..\Nacoes.Agendamentos.ReadModels\Nacoes.Agendamentos.ReadModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\Usuarios\Commands\" />
+    <Folder Include="Entities\Usuarios\Validators\" />
   </ItemGroup>
 
 </Project>

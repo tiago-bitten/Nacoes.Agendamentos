@@ -15,7 +15,7 @@ public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
     #endregion
 
     #region RecuperarPorEmailAddress
-    public Task<Usuario?> RecuperarPorEmailAddress(string emailAddress)
+    public Task<Usuario?> RecuperarPorEmailAddressAsync(string emailAddress)
     {
         return GetAll().AsNoTracking()
                        .FirstOrDefaultAsync(x => x.Email.Address == emailAddress);

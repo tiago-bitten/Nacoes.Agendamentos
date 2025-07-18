@@ -8,15 +8,12 @@ using Nacoes.agendamentos.application.entities.agendas.commands.agendar;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
 using Nacoes.Agendamentos.Application.Authentication.Strategies;
-using Nacoes.Agendamentos.Application.Authentication.TokenGenerator;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
+using Nacoes.Agendamentos.Application.Authentication.Validators;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
-using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarUsuario;
-using Nacoes.Agendamentos.Application.Entities.Usuarios.UseCases.AdicionarUsuarioUseCase;
-using Nacoes.Agendamentos.Application.Entities.Usuarios.Validators;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.VincularVoluntarioMinisterio;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -31,8 +28,6 @@ using Nacoes.Agendamentos.Infra.Entities.Usuarios;
 using Nacoes.Agendamentos.Infra.Entities.Voluntarios;
 using Nacoes.Agendamentos.Infra.Persistence;
 using Nacoes.Agendamentos.Infra.Settings;
-using Nacoes.Agendamentos.ReadModels.Entities.Usuarios.Queries.RecuperarUsuarios;
-using Nacoes.Agendamentos.ReadModels.Entities.Voluntarios.Queries.RecuperarVoluntario;
 
 namespace Nacoes.Agendamentos.API.Extensions;
 
@@ -84,6 +79,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
         services.AddScoped<IVoluntarioMinisterioRepository, VoluntarioMinisterioRepository>();
         services.AddScoped<IAtividadeRepository, AtividadeRepository>();
+        services.AddScoped<IUsuarioConviteRepository, UsuarioConviteRepository>();
         
         return services;
     }
@@ -92,7 +88,6 @@ public static class DependencyInjectionExtensions
     #region AddAppHandlers
     public static IServiceCollection AddAppHandlers(this IServiceCollection services)
     {
-        services.AddScoped<IAdicionarUsuarioHandler, AdicionarUsuarioHandler>();
         services.AddScoped<IAdicionarMinisterioHandler, AdicionarMinisterioHandler>();
         services.AddScoped<ILoginHandler, LoginHandler>();
         services.AddScoped<IAdicionarVoluntarioHandler, AdicionarVoluntarioHandler>();
@@ -108,8 +103,6 @@ public static class DependencyInjectionExtensions
     #region AddAppQueries
     public static IServiceCollection AddAppQueries(this IServiceCollection services)
     {
-        services.AddScoped<IRecuperarUsuarioQuery, RecuperarUsuarioQuery>();
-        services.AddScoped<IRecuperarVoluntarioQuery, RecuperarVoluntarioQuery>();
 
         return services;
     }
@@ -118,7 +111,7 @@ public static class DependencyInjectionExtensions
     #region AddValidators
     public static IServiceCollection AddValidators(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<AdicionarUsuarioCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<LoginCommandValidator>();
 
         return services;
     }

@@ -24,7 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Nacoes.Agendamentos.Application\Nacoes.Agendamentos.Application.csproj" />
     <ProjectReference Include="..\Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj" />
-    <ProjectReference Include="..\Nacoes.Agendamentos.ReadModels\Nacoes.Agendamentos.ReadModels.csproj" />
   </ItemGroup>
 
 </Project>
