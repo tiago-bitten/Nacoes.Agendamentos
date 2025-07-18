@@ -1,10 +1,9 @@
-﻿using Nacoes.Agendamentos.Application.Common.Results;
-using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
-using Nacoes.Agendamentos.Domain.ValueObjects;
+﻿using Nacoes.Agendamentos.Domain.Common;
+using VoluntarioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Voluntarios.Voluntario>;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 
 public interface IAdicionarVoluntarioHandler
 {
-    Task<Result<Id<Voluntario>, Error>> ExecutarAsync(AdicionarVoluntarioCommand command, CancellationToken cancellation = default);
+    Task<Result<VoluntarioId>> ExecutarAsync(AdicionarVoluntarioCommand command, CancellationToken cancellation = default);
 }

@@ -27,9 +27,8 @@ public static class ModelBuilderExtensions
                     var converterType = typeof(IdValueConverter<>).MakeGenericType(argumentType);
                     var converter = (ValueConverter)Activator.CreateInstance(converterType)!;
 
-                    entityBuilder
-                        .Property(property.Name)
-                        .HasConversion(converter);
+                    entityBuilder.Property(property.Name)
+                                 .HasConversion(converter);
                 }
             }
         }

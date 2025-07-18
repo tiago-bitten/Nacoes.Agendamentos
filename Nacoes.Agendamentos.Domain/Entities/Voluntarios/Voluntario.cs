@@ -1,25 +1,20 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios;
-using Nacoes.Agendamentos.Domain.Exceptions;
+using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.ValueObjects;
+using MinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio>;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 
 public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
 {
-    private List<VoluntarioMinisterio> _ministerios = [];
+    private readonly List<VoluntarioMinisterio> _ministerios = [];
 
     #region Constructor
-    internal Voluntario() { }
+    private Voluntario() { }
 
     public Voluntario(string nome, Email? email, Celular? celular, CPF? cpf, DataNascimento? dataNascimento)
     {
-        if (string.IsNullOrWhiteSpace(nome))
-        {
-            throw new ArgumentNullException(nameof(nome), "O nome do voluntário é obrigatório");
-        }
-
         Nome = nome;
         Email = email;
         Celular = celular;
@@ -28,7 +23,7 @@ public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
     }
     #endregion
 
-    public string Nome { get; private set; }
+    public string Nome { get; private set; } = null!;
     public Email? Email { get; private set; }
     public Celular? Celular { get; private set; }
     public CPF? Cpf { get; private set; }
@@ -40,16 +35,16 @@ public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
     public bool MenorDeIdade => DataNascimento?.MenorDeIdade ?? false;
 
     #region VincularMinisterio
-    public void VincularMinisterio(Id<Ministerio> ministerioId)
+    public Result VincularMinisterio(MinisterioId ministerioId)
     {
         var existeVinculo = _ministerios.FirstOrDefault(x => x.MinisterioId == ministerioId);
         if (existeVinculo is null)
         {
             _ministerios.Add(new VoluntarioMinisterio(ministerioId));
-            return;
+            return Result.Success();
         }
 
-        existeVinculo.Ativar();
+        return existeVinculo.Ativar();
     }
     #endregion
 }

@@ -1,12 +1,11 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
-using Nacoes.Agendamentos.Domain.Exceptions;
+using Nacoes.Agendamentos.Domain.Common;
 using MinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio>;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 
 public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>
 {
-    #region Construtores
     private VoluntarioMinisterio() { }
 
     internal VoluntarioMinisterio(MinisterioId ministerioId)
@@ -14,38 +13,41 @@ public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>
         MinisterioId = ministerioId;
         Status = EVoluntarioMinisterioStatus.Ativo;
     }
-    #endregion
 
-    public MinisterioId MinisterioId { get; private set; }
+    public MinisterioId MinisterioId { get; private set; } = null!;
     public EVoluntarioMinisterioStatus Status { get; private set; }
 
     #region Ativar
-    public void Ativar()
+    public Result Ativar()
     {
         if (Status is EVoluntarioMinisterioStatus.Ativo)
         {
-            throw ExceptionFactory.VoluntarioJaEstaAtivo();
+            return VoluntarioMinisterioErrors.VoluntarioJaEstaAtivo;
         }
 
         Status = EVoluntarioMinisterioStatus.Ativo;
+        
+        return Result.Success();
     }
     #endregion
 
     #region Suspender
-    public void Suspender()
+    public Result Suspender()
     {
         if (Status is EVoluntarioMinisterioStatus.Suspenso)
         {
-            throw ExceptionFactory.VoluntarioJaEstaSuspenso();
+            return VoluntarioMinisterioErrors.VoluntarioJaEstaSuspenso;
         }
 
         Status = EVoluntarioMinisterioStatus.Suspenso;
+        
+        return Result.Success();
     }
     #endregion
 }
 
 public enum EVoluntarioMinisterioStatus
 {
-    Ativo,
-    Suspenso,
+    Ativo = 0,
+    Suspenso = 1,
 }

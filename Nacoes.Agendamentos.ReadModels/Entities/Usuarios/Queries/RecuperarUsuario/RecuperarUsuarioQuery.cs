@@ -1,10 +1,10 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Nacoes.Agendamentos.ReadModels.Abstracts;
+using Nacoes.Agendamentos.ReadModels.Entities.Usuarios.Queries.RecuperarUsuarios;
 using Nacoes.Agendamentos.ReadModels.Extensions;
 
-namespace Nacoes.Agendamentos.ReadModels.Entities.Usuarios.Queries.RecuperarUsuarios;
+namespace Nacoes.Agendamentos.ReadModels.Entities.Usuarios.Queries.RecuperarUsuario;
 
 public sealed class RecuperarUsuarioQuery(NacoesDbContext dbContext) : BaseQuery(dbContext), IRecuperarUsuarioQuery
 {

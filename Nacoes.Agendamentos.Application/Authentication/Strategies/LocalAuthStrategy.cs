@@ -1,31 +1,44 @@
 ﻿using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Authentication.PasswordVerifiers;
+using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
-using Nacoes.Agendamentos.Domain.Exceptions;
-using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Strategies;
 
 public class LocalAuthStrategy(IUsuarioRepository usuarioRepository) : IAuthStrategy
 {
-    public async Task<Usuario> AutenticarAsync(LoginCommand command)
+    public async Task<Result<Usuario>> AutenticarAsync(LoginCommand command)
     {
-        var usuario = await usuarioRepository.RecuperarPorEmailAddress(command.Email)
-                                             .OrElse(ExceptionFactory.UsuarioNaoEncontrado);
-
+        var usuario = await usuarioRepository.RecuperarPorEmailAddressAsync(command.Email!);
+        if (usuario is null)
+        {
+            return LocalAuthStrategyErrors.UsuarioNaoEncontrado;
+        }
+            
         if (usuario.AuthType != EAuthType.Local)
         {
-            throw ExceptionFactory.AutenticacaTipoInvalido(usuario.AuthType.ToString());
+            return LocalAuthStrategyErrors.AutenticacaTipoInvalido;
         }
 
         var senhaValida = PasswordVerifier.Execute(command.Senha!, usuario.Senha!);
-
         if (!senhaValida)
         {
-            throw ExceptionFactory.SenhaInvalida();
+            return LocalAuthStrategyErrors.SenhaInvalida;
         }
 
-        return usuario;
+        return Result<Usuario>.Success(usuario);
     }
+}
+
+public static class LocalAuthStrategyErrors
+{
+    public static readonly Error SenhaInvalida = 
+        new("Login.Local.SenhaInvalida", "A senha informada é inválida.");
+    
+    public static readonly Error AutenticacaTipoInvalido = 
+        new("Login.Local.AutenticacaTipoInvalido", "O tipo de autenticação informado é inválido.");
+    
+    public static readonly Error UsuarioNaoEncontrado = 
+        new("Login.Local.UsuarioNaoEncontrado", "O usuário informado não foi encontrado.");
 }

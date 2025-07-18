@@ -2,14 +2,14 @@
 
 namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
-public sealed record class Email : IEquatable<Email>
+public sealed record Email : IEquatable<Email>
 {
     public string Address { get; }
     public bool IsConfirmed { get; }
     public string? ConfirmationCode { get; }
     public DateTimeOffset? ConfirmationCodeExpiration { get; }
 
-    public Email(string address,
+    private Email(string address,
                  bool isConfirmed = false,
                  string? confirmationCode = null,
                  DateTimeOffset? confirmationCodeExpiration = null)
@@ -35,8 +35,8 @@ public sealed record class Email : IEquatable<Email>
         return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
     }
 
-    public bool Equals(Email other) =>
-        Address.Equals(other.Address, StringComparison.OrdinalIgnoreCase);
+    public bool Equals(Email? other) =>
+        Address.Equals(other?.Address, StringComparison.OrdinalIgnoreCase);
 
     public override int GetHashCode() =>
         Address.ToLowerInvariant().GetHashCode();
@@ -55,7 +55,7 @@ public sealed record class Email : IEquatable<Email>
             throw new InvalidOperationException("Código de confirmação expirado.");
         }
 
-        return new Email(Address, true, null, null);
+        return new Email(Address, true);
     }
 
     public static Email GenerateConfirmation(string address)

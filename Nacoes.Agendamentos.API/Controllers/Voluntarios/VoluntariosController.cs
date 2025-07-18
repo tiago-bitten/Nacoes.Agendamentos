@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nacoes.Agendamentos.API.Controllers.Abstracts;
-using Nacoes.Agendamentos.Application.Common.Responses;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.VincularVoluntarioMinisterio;
-using Nacoes.Agendamentos.ReadModels.Entities.Voluntarios.Queries.RecuperarVoluntario;
 
 namespace Nacoes.Agendamentos.API.Controllers.Voluntarios;
 
@@ -16,20 +14,7 @@ public sealed class VoluntariosController : NacoesController
     {
         var resultado = await handler.ExecutarAsync(command);
 
-        return Responder(resultado.Montar());
-    }
-    #endregion
-
-    #region Recuperar
-    [HttpGet]
-    public async Task<IActionResult> Recuperar([FromServices] IRecuperarVoluntarioQuery query,
-                                               [FromQuery] RecuperarVoluntarioParam param)
-    {
-        var resultado = await query.ExecutarAsync(param);
-
-        return Responder(resultado.Items.Montar()
-                                        .ComTotal(resultado.Total)
-                                        .DefinirProximaPagina(resultado));
+        return Ok();
     }
     #endregion
 
@@ -47,7 +32,7 @@ public sealed class VoluntariosController : NacoesController
 
         var resultado = await handler.ExecutarAsync(command);
 
-        return Responder(resultado.Montar());
+        return Ok();
     }
     #endregion
 }

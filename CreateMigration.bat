@@ -1,16 +1,6 @@
-﻿@echo off
-setlocal
-
-:: Nome da Migration
-set /p MigrationName=Digite o nome da migration: 
-
-:: Caminhos do projeto
-set StartupProjectPath=.\Nacoes.Agendamentos.API\Nacoes.Agendamentos.API.csproj
-set RepositoryProjectPath=.\Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj
-set DbContextName=NacoesDbContext
-
-:: Comando para criar a migration
-echo Criando migration: %MigrationName%
-dotnet ef migrations add %MigrationName% --context %DbContextName% --project "%RepositoryProjectPath%" --startup-project "%StartupProjectPath%" --verbose
-
-pause
+﻿Listagem de comissões usuário ADM com valor total:
+Listagem de comissões usuário sem permissão com valor total apenas dele:
+Extrato de uma comissão usuário ADM com valor total:
+Extrato de uma comissão usuário sem permissão com valor total apenas dele:
+Gerar pagar de comissão usuário ADM deve gerar para todos:
+Gerar pagar de comissão usuário sem permissão deve gerar parar todos:

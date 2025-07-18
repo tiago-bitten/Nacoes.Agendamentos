@@ -15,7 +15,7 @@ public class AgendasController : NacoesController
     {
         var resposta = await handler.ExecutarAsync(command);
 
-        return Responder(resposta.Montar());
+        return Ok();
     }
     #endregion
 

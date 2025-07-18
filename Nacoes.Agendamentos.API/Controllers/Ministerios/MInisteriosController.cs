@@ -14,7 +14,7 @@ public class MinisteriosController : NacoesAuthenticatedController
     {
         var resultado = await handler.ExecutarAsync(command);
 
-        return Responder(resultado.Montar());
+        return Ok();
     }
     #endregion
 
@@ -26,7 +26,7 @@ public class MinisteriosController : NacoesAuthenticatedController
     {
         var resultado = await handler.ExecutarAsync(command, ministerioId);
 
-        return Responder(resultado.Montar());
+        return Ok();
     }
     #endregion
 }

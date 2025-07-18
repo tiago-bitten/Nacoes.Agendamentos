@@ -4,9 +4,9 @@ namespace Nacoes.Agendamentos.Domain.Entities.Ministerios;
 public sealed class Atividade : EntityId<Atividade>
 {
     #region Constructors
-    internal Atividade() { }
+    private Atividade() { }
 
-    internal Atividade(string nome, string? descricao = default)
+    internal Atividade(string nome, string? descricao = null)
     {
         if (string.IsNullOrWhiteSpace(nome))
         {
@@ -18,6 +18,6 @@ public sealed class Atividade : EntityId<Atividade>
     }
     #endregion
 
-    public string Nome { get; private set; }
+    public string Nome { get; private set; } = null!;
     public string? Descricao { get; private set; }
 }

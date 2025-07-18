@@ -18,7 +18,7 @@ public class NacoesDbContext : DbContext
     }
 
     public DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<UsuarioAprovacao> UsuariosAprovacoes { get; set; }
+    public DbSet<UsuarioConvite> Convites { get; set; }
     public DbSet<Agenda> Agendas { get; set; }
     public DbSet<Agendamento> Agendamentos { get; set; }
     public DbSet<Voluntario> Voluntarios { get; set; }

@@ -4,17 +4,8 @@ namespace Nacoes.Agendamentos.Domain.Abstracts;
 
 public abstract class EntityId<T> where T : class
 {
-    #region Construtor
-    protected EntityId()
-    {
-        Id = new Id<T>(Guid.Empty.ToString());
-        DataCriacao = DateTime.UtcNow;
-        Inativo = false;
-    }
-    #endregion
-
-    public Id<T> Id { get; private set; }
-    public DateTime DataCriacao { get; private set; }
+    public Id<T> Id { get; private set; } = new(Guid.Empty.ToString());
+    public DateTimeOffset DataCriacao { get; private set; } = DateTimeOffset.UtcNow;
     public bool Inativo { get; private set; }
 
     // USAR ISSO APENAS NO SAVECHANGES

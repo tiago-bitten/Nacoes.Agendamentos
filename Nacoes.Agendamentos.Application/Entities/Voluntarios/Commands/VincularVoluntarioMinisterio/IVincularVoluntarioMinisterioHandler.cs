@@ -1,10 +1,8 @@
-﻿using Nacoes.Agendamentos.Application.Common.Results;
-using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
-using Nacoes.Agendamentos.Domain.ValueObjects;
+﻿using Nacoes.Agendamentos.Domain.Common;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.VincularVoluntarioMinisterio;
 
 public interface IVincularVoluntarioMinisterioHandler
 {
-    Task<Result<Id<VoluntarioMinisterio>, Error>> ExecutarAsync(VincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default);
+    Task<Result> ExecutarAsync(VincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default);
 }

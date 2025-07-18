@@ -39,9 +39,5 @@ public class UsuarioConfiguration : EntityIdConfiguration<Usuario>
 
         builder.Property(u => u.AuthType)
                .HasConversion<string>();
-
-        builder.HasMany(u => u.Solicitacoes)
-               .WithOne()
-               .HasForeignKey("usuario_solicitante_id");
     }
 }
