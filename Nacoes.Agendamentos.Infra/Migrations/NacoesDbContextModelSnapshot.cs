@@ -28,7 +28,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -56,11 +56,15 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid>("AgendaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("agenda_id");
+
                     b.Property<Guid>("AtividadeId")
                         .HasColumnType("uuid")
                         .HasColumnName("atividade_id");
 
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -101,7 +105,11 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasIndex("Id", "DataCriacao")
                         .HasDatabaseName("ix_agendamento_id_created_at");
 
-                    b.ToTable("agendamento", (string)null);
+                    b.ToTable("agendamento", null, t =>
+                        {
+                            t.Property("agenda_id")
+                                .HasColumnName("agenda_id1");
+                        });
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Ministerios.Atividade", b =>
@@ -110,12 +118,11 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<string>("Descricao")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("descricao");
 
@@ -150,7 +157,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -187,7 +194,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnType("text")
                         .HasColumnName("auth_type");
 
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -213,91 +220,60 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.ToTable("usuario", (string)null);
                 });
 
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.UsuarioAprovacao", b =>
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.UsuarioConvite", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime?>("DataAprovacao")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_aprovacao");
-
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<DateTimeOffset>("DataExpiracao")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("data_expiracao");
+
+                    b.Property<Guid?>("EnviadoParaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("enviado_para_id");
+
+                    b.Property<Guid>("EnviadoPorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("enviado_por_id");
 
                     b.Property<bool>("Inativo")
                         .HasColumnType("boolean")
                         .HasColumnName("inactive");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("nome");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("status");
 
-                    b.Property<Guid?>("usuario_aprovador_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("usuario_aprovador_id");
-
-                    b.Property<Guid?>("usuario_solicitante_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("usuario_solicitante_id");
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("token");
 
                     b.HasKey("Id")
-                        .HasName("pk_usuario_aprovacao");
+                        .HasName("pk_usuario_convite");
 
-                    b.HasIndex("usuario_aprovador_id")
-                        .HasDatabaseName("ix_usuario_aprovacao_usuario_aprovador_id");
+                    b.HasIndex("EnviadoParaId")
+                        .HasDatabaseName("ix_usuario_convite_enviado_para_id");
 
-                    b.HasIndex("usuario_solicitante_id")
-                        .HasDatabaseName("ix_usuario_aprovacao_usuario_solicitante_id");
-
-                    b.HasIndex("Id", "DataCriacao")
-                        .HasDatabaseName("ix_usuario_aprovacao_id_created_at");
-
-                    b.ToTable("usuario_aprovacao", (string)null);
-                });
-
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.UsuarioAprovacaoMinisterio", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<bool>("Aprovado")
-                        .HasColumnType("boolean")
-                        .HasColumnName("aprovado");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<bool>("Inativo")
-                        .HasColumnType("boolean")
-                        .HasColumnName("inactive");
-
-                    b.Property<Guid>("MinisterioId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("ministerio_id");
-
-                    b.Property<Guid?>("usuario_aprovacao_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("usuario_aprovacao_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_usuario_aprovacao_ministerio");
-
-                    b.HasIndex("MinisterioId")
-                        .HasDatabaseName("ix_usuario_aprovacao_ministerio_ministerio_id");
-
-                    b.HasIndex("usuario_aprovacao_id")
-                        .HasDatabaseName("ix_usuario_aprovacao_ministerio_usuario_aprovacao_id");
+                    b.HasIndex("EnviadoPorId")
+                        .HasDatabaseName("ix_usuario_convite_enviado_por_id");
 
                     b.HasIndex("Id", "DataCriacao")
-                        .HasDatabaseName("ix_usuario_aprovacao_ministerio_id_created_at");
+                        .HasDatabaseName("ix_usuario_convite_id_created_at");
 
-                    b.ToTable("usuario_aprovacao_ministerio", (string)null);
+                    b.ToTable("usuario_convite", (string)null);
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Voluntarios.Voluntario", b =>
@@ -306,7 +282,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -328,13 +304,13 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.ToTable("voluntario", (string)null);
                 });
 
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios.VoluntarioMinisterio", b =>
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Voluntarios.VoluntarioMinisterio", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("DataCriacao")
+                    b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -351,12 +327,15 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnType("text")
                         .HasColumnName("status");
 
-                    b.Property<Guid>("VoluntarioId")
+                    b.Property<Guid?>("voluntario_id")
                         .HasColumnType("uuid")
                         .HasColumnName("voluntario_id");
 
                     b.HasKey("Id")
                         .HasName("pk_voluntario_ministerio");
+
+                    b.HasIndex("voluntario_id")
+                        .HasDatabaseName("ix_voluntario_ministerio_voluntario_id");
 
                     b.HasIndex("Id", "DataCriacao")
                         .HasDatabaseName("ix_voluntario_ministerio_id_created_at");
@@ -402,7 +381,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_agendamento_atividade_atividade_id");
 
-                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.VoluntariosMinisterios.VoluntarioMinisterio", null)
+                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Voluntarios.VoluntarioMinisterio", null)
                         .WithMany()
                         .HasForeignKey("VoluntarioMinisterioId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -513,41 +492,52 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                                 .HasConstraintName("fk_usuario_usuario_id");
                         });
 
-                    b.Navigation("Celular")
-                        .IsRequired();
+                    b.Navigation("Celular");
 
                     b.Navigation("Email")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.UsuarioAprovacao", b =>
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.UsuarioConvite", b =>
                 {
-                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario", "Aprovador")
+                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario", "EnviadoPara")
                         .WithMany()
-                        .HasForeignKey("usuario_aprovador_id")
-                        .HasConstraintName("fk_usuario_aprovacao_usuario_usuario_aprovador_id");
+                        .HasForeignKey("EnviadoParaId")
+                        .HasConstraintName("fk_usuario_convite_usuario_enviado_para_id");
 
-                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario", null)
-                        .WithMany("Solicitacoes")
-                        .HasForeignKey("usuario_solicitante_id")
-                        .HasConstraintName("fk_usuario_aprovacao_usuario_usuario_solicitante_id");
-
-                    b.Navigation("Aprovador");
-                });
-
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.UsuarioAprovacaoMinisterio", b =>
-                {
-                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio", null)
+                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario", "EnviadoPor")
                         .WithMany()
-                        .HasForeignKey("MinisterioId")
+                        .HasForeignKey("EnviadoPorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_usuario_aprovacao_ministerio_ministerio_ministerio_id");
+                        .HasConstraintName("fk_usuario_convite_usuario_enviado_por_id");
 
-                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Usuarios.UsuarioAprovacao", null)
-                        .WithMany("Ministerios")
-                        .HasForeignKey("usuario_aprovacao_id")
-                        .HasConstraintName("fk_usuario_aprovacao_ministerio_usuario_aprovacao_usuario_apro");
+                    b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("UsuarioConviteId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Address")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("email");
+
+                            b1.HasKey("UsuarioConviteId");
+
+                            b1.ToTable("usuario_convite");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UsuarioConviteId")
+                                .HasConstraintName("fk_usuario_convite_usuario_convite_id");
+                        });
+
+                    b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("EnviadoPara");
+
+                    b.Navigation("EnviadoPor");
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Voluntarios.Voluntario", b =>
@@ -657,6 +647,14 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.Navigation("Email");
                 });
 
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Voluntarios.VoluntarioMinisterio", b =>
+                {
+                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Voluntarios.Voluntario", null)
+                        .WithMany("Ministerios")
+                        .HasForeignKey("voluntario_id")
+                        .HasConstraintName("fk_voluntario_ministerio_voluntario_voluntario_id");
+                });
+
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Agendas.Agenda", b =>
                 {
                     b.Navigation("Agendamentos");
@@ -667,12 +665,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.Navigation("Atividades");
                 });
 
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario", b =>
-                {
-                    b.Navigation("Solicitacoes");
-                });
-
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.UsuarioAprovacao", b =>
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Voluntarios.Voluntario", b =>
                 {
                     b.Navigation("Ministerios");
                 });
