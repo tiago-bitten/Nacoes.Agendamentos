@@ -2,6 +2,7 @@
 
 namespace Nacoes.Agendamentos.API.Controllers.Usuarios;
 
-public class UsuariosController : NacoesAuthenticatedController
+public sealed class UsuariosController : NacoesAuthenticatedController
 {
+    
 }

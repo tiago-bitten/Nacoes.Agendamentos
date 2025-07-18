@@ -16,17 +16,21 @@ public sealed class LoginHandler(IUnitOfWork uow,
 {
     public async Task<Result<LoginResponse>> ExecutarAsync(LoginCommand command, CancellationToken cancellationToken)
     { 
-        await loginValidator.CheckAsync(command);
-
-        var strategy = authStrategyFactory.Criar(command.AuthType);
-        
-        var result = await strategy.AutenticarAsync(command);
-        if (result.IsFailure)
+        var commandResult = await loginValidator.CheckAsync(command);
+        if (commandResult.IsFailure)
         {
-            return result.Error;
+            return commandResult.Error;
         }
         
-        var usuario = result.Value;
+        var strategy = authStrategyFactory.Criar(command.AuthType);
+        
+        var usuarioResult = await strategy.AutenticarAsync(command);
+        if (usuarioResult.IsFailure)
+        {
+            return usuarioResult.Error;
+        }
+        
+        var usuario = usuarioResult.Value;
         
         var authToken = tokenGenerator.GenerateAuth(usuario);
         var refreshToken = tokenGenerator.GenerateRefresh();

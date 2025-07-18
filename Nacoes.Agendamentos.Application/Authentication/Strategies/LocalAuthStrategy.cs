@@ -16,7 +16,7 @@ public class LocalAuthStrategy(IUsuarioRepository usuarioRepository) : IAuthStra
             return LocalAuthStrategyErrors.UsuarioNaoEncontrado;
         }
             
-        if (usuario.AuthType != EAuthType.Local)
+        if (usuario.AuthType is not EAuthType.Local)
         {
             return LocalAuthStrategyErrors.AutenticacaTipoInvalido;
         }
