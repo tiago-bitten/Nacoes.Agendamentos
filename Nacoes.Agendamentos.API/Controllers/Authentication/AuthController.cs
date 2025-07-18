@@ -15,7 +15,7 @@ public class AuthController : NacoesController
     {
         var resposta = await handler.ExecutarAsync(command);
 
-        return Ok();
+        return Ok(resposta);
     }
     #endregion
 }

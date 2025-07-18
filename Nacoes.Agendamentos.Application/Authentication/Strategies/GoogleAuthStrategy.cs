@@ -23,7 +23,7 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
                 return GoogleAuthStrategyErrors.UsuarioNaoEncontrado;
             }
 
-            if (usuario.AuthType != EAuthType.Google)
+            if (usuario.AuthType is not EAuthType.Google)
             {
                 return GoogleAuthStrategyErrors.AuthTypeInvalido;
             }

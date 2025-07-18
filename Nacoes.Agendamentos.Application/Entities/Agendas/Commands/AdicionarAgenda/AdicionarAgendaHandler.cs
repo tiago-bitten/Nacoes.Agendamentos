@@ -16,8 +16,12 @@ public class AdicionarAgendaHandler(IUnitOfWork uow,
 {
     public async Task<Result<AgendaId>> ExecutarAsync(AdicionarAgendaCommand command, CancellationToken cancellation = default)
     {
-        await agendaValidator.CheckAsync(command);
-
+        var commandResult = await agendaValidator.CheckAsync(command);
+        if (commandResult.IsFailure)
+        {
+            return commandResult.Error;
+        }
+        
         var agendaResult = command.ToEntity();
         if (agendaResult.IsFailure)
         {

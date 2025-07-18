@@ -30,10 +30,10 @@ public class Result<T> : Result
 
     public T Value => IsSuccess
         ? _value
-        : throw new InvalidOperationException("Cannot access the value of a failed result.");
+        : throw new InvalidOperationException("Não é possível obter o valor de um Result falho.");
 
     public static Result<T> Success(T value) => new(true, value, Error.None);
     private new static Result<T> Failure(Error error) => new(false, default!, error);
 
-    public static implicit operator Result<T>(Error error) => Failure(error); // ✅ isso resolve
+    public static implicit operator Result<T>(Error error) => Failure(error);
 }

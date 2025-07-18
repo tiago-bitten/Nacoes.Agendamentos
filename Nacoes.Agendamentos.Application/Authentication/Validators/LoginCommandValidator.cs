@@ -8,9 +8,9 @@ public sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
     public LoginCommandValidator()
     {
-        RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        RuleFor(x => x.Email).NotEmpty().When(x => x.AuthType is EAuthType.Local).EmailAddress();
         RuleFor(x => x.AuthType).NotNull();
-        RuleFor(x => x.Senha).NotEmpty().When(x => x.AuthType == EAuthType.Local);
-        RuleFor(x => x.TokenExterno).NotEmpty().When(x => x.AuthType != EAuthType.Local);
+        RuleFor(x => x.Senha).NotEmpty().When(x => x.AuthType is EAuthType.Local);
+        RuleFor(x => x.TokenExterno).NotEmpty().When(x => x.AuthType is not EAuthType.Local);
     }
 }

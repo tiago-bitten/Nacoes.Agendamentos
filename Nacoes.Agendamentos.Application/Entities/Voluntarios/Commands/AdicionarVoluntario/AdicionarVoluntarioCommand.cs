@@ -1,10 +1,8 @@
-﻿using Nacoes.Agendamentos.Domain.ValueObjects;
-
-namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
+﻿namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 
 public record AdicionarVoluntarioCommand
 {
-    public string Nome { get; init; }
+    public required string Nome { get; init; }
     public string? Email { get; init; }
     public CelularItem? Celular { get; init; }
     public string? Cpf { get; init; }
@@ -12,7 +10,7 @@ public record AdicionarVoluntarioCommand
 
     public record CelularItem
     {
-        public string Ddd { get; init; }
-        public string Numero { get; init; }
+        public required string Ddd { get; init; }
+        public required string Numero { get; init; }
     }
 }
