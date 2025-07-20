@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
-using Nacoes.Agendamentos.Domain.ValueObjects;
 using Nacoes.Agendamentos.Infra.Extensions;
 using System.Security.Claims;
+using UsuarioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario>;
 
 namespace Nacoes.Agendamentos.Infra.Helpers;
 
 public static class ClaimHelper
 {
     #region Values
-    public static string IsAutenticado = "IsAutenticado";
-    public static string UsuarioId = "UsuarioId";
-    public static string UsuarioEmailAddress = "UsuarioEmailAddress";
-    public static string Environment = "Environment";
-    public static string IsBot = "IsBot";
+    public static readonly string IsAutenticado = "IsAutenticado";
+    public static readonly string UsuarioId = "UsuarioId";
+    public static readonly string UsuarioEmailAddress = "UsuarioEmailAddress";
+    public static readonly string Environment = "Environment";
+    public static readonly string IsBot = "IsBot";
     #endregion
 
     #region Invoke
@@ -22,7 +22,7 @@ public static class ClaimHelper
         return
         [
             new Claim(UsuarioId, usuario.Id.ToString()),
-            new Claim(UsuarioEmailAddress, usuario.Email.Address.ToString()),
+            new Claim(UsuarioEmailAddress, usuario.Email.Address),
             new Claim(IsBot, bool.FalseString)
         ];
     }
@@ -41,9 +41,9 @@ public static class ClaimHelper
     #endregion
 
     #region GetUserId
-    public static Id<Usuario> GetUsusarioId(IHttpContextAccessor context)
+    public static UsuarioId GetUsusarioId(IHttpContextAccessor context)
     {
-        return new Id<Usuario>(context.GetClaim(UsuarioId).Value);
+        return new UsuarioId(context.GetClaim(UsuarioId).Value);
     }
     #endregion
 

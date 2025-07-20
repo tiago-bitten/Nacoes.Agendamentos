@@ -6,10 +6,9 @@ namespace Nacoes.Agendamentos.Application.Extensions;
 
 public static class FluentValidationExtensions
 {
-    public static async Task<Result> CheckAsync<T>(this IValidator<T> validator, T instance)
+    public static async Task<Result> CheckAsync<T>(this IValidator<T> validator, T instance, CancellationToken cancellation = default)
     {
-        var resultado = await validator.ValidateAsync(instance);
-
+        var resultado = await validator.ValidateAsync(instance, cancellation);
         if (!resultado.IsValid)
         {
             return resultado.ToError();

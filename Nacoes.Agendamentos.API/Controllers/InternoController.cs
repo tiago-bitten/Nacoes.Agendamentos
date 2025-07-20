@@ -26,28 +26,14 @@ public class InternoController : NacoesController
                                  "O ambiente já está montado. Use e-mail nacoes@nacoes.com e senha 123456 para acessar."),
             });
         }
-        
-        var ministerioCommand = new AdicionarMinisterioCommand
-        {
-            Nome = "Estacionamento",
-            Descricao = "Cuida das dependencias do estacionamento",
-            Cor = new AdicionarMinisterioCommand.CorItem
-            {
-                Valor = "84JG76",
-                Tipo = ETipoCor.Hex
-            }
-        };
 
-        var ministerio = await ministerioHandler.ExecutarAsync(ministerioCommand);
+        var insertUsuario = """
+                            insert into "usuario" ("Id", "Nome", "Email", "Celular", "Senha", "AuthType")
+                            values (1, 'Nacoes', 'nacoes@nacoes.com', '123456789', '123456', 'Email');
+                            """;
 
+        await context.Database.ExecuteSqlRawAsync(insertUsuario);
 
-        var aprovarUsuarioSolicitacaoSql = "update usuario_aprovacao set status = 'Aprovado'";
-        var aprovarUsuarioSolicitacaoMinisterioSql = "update usuario_aprovacao_ministerio set aprovado = true";
-        
-        await context.Database.ExecuteSqlRawAsync(aprovarUsuarioSolicitacaoSql);
-        await context.Database.ExecuteSqlRawAsync(aprovarUsuarioSolicitacaoMinisterioSql);
-        await context.SaveChangesAsync();
-        
         await context.SaveChangesAsync();
         
         return Responder(new ApiResponse<object>());

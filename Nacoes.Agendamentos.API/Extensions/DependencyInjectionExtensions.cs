@@ -89,7 +89,6 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddAppHandlers(this IServiceCollection services)
     {
         services.AddScoped<IAdicionarMinisterioHandler, AdicionarMinisterioHandler>();
-        services.AddScoped<ILoginHandler, LoginHandler>();
         services.AddScoped<IAdicionarVoluntarioHandler, AdicionarVoluntarioHandler>();
         services.AddScoped<IAdicionarAtivdadeHandler, AdicionarAtividadeHandler>();
         services.AddScoped<IAdicionarAgendaHandler, AdicionarAgendaHandler>();

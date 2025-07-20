@@ -32,6 +32,7 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
     public EnviadoPorId EnviadoPorId { get; private set; } = null!;
     public EnviadoParaId? EnviadoParaId { get; private set; }
     public EConviteStatus Status { get; private set; }
+    public string Motivo { get; private set; } = null!;
     public DateTimeOffset DataExpiracao { get; private set; }
     public string Token { get; private set; } = null!;
 
@@ -54,10 +55,24 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
     }
     #endregion
     
+    #region Pendenciar
+    public Result Pendenciar()
+    {
+        if (Status is not EConviteStatus.Enviado)
+        {
+            return UsuarioConviteErrors.StatusInvalidoParaPendenciar;
+        }
+
+        Status = EConviteStatus.Pendente;
+        
+        return Result.Success();
+    }
+    #endregion
+    
     #region Aceitar
     public Result Aceitar(EnviadoParaId enviadoParaId)
     {
-        if (Status is not EConviteStatus.Enviado)
+        if (Status is not EConviteStatus.Pendente)
         {
             return UsuarioConviteErrors.StatusInvalidoParaAceitar;
         }
@@ -72,7 +87,7 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
     #region Recusar
     public Result Recusar()
     {
-        if (Status is not EConviteStatus.Enviado)
+        if (Status is not EConviteStatus.Pendente)
         {
             return UsuarioConviteErrors.StatusInvalidoParaRecusar;
         }
@@ -86,7 +101,7 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
     #region Expirar
     public Result Expirar()
     {
-        if (Status is not EConviteStatus.Enviado)
+        if (Status is not EConviteStatus.Pendente)
         {
             return UsuarioConviteErrors.StatusInvalidoParaRecusar;
         }
@@ -102,12 +117,45 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
         return Result.Success();
     }
     #endregion
+    
+    #region Cancelar
+    public Result Cancelar(string motivo)
+    {
+        if (Status is not EConviteStatus.Pendente)
+        {
+            return UsuarioConviteErrors.StatusInvalidoParaCancelar;
+        }
+        
+        if (string.IsNullOrWhiteSpace(motivo))
+        {
+            return UsuarioConviteErrors.MotivoObrigatorio;
+        }
+
+        Status = EConviteStatus.Cancelado;
+        Motivo = motivo;
+
+        return Result.Success();
+    }
+    #endregion
+    
+    #region Erro
+    public Result Erro(string? motivo)
+    {
+        Status = EConviteStatus.Erro;
+        Motivo = motivo ?? "Ocorreu um erro interno.";
+
+        return Result.Success();
+    }
+    #endregion
 }
 
 public enum EConviteStatus
 {
     Enviado = 0,
-    Aceito = 1,
-    Recusado = 2,
-    Expirado = 3
+    Pendente = 1,
+    Aceito = 2,
+    Recusado = 3,
+    Expirado = 4,
+    Cancelado = 5,
+    Erro = 6
 }
