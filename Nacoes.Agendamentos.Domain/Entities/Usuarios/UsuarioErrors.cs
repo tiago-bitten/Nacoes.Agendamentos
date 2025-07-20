@@ -12,4 +12,7 @@ public static class UsuarioErrors
     
     public static readonly Error SenhaNaoNecessaria = 
         new("Usuarios.SenhaNaoNecessaria", "Autenticação difeente de conta Nações não precisa informar senha.");
+    
+    public static readonly Error EmailEmUso = 
+        new("Usuarios.EmailEmUso", "O email informado já esta em uso.");
 }

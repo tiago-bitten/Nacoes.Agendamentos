@@ -1,22 +1,20 @@
 ﻿using FluentValidation;
-using Nacoes.Agendamentos.Application.Abstracts;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Application.Extensions;
-using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 
-public sealed class LoginHandler(IUnitOfWork uow,
-                                 IValidator<LoginCommand> loginValidator,
+public sealed class LoginHandler(IValidator<LoginCommand> loginValidator,
                                  IAuthStrategyFactory authStrategyFactory,
                                  ITokenGenerator tokenGenerator)
-    : BaseHandler(uow), ILoginHandler
+    : ICommandHandler<LoginCommand, LoginResponse>
 {
-    public async Task<Result<LoginResponse>> ExecutarAsync(LoginCommand command, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse>> Handle(LoginCommand command, CancellationToken cancellationToken)
     { 
-        var commandResult = await loginValidator.CheckAsync(command);
+        var commandResult = await loginValidator.CheckAsync(command, cancellationToken);
         if (commandResult.IsFailure)
         {
             return commandResult.Error;

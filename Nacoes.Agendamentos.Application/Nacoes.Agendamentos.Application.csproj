@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\Usuarios\Validators\" />
-  </ItemGroup>
-
 </Project>
