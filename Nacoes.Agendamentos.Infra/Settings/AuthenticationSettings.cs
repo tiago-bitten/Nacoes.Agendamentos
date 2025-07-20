@@ -1,6 +1,6 @@
 ﻿namespace Nacoes.Agendamentos.Infra.Settings;
-public class AuthenticationSettings
+public sealed class AuthenticationSettings
 {
-    public JwtSettings Jwt { get; set; }
-    public GoogleSettings Google { get; set; }
+    public required JwtSettings Jwt { get; set; }
+    public required GoogleSettings Google { get; set; }
 }

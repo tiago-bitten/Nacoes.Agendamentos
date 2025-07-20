@@ -15,9 +15,9 @@ public sealed class AceitarUsuarioConviteHandler(IUnitOfWork uow,
                                                  IUsuarioConviteRepository usuarioConviteRepository,
                                                  ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler,
                                                  ICommandHandler<LoginCommand, LoginResponse> loginHandler)
-    : ICommandHandler<AceitarUsuarioConviteCommand>
+    : ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse>
 {
-    public async Task<Result> Handle(AceitarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<AceitarUsuarioConviteResponse>> Handle(AceitarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
         var commandResult = await commandValidator.CheckAsync(command, cancellationToken);
         if (commandResult.IsFailure)
@@ -56,6 +56,12 @@ public sealed class AceitarUsuarioConviteHandler(IUnitOfWork uow,
             return loginResult.Error;
         }
         
-        return Result.Success();
+        var response = new AceitarUsuarioConviteResponse
+        {
+            AuthToken = loginResult.Value.AuthToken,
+            RefreshToken = loginResult.Value.RefreshToken
+        };
+        
+        return Result<AceitarUsuarioConviteResponse>.Success(response);
     }
 }

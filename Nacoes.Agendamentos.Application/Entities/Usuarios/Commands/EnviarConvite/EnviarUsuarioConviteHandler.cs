@@ -14,9 +14,9 @@ public sealed class EnviarUsuarioConviteHandler(IUnitOfWork uow,
                                                 IValidator<EnviarUsuarioConviteCommand> commandValidator,
                                                 IUsuarioConviteRepository usuarioConviteRepository,
                                                 IAmbienteContext ambienteContext)               
-    : ICommandHandler<EnviarUsuarioConviteCommand, EnviarUsuarioConviteResponse>
+    : ICommandHandler<EnviarUsuarioConviteCommand, string>
 {
-    public async Task<Result<EnviarUsuarioConviteResponse>> Handle(EnviarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<string>> Handle(EnviarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
         var commandResult = await commandValidator.CheckAsync(command, cancellationToken);
         if (commandResult.IsFailure)
@@ -62,11 +62,7 @@ public sealed class EnviarUsuarioConviteHandler(IUnitOfWork uow,
         await uow.CommitAsync(cancellationToken);
         // TODO: Histórico service: Convite pendente
         
-        var response = new EnviarUsuarioConviteResponse
-        {
-            LinkConvite = usuarioConvite.Token
-        };
         
-        return Result<EnviarUsuarioConviteResponse>.Success(response);
+        return Result<string>.Success(usuarioConvite.Token);
     }
 }

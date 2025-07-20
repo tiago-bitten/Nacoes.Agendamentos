@@ -1,7 +1,9 @@
-﻿using Nacoes.Agendamentos.Domain.ValueObjects;
+﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Domain.Entities.Ministerios;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
-public record AdicionarMinisterioCommand
+public record AdicionarMinisterioCommand : ICommand<Id<Ministerio>>
 {
     public string Nome { get; set; }
     public string? Descricao { get; set; }

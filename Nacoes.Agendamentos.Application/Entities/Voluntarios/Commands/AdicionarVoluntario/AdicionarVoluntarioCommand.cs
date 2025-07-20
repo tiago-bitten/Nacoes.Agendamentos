@@ -1,6 +1,10 @@
-﻿namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
+﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 
-public record AdicionarVoluntarioCommand
+namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
+
+public record AdicionarVoluntarioCommand : ICommand<Id<Voluntario>>
 {
     public required string Nome { get; init; }
     public string? Email { get; init; }

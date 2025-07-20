@@ -1,6 +1,10 @@
-﻿namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
+﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Domain.Entities.Agendas;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 
-public record AdicionarAgendaCommand
+namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
+
+public record AdicionarAgendaCommand : ICommand<Id<Agenda>>
 {
     public string Descricao { get; set; } = string.Empty;
     public HorarioItem Horario { get; set; } = new();

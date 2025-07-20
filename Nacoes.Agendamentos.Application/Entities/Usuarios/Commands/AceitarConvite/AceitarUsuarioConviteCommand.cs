@@ -5,9 +5,10 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 
-public record AceitarUsuarioConviteCommand : ICommand
+public record AceitarUsuarioConviteCommand : ICommand<AceitarUsuarioConviteResponse>
 {
     public Guid UsuarioConviteId { get; init; }
+    public string? TokenExterno { get; init; }
     public string? Senha { get; init; }
     public EAuthType AuthType { get; init; }
     public CelularItem? Celular { get; init; }
@@ -43,6 +44,7 @@ public static class AceitarUsuarioConviteCommandExtensions
         {
             Email = email,
             Senha = command.Senha,
-            AuthType = command.AuthType
+            AuthType = command.AuthType,
+            TokenExterno = command.TokenExterno
         };
 }

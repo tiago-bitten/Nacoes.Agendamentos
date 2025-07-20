@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Nacoes.Agendamentos.Application.Abstracts;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Mappings;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -12,9 +13,9 @@ namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adiciona
 public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
                                                IValidator<AdicionarVoluntarioCommand> voluntarioValidator,
                                                IVoluntarioRepository voluntarioRepository)
-    : BaseHandler(uow), IAdicionarVoluntarioHandler
+    : ICommandHandler<AdicionarVoluntarioCommand, VoluntarioId>
 {
-    public async Task<Result<VoluntarioId>> ExecutarAsync(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
+    public async Task<Result<VoluntarioId>> Handle(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
     {
         await voluntarioValidator.CheckAsync(command);
 
@@ -32,9 +33,9 @@ public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
             return VoluntarioErrors.VoluntarioComEmailExistente;
         }*/
 
-        await Uow.BeginAsync();
+        await uow.BeginAsync();
         await voluntarioRepository.AddAsync(voluntario);
-        await Uow.CommitAsync(cancellation);
+        await uow.CommitAsync(cancellation);
 
         return Result<VoluntarioId>.Success(voluntario.Id);
     }

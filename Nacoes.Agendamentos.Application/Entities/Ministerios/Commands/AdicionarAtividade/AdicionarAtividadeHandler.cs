@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Nacoes.Agendamentos.Application.Abstracts;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
@@ -11,13 +12,13 @@ namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adiciona
 public sealed class AdicionarAtividadeHandler(IUnitOfWork uow,
                                               IValidator<AdicionarAtividadeCommand> atividadeValidator,
                                               IMinisterioRepository ministerioRepository)
-    : BaseHandler(uow), IAdicionarAtivdadeHandler
+    : ICommandHandler<AdicionarAtividadeCommand, AtividadeId>
 {
-    public async Task<Result<AtividadeId>> ExecutarAsync(AdicionarAtividadeCommand command, Guid ministerioId, CancellationToken cancellation = default)
+    public async Task<Result<AtividadeId>> Handle(AdicionarAtividadeCommand command, CancellationToken cancellation = default)
     {
-        await atividadeValidator.CheckAsync(command);
+        await atividadeValidator.CheckAsync(command, cancellation);
 
-        var ministerio = await ministerioRepository.GetByIdAsync(ministerioId);
+        var ministerio = await ministerioRepository.GetByIdAsync(command.MinisterioId);
 
         /*var nomeExistente = await GetSpecification(new AtividadeComNomeExistenteSpecification(command.Nome, ministerioId),
                                                    ministerioRepository);
@@ -26,9 +27,9 @@ public sealed class AdicionarAtividadeHandler(IUnitOfWork uow,
             return AtividadeErrors.AtividadeComNomeExistente;
         }*/
 
-        await Uow.BeginAsync();
+        await uow.BeginAsync();
         ministerio.AdicionarAtividade(command.Nome, command.Descricao);
-        await Uow.CommitAsync(cancellation);
+        await uow.CommitAsync(cancellation);
 
         var atividade = ministerio.Atividades.Last();
         return Result<AtividadeId>.Success(atividade.Id);

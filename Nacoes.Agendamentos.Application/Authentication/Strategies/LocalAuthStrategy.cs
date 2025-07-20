@@ -21,7 +21,7 @@ public class LocalAuthStrategy(IUsuarioRepository usuarioRepository) : IAuthStra
             return LocalAuthStrategyErrors.AutenticacaTipoInvalido;
         }
 
-        var senhaValida = PasswordVerifier.Execute(command.Senha!, usuario.Senha!);
+        var senhaValida = PasswordHelper.Verify(command.Senha!, usuario.Senha!);
         if (!senhaValida)
         {
             return LocalAuthStrategyErrors.SenhaInvalida;

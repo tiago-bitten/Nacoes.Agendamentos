@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Nacoes.Agendamentos.Application.Abstracts;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
@@ -11,14 +12,18 @@ using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.VincularVoluntarioMinisterio;
 public sealed class VincularVoluntarioMinisterioHandler(IUnitOfWork uow,
-                                                        IValidator<VincularVoluntarioMinisterioCommand> vincularVoluntarioMinisterioValidator,
+                                                        IValidator<VincularVoluntarioMinisterioCommand> commandValidator,
                                                         IVoluntarioRepository voluntarioRepository,
                                                         IMinisterioRepository ministerioRepository)
-    : BaseHandler(uow), IVincularVoluntarioMinisterioHandler
+    : ICommandHandler<VincularVoluntarioMinisterioCommand>
 {
-    public async Task<Result> ExecutarAsync(VincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default)
+    public async Task<Result> Handle(VincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default)
     {
-        await vincularVoluntarioMinisterioValidator.CheckAsync(command);
+        var commandResult = await commandValidator.CheckAsync(command, cancellation);
+        if (commandResult.IsFailure)
+        {
+            return commandResult.Error;
+        }
 
         var voluntario = await voluntarioRepository.GetByIdAsync(command.VoluntarioId, includes: "Ministerios");
         if (voluntario is null)
@@ -34,15 +39,14 @@ public sealed class VincularVoluntarioMinisterioHandler(IUnitOfWork uow,
             return MinisterioErrors.NaoEncontrado;
         }
         
-        await Uow.BeginAsync();
+        await uow.BeginAsync();
         var result = voluntario.VincularMinisterio(ministerioId);
         
         if (result.IsFailure)
         {
-            await Uow.RollbackAsync();
             return result.Error;
         }
-        await Uow.CommitAsync(cancellation);
+        await uow.CommitAsync(cancellation);
       
         return Result.Success();
     }
