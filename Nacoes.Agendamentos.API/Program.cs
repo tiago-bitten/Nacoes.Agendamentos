@@ -1,11 +1,12 @@
+using Hangfire;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Json;
 using Nacoes.Agendamentos.API.Middlewares;
+using Nacoes.Agendamentos.Application.Common.Settings;
 using Nacoes.Agendamentos.Infra.Contexts;
-using Nacoes.Agendamentos.Infra.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,13 +25,14 @@ builder.Services.AddHealthChecks();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAppConfiguration(builder.Configuration);
-builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddDatabase();
 builder.Services.AddRepositories();
 builder.Services.AddAppHandlers();
-builder.Services.AddAppQueries();
 builder.Services.AddValidators();
 builder.Services.AddFactories();
 builder.Services.AddServices();
+builder.Services.AddHangfire();
+builder.Services.AddHangfireServer();
 
 builder.Services.Configure<RouteOptions>(x => x.LowercaseUrls = true);
 
@@ -107,6 +109,8 @@ if (app.Environment.IsDevelopment())
         await context.SaveChangesAsync();
     }
 }
+
+app.UseHangfireDashboard();
 
 app.UseCors();
 

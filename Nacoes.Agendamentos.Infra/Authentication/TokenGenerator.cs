@@ -4,11 +4,12 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
+using Nacoes.Agendamentos.Application.Common.Settings;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Infra.Helpers;
-using Nacoes.Agendamentos.Infra.Settings;
 
-namespace Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
+namespace Nacoes.Agendamentos.Infra.Authentication;
 
 public sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings) : ITokenGenerator
 {

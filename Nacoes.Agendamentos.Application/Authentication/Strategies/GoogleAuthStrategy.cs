@@ -1,10 +1,10 @@
 ﻿using Google.Apis.Auth;
 using Microsoft.Extensions.Options;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
+using Nacoes.Agendamentos.Application.Common.Settings;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
-using Nacoes.Agendamentos.Infra.Settings;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Strategies;
 

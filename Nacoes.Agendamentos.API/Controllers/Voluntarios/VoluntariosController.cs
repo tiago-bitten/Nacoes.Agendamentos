@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nacoes.Agendamentos.API.Controllers.Abstracts;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.VincularVoluntarioMinisterio;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
+using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.API.Controllers.Voluntarios;
 
@@ -9,10 +12,10 @@ public sealed class VoluntariosController : NacoesController
 {
     #region Adicionar
     [HttpPost]
-    public async Task<IActionResult> Adicionar([FromServices] IAdicionarVoluntarioHandler handler,
+    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarVoluntarioCommand, Id<Voluntario>> handler,
                                                [FromBody] AdicionarVoluntarioCommand command)
     {
-        var resultado = await handler.ExecutarAsync(command);
+        var resultado = await handler.Handle(command);
 
         return Ok();
     }
@@ -20,7 +23,7 @@ public sealed class VoluntariosController : NacoesController
 
     #region VincularMinisterio
     [HttpPost("{voluntarioId:guid}/ministerio/{ministerio:guid}")]
-    public async Task<IActionResult> VincularMinisterio([FromServices] IVincularVoluntarioMinisterioHandler handler,
+    public async Task<IActionResult> VincularMinisterio([FromServices] ICommandHandler<VincularVoluntarioMinisterioCommand> handler,
                                                         [FromRoute] Guid voluntarioId,
                                                         [FromRoute] Guid ministerioId)
     {
@@ -30,7 +33,7 @@ public sealed class VoluntariosController : NacoesController
             MinisterioId = ministerioId
         };
 
-        var resultado = await handler.ExecutarAsync(command);
+        var resultado = await handler.Handle(command);
 
         return Ok();
     }
