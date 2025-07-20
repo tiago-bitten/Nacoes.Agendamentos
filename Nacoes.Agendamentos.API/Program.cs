@@ -22,6 +22,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHealthChecks();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAppConfiguration(builder.Configuration);
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
@@ -38,14 +39,14 @@ builder.Services.AddJwt(authSettings!.Jwt.Issuer, authSettings.Jwt.Audience, aut
 
 builder.Services.AddCors(x => x.AddDefaultPolicy(option =>
     option.AllowAnyMethod()
-        .AllowAnyHeader()
-        .SetIsOriginAllowed(_ => true)
-        .AllowCredentials()
+          .AllowAnyHeader()
+          .SetIsOriginAllowed(_ => true)
+          .AllowCredentials()
 ));
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Loote API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nacoes.Agendamentos API", Version = "v1" });
     c.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -90,24 +91,20 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nacoes.Agendamentos API v1");
         c.RoutePrefix = string.Empty;
     });
-    var devSettings = app.Configuration.GetSection("Dev").Get<DevSettings>() ?? new DevSettings();
-
-    if (devSettings.RecriarBanco)
+    var devSettings = app.Configuration.GetSection("Dev").Get<DevSettings>();
+    if (devSettings!.RecriarBanco)
     {
         using var scope = app.Services.CreateScope();
-
         var context = scope.ServiceProvider.GetRequiredService<NacoesDbContext>();
-
         var entityTypes = context.Model.GetEntityTypes();
 
         foreach (var type in entityTypes)
         {
             var tableName = type.GetTableName();
             var sql = $"TRUNCATE TABLE {tableName} CASCADE;";
-            context.Database.ExecuteSqlRaw(sql);
+            await context.Database.ExecuteSqlRawAsync(sql);
         }
-
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }
 

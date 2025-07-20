@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Nacoes.Agendamentos.Application.Abstracts;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Mappings;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -12,11 +13,11 @@ namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAge
 public class AdicionarAgendaHandler(IUnitOfWork uow,
                                     IValidator<AdicionarAgendaCommand> agendaValidator,
                                     IAgendaRepository agendaRepository)
-    : BaseHandler(uow), IAdicionarAgendaHandler
+    : ICommandHandler<AdicionarAgendaCommand, AgendaId>
 {
-    public async Task<Result<AgendaId>> ExecutarAsync(AdicionarAgendaCommand command, CancellationToken cancellation = default)
+    public async Task<Result<AgendaId>> Handle(AdicionarAgendaCommand command, CancellationToken cancellation = default)
     {
-        var commandResult = await agendaValidator.CheckAsync(command);
+        var commandResult = await agendaValidator.CheckAsync(command, cancellation);
         if (commandResult.IsFailure)
         {
             return commandResult.Error;
@@ -30,9 +31,9 @@ public class AdicionarAgendaHandler(IUnitOfWork uow,
         
         var agenda = agendaResult.Value;
 
-        await Uow.BeginAsync();
+        await uow.BeginAsync();
         await agendaRepository.AddAsync(agenda);
-        await Uow.CommitAsync(cancellation);
+        await uow.CommitAsync(cancellation);
 
         return Result<AgendaId>.Success(agenda.Id);
     }

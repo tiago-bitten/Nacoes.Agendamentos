@@ -7,14 +7,14 @@ using Nacoes.Agendamentos.Domain.Common;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 
-public sealed class LoginHandler(IValidator<LoginCommand> loginValidator,
+public sealed class LoginHandler(IValidator<LoginCommand> commandValidator,
                                  IAuthStrategyFactory authStrategyFactory,
                                  ITokenGenerator tokenGenerator)
     : ICommandHandler<LoginCommand, LoginResponse>
 {
     public async Task<Result<LoginResponse>> Handle(LoginCommand command, CancellationToken cancellationToken)
     { 
-        var commandResult = await loginValidator.CheckAsync(command, cancellationToken);
+        var commandResult = await commandValidator.CheckAsync(command, cancellationToken);
         if (commandResult.IsFailure)
         {
             return commandResult.Error;

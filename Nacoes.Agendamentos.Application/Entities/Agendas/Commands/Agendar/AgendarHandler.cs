@@ -1,5 +1,6 @@
 using FluentValidation;
 using Nacoes.Agendamentos.Application.Abstracts;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -16,11 +17,11 @@ public sealed class AgendarHandler(IUnitOfWork uow,
                                    IAgendaRepository agendaRepository,
                                    IVoluntarioMinisterioRepository voluntarioMinisterioRepository,
                                    IAtividadeRepository atividadeRepository)
-    : BaseHandler(uow), IAgendarHandler
+    : ICommandHandler<AgendarCommand, AgendamentoId>
 {
-    public async Task<Result<AgendamentoId>> ExecutarAsync(AgendarCommand command, CancellationToken cancellation = default)
+    public async Task<Result<AgendamentoId>> Handle(AgendarCommand command, CancellationToken cancellation = default)
     {
-        await agendarValidator.CheckAsync(command);
+        await agendarValidator.CheckAsync(command, cancellation);
         throw new NotImplementedException();
     }
 }

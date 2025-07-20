@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Nacoes.Agendamentos.Application.Abstracts;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Mappings;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -12,11 +13,11 @@ namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adiciona
 public sealed class AdicionarMinisterioHandler(IUnitOfWork uow,
                                                IValidator<AdicionarMinisterioCommand> ministerioValidator,
                                                IMinisterioRepository ministerioRepository)
-    : BaseHandler(uow), IAdicionarMinisterioHandler
+    : ICommandHandler<AdicionarMinisterioCommand, MinisterioId>
 {
-    public async Task<Result<MinisterioId>> ExecutarAsync(AdicionarMinisterioCommand command)
+    public async Task<Result<MinisterioId>> Handle(AdicionarMinisterioCommand command, CancellationToken cancellationToken = default)
     {
-        await ministerioValidator.CheckAsync(command);
+        await ministerioValidator.CheckAsync(command, cancellationToken);
 
         var ministerio = command.GetEntidade();
 
@@ -27,9 +28,9 @@ public sealed class AdicionarMinisterioHandler(IUnitOfWork uow,
             return MinisterioErrors.MinisterioComNomeExistente;
         }*/
 
-        await Uow.BeginAsync();
+        await uow.BeginAsync();
         await ministerioRepository.AddAsync(ministerio);
-        await Uow.CommitAsync();
+        await uow.CommitAsync();
 
         return Result<MinisterioId>.Success(ministerio.Id);
     }

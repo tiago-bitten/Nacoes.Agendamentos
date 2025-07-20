@@ -1,6 +1,10 @@
-﻿namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
+﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Domain.Entities.Agendas;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 
-public record AgendarCommand
+namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
+
+public record AgendarCommand : ICommand<Id<Agendamento>>
 {
     public Guid AgendaId { get; init; }
     public Guid VoluntarioMinisterioId { get; init; }

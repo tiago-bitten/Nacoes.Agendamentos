@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.agendamentos.application.entities.agendas.commands.agendar;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
+using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
 using Nacoes.Agendamentos.Application.Authentication.Strategies;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
@@ -14,6 +16,7 @@ using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
+using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.VincularVoluntarioMinisterio;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -85,20 +88,6 @@ public static class DependencyInjectionExtensions
     }
     #endregion
 
-    #region AddAppHandlers
-    public static IServiceCollection AddAppHandlers(this IServiceCollection services)
-    {
-        services.AddScoped<IAdicionarMinisterioHandler, AdicionarMinisterioHandler>();
-        services.AddScoped<IAdicionarVoluntarioHandler, AdicionarVoluntarioHandler>();
-        services.AddScoped<IAdicionarAtivdadeHandler, AdicionarAtividadeHandler>();
-        services.AddScoped<IAdicionarAgendaHandler, AdicionarAgendaHandler>();
-        services.AddScoped<IVincularVoluntarioMinisterioHandler, VincularVoluntarioMinisterioHandler>();
-        services.AddScoped<IAgendarHandler, AgendarHandler>();
-
-        return services;
-    }
-    #endregion
-
     #region AddAppQueries
     public static IServiceCollection AddAppQueries(this IServiceCollection services)
     {
@@ -132,6 +121,8 @@ public static class DependencyInjectionExtensions
         services.AddScoped<GoogleAuthStrategy>();
         services.AddScoped<LocalAuthStrategy>();
 
+        services.AddScoped<IAmbienteContext, AmbienteContext>();
+
         return services;
     }
     #endregion
@@ -157,4 +148,20 @@ public static class DependencyInjectionExtensions
         return services;
     }
     #endregion
+    
+    public static IServiceCollection AddAppHandlers(this IServiceCollection services)
+    {
+        services.Scan(scan => scan.FromAssembliesOf(typeof(AdicionarUsuarioCommand))
+            .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), publicOnly: false)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime()
+            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), publicOnly: false)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime()
+            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), publicOnly: false)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
+        return services;
+    }
 }
