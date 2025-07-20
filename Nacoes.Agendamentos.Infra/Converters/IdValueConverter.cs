@@ -2,11 +2,5 @@
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Infra.Converters;
-public class IdValueConverter<T> : ValueConverter<Id<T>, Guid>
-{
-    public IdValueConverter() : base(
-        id => id.Value,          
-        guid => new Id<T>(guid.ToString())) 
-    {
-    }
-}
+public sealed class IdValueConverter<T>() 
+    : ValueConverter<Id<T>, Guid>(id => id.Value, guid => new Id<T>(guid.ToString()));

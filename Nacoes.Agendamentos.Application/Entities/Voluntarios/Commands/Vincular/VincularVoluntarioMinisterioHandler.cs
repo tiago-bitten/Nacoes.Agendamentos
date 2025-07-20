@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Nacoes.Agendamentos.Application.Abstracts;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -10,7 +9,7 @@ using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 
-namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.VincularVoluntarioMinisterio;
+namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
 public sealed class VincularVoluntarioMinisterioHandler(IUnitOfWork uow,
                                                         IValidator<VincularVoluntarioMinisterioCommand> commandValidator,
                                                         IVoluntarioRepository voluntarioRepository,

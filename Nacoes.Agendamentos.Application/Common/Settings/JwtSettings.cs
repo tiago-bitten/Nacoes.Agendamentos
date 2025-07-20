@@ -1,4 +1,4 @@
-﻿namespace Nacoes.Agendamentos.Infra.Settings;
+﻿namespace Nacoes.Agendamentos.Application.Common.Settings;
 
 public class JwtSettings
 {

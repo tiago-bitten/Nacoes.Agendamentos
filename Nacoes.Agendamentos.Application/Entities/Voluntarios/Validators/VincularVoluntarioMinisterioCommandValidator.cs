@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.VincularVoluntarioMinisterio;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Validators;
 
