@@ -46,11 +46,11 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
 public static class GoogleAuthStrategyErrors
 {
     public static readonly Error AuthTypeInvalido = 
-        new("Login.Google.AuthTypeInvalido", "Autenticação inválida.");
+        new("Login.Google.AuthTypeInvalido", ErrorType.Unauthorized, "Autenticação inválida.");
     
     public static readonly Error SenhaInvalida = 
-        new("Login.Google.SenhaInvalida", "Senha inválida.");
+        new("Login.Google.SenhaInvalida", ErrorType.Unauthorized, "Senha inválida.");
     
     public static readonly Error UsuarioNaoEncontrado = 
-        new("Login.Google.UsuarioNaoEncontrado", "Usuário não encontrado.");
+        new("Login.Google.UsuarioNaoEncontrado", ErrorType.NotFound, "Usuário não encontrado.");
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nacoes.Agendamentos.API.Controllers.Abstracts;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
@@ -17,7 +18,7 @@ public sealed class VoluntariosController : NacoesController
     {
         var result = await handler.Handle(command);
 
-        return Ok();
+        return result.AsHttpResult(mensagem: "Voluntario adicionado com sucesso.");
     }
     #endregion
 

@@ -6,31 +6,27 @@ namespace Nacoes.Agendamentos.API.Extensions;
 
 public static class ApiResponseExtensions
 {
-    public static ObjectResult It<T>(this Result<T> result, string message) where T : class
+    public static ObjectResult AsHttpResult<T>(this Result<T> result, string mensagem)
     {
-        ApiResponse<T> response;
-        if (result.IsFailure)
-        {
-            response = new ApiResponse<T>
-            {
-                Sucesso = false,
-                Erro = result.Error
-            };
-            
-            return new ObjectResult(response)
-            {
-                StatusCode = 400,
-            };
-        }
+        var response = result.IsFailure
+            ? ApiResponse.Erro(result.Error)
+            : ApiResponse.Ok(result.Value!, mensagem);
 
-        response = new ApiResponse<T>
+        return new ObjectResult(response)
         {
-            Sucesso = true,
-            Mensagem = message,
-            Dados = result.Value,
-            Erro = null
+            StatusCode = result.GetStatusCode()
         };
-        
-        return new ObjectResult(response);
+    }
+
+    public static ObjectResult AsHttpResult(this Result result, string mensagem)
+    {
+        var response = result.IsFailure
+            ? ApiResponse.Erro(result.Error)
+            : ApiResponse.Ok(mensagem);
+
+        return new ObjectResult(response)
+        {
+            StatusCode = result.GetStatusCode()
+        };
     }
 }

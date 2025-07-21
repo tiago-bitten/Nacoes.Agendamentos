@@ -34,11 +34,11 @@ public class LocalAuthStrategy(IUsuarioRepository usuarioRepository) : IAuthStra
 public static class LocalAuthStrategyErrors
 {
     public static readonly Error SenhaInvalida = 
-        new("Login.Local.SenhaInvalida", "A senha informada é inválida.");
+        new("Login.Local.SenhaInvalida", ErrorType.Unauthorized, "A senha informada é inválida.");
     
     public static readonly Error AutenticacaTipoInvalido = 
-        new("Login.Local.AutenticacaTipoInvalido", "O tipo de autenticação informado é inválido.");
+        new("Login.Local.AutenticacaTipoInvalido", ErrorType.Unauthorized, "O tipo de autenticação informado é inválido.");
     
     public static readonly Error UsuarioNaoEncontrado = 
-        new("Login.Local.UsuarioNaoEncontrado", "O usuário informado não foi encontrado.");
+        new("Login.Local.UsuarioNaoEncontrado", ErrorType.NotFound, "O usuário informado não foi encontrado.");
 }
