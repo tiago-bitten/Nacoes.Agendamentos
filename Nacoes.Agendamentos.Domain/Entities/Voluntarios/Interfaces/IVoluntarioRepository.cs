@@ -6,4 +6,5 @@ namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 public interface IVoluntarioRepository : IBaseRepository<Voluntario>
 {
     IQueryable<Voluntario> RecuperarPorVoluntarioMinisterio(VoluntarioMinisterioId voluntarioMinisterioId);
+    Task<Voluntario?> RecuperarPorEmailAddressAsync(string emailAddress);
 }

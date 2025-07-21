@@ -20,7 +20,7 @@ public class InternoController : NacoesController
                                 await context.Ministerios.AsNoTracking().AnyAsync();
         if (existeAlgumaCoisa)
         {
-            return Responder(new ApiResponse<object>
+            return Ok(new ApiResponse<object>
             {
                 Sucesso = false,
                 Erro = new Error("Interno.MontarAmbiente",

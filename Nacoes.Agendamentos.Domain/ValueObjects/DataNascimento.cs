@@ -40,6 +40,6 @@ public sealed record class DataNascimento : IEquatable<DataNascimento>
 
     public override string ToString() => Valor.ToString("dd/MM/yyyy");
 
-    public bool Equals(DataNascimento other) => Valor == other.Valor;
+    public bool Equals(DataNascimento? other) => other != null && Valor == other.Valor;
     public override int GetHashCode() => Valor.GetHashCode();
 }

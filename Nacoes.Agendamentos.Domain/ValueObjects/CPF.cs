@@ -57,6 +57,8 @@ public sealed record class CPF : IEquatable<CPF>
 
     public override string ToString() => Convert.ToUInt64(Numero).ToString(@"000\.000\.000\-00");
 
-    public bool Equals(CPF other) => Numero == other.Numero;
+    public bool Equals(CPF? other) => Numero == other?.Numero;
     public override int GetHashCode() => Numero.GetHashCode();
+    
+    public static implicit operator string(CPF cpf) => cpf.ToString();
 }
