@@ -9,7 +9,8 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 namespace Nacoes.Agendamentos.Application.Authentication.Strategies;
 
 public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
-                                       IOptions<AuthenticationSettings> authSettings) : IAuthStrategy
+                                       IOptions<AuthenticationSettings> authSettings) 
+    : IAuthStrategy
 {
     public async Task<Result<Usuario>> AutenticarAsync(LoginCommand command)
     {
@@ -30,7 +31,12 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
 
             return Result<Usuario>.Success(usuario);
         }
-        catch
+        catch (InvalidJwtException ex)
+        {
+            return GoogleAuthStrategyErrors.JwtInvalido(ex.Message);
+        }
+        
+        catch (Exception)
         {
             return GoogleAuthStrategyErrors.SenhaInvalida;
         }
@@ -50,6 +56,9 @@ public static class GoogleAuthStrategyErrors
     
     public static readonly Error SenhaInvalida = 
         new("Login.Google.SenhaInvalida", ErrorType.Unauthorized, "Senha inválida.");
+    
+    public static Error JwtInvalido(string googleMessage)
+        => new("Login.Google.JwtInvalido", ErrorType.Unauthorized, $"Erro: {googleMessage}");
     
     public static readonly Error UsuarioNaoEncontrado = 
         new("Login.Google.UsuarioNaoEncontrado", ErrorType.NotFound, "Usuário não encontrado.");

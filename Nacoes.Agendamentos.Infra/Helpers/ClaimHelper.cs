@@ -29,11 +29,16 @@ public static class ClaimHelper
 
     public static Claim[] InvokeBot()
     {
-        throw new NotImplementedException();
+        return
+        [
+            new Claim(UsuarioId, "1"),
+            new Claim(UsuarioEmailAddress, "bot@nacoes.com"),
+            new Claim(IsBot, bool.TrueString)
+        ];
     }
     #endregion
 
-    #region IsAuthenticated
+    #region GetIsAuthenticated
     public static bool GetIsAuthenticated(IHttpContextAccessor context)
     {
         return context.GetIdentity().IsAuthenticated;
@@ -47,7 +52,7 @@ public static class ClaimHelper
     }
     #endregion
 
-    #region GetUserEmail
+    #region GetUsusarioEmailAddress
     public static string GetUsusarioEmailAddress(IHttpContextAccessor context)
     {
         return context.GetClaim(UsuarioEmailAddress).Value;

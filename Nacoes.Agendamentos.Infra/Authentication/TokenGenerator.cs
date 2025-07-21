@@ -15,7 +15,7 @@ public sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings
 {
     private readonly JwtSettings _jwtSettings = authSettings.Value.Jwt;
 
-    private DateTime DurationAuth => DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes);
+    private DateTimeOffset DurationAuth => DateTimeOffset.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes);
     private byte[] Secret => Encoding.UTF8.GetBytes(_jwtSettings.Secret);
 
     #region GenerateAuth
@@ -27,7 +27,7 @@ public sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DurationAuth,
+            Expires = DurationAuth.DateTime,
             Issuer = _jwtSettings.Issuer,
             Audience = _jwtSettings.Audience,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Secret), SecurityAlgorithms.HmacSha256Signature)
