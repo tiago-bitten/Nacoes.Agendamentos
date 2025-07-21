@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Nacoes.Agendamentos.API.Controllers.Abstracts;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Common.Responses;
@@ -14,9 +15,9 @@ public class AuthController : NacoesController
     public async Task<IActionResult> Login([FromServices] ICommandHandler<LoginCommand, LoginResponse> handler,
                                            [FromBody] LoginCommand command)
     {
-        var resposta = await handler.Handle(command);
+        var result = await handler.Handle(command);
 
-        return Ok(resposta);
+        return result.AsHttpResult(mensagem: "Login realizado com sucesso.");
     }
     #endregion
 }

@@ -21,7 +21,7 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next)
             {
                 Sucesso = false,
                 Mensagem = "Ocorreu um erro interno no servidor",
-                Erro = new Error("Interno", ex.Message)
+                Erro = new Error("Interno", ErrorType.Internal, ex.Message)
             };
 
             await context.Response.WriteAsJsonAsync(baseResponse, PascalCaseOptions);

@@ -24,6 +24,7 @@ public class InternoController : NacoesController
             {
                 Sucesso = false,
                 Erro = new Error("Interno.MontarAmbiente",
+                                 ErrorType.Validation, 
                                  "O ambiente já está montado. Use e-mail nacoes@nacoes.com e senha 123456 para acessar."),
             });
         }

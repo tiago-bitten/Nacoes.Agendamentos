@@ -21,6 +21,6 @@ public static class FluentValidationExtensions
     {
         var erros = validationResult.Errors.Select(x => x.ErrorMessage);
         var errosStr = string.Join(", ", erros);
-        return new Error("Validacao", errosStr);
+        return new Error("Validacao", ErrorType.Validation, errosStr);
     }
 }
