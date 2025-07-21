@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Nacoes.Agendamentos.Application.Abstracts.BackgroundJobs;
+using Nacoes.Agendamentos.Application.Abstracts.CronJobs;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.agendamentos.application.entities.agendas.commands.agendar;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
@@ -21,7 +22,6 @@ using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
@@ -30,6 +30,7 @@ using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Infra.Authentication;
 using Nacoes.Agendamentos.Infra.BackgroundJobs;
 using Nacoes.Agendamentos.Infra.Contexts;
+using Nacoes.Agendamentos.Infra.CronJobs.Implementations;
 using Nacoes.Agendamentos.Infra.Entities.Agendas;
 using Nacoes.Agendamentos.Infra.Entities.Ministerios;
 using Nacoes.Agendamentos.Infra.Entities.Usuarios;
@@ -118,6 +119,12 @@ public static class DependencyInjectionExtensions
         services.AddScoped<LocalAuthStrategy>();
 
         services.AddScoped<IAmbienteContext, AmbienteContext>();
+        
+        var infraAssembly = typeof(DailyAppInfoJob).Assembly;
+        services.Scan(scan => scan.FromAssemblies(infraAssembly)
+                .AddClasses(classes => classes.AssignableTo<ICronJob>())
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
 
         return services;
     }
@@ -183,7 +190,7 @@ public static class DependencyInjectionExtensions
                       });
         });
 
-        services.AddScoped<IBackgroundJobDispatcher, HangfireBackgroundJobDispatcher>();
+        services.AddScoped<IBackgroundJobManager, HangfireBackgroundJobManager>();
         services.AddTransient<BackgroundJobProcessor>();
         services.AddScoped<ICommandExecutor, CommandExecutor>();
 

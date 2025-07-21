@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.AdicionarVoluntario;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Mappings;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -11,32 +10,35 @@ using VoluntarioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamen
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 
 public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
-                                               IValidator<AdicionarVoluntarioCommand> voluntarioValidator,
+                                               IValidator<AdicionarVoluntarioCommand> commandValidator,
                                                IVoluntarioRepository voluntarioRepository)
     : ICommandHandler<AdicionarVoluntarioCommand, VoluntarioId>
 {
     public async Task<Result<VoluntarioId>> Handle(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
     {
-        await voluntarioValidator.CheckAsync(command);
-
-        var voluntario = command.ToEntity();
-
-        /*var cpfExistente = await CpfExistenteSpecification(voluntario.Cpf);
-        if (cpfExistente)
+        var commandResult = await commandValidator.CheckAsync(command, cancellation);
+        if (commandResult.IsFailure)
         {
-            return VoluntarioErrors.VoluntarioComCpfExistente;
+            return commandResult.Error;
+        }
+        
+        var existeVoluntarioComEmail = await voluntarioRepository.RecuperarPorEmailAddressAsync(command.Email ?? string.Empty);
+        if (existeVoluntarioComEmail is not null)
+        {
+            // TODO: Add warning, voluntario pode ter email duplicado, pois pode ser dependente
         }
 
-        var emailExistente = await EmailExistenteSpecification(voluntario.Email);
-        if (emailExistente) 
+        var voluntarioResult = command.ToDomain();
+        if (voluntarioResult.IsFailure)
         {
-            return VoluntarioErrors.VoluntarioComEmailExistente;
-        }*/
-
+            return voluntarioResult.Error;
+        }
+        
+        var voluntario = voluntarioResult.Value;
         await uow.BeginAsync();
         await voluntarioRepository.AddAsync(voluntario);
         await uow.CommitAsync(cancellation);
-
+        
         return Result<VoluntarioId>.Success(voluntario.Id);
     }
 }
