@@ -2,8 +2,11 @@
 
 public interface IAmbienteContext
 {
-    Guid UsuarioId { get; }
+    string UserId { get; }
     bool IsUsuarioAuthenticated { get; }
+    bool IsUsuario { get; }
     bool IsBot { get; }
+    bool IsThirdPartyUser { get; }
     void StartBotSession();
+    void StartThirdPartyUserSession(string id, string? email);
 }

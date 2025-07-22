@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Dtos;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Infra.Abstracts;
@@ -7,7 +9,7 @@ using VoluntarioMinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes
 
 namespace Nacoes.Agendamentos.Infra.Entities.Voluntarios;
 
-public class VoluntarioRepository : BaseRepository<Voluntario>, IVoluntarioRepository
+public class VoluntarioRepository : BaseRepository<Voluntario>, IVoluntarioRepository, IVoluntarioApplicationRepository
 {
     #region Constructors
     public VoluntarioRepository(NacoesDbContext dbContext)
@@ -32,5 +34,18 @@ public class VoluntarioRepository : BaseRepository<Voluntario>, IVoluntarioRepos
             .Where(x => x.Email != null && x.Email.Address == emailAddress);
     }
 
+    #endregion
+
+    #region RecuperarLogin
+    public Task<LoginVoluntarioDto?> RecuperarLoginAsync(string cpf, DateOnly dataNascimento)
+    {
+        return GetAll()
+            .Where(x => x.Cpf != null && x.Cpf.Numero == cpf 
+                   && x.DataNascimento != null && x.DataNascimento.Valor == dataNascimento)
+            .Select(x => new LoginVoluntarioDto(
+                x.Id,
+                x.Email != null ? x.Email.Address : string.Empty))
+            .SingleOrDefaultAsync();
+    }
     #endregion
 }

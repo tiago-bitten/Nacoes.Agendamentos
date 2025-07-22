@@ -2,7 +2,6 @@
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Infra.Extensions;
 using System.Security.Claims;
-using UsuarioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario>;
 
 namespace Nacoes.Agendamentos.Infra.Helpers;
 
@@ -10,20 +9,22 @@ public static class ClaimHelper
 {
     #region Values
     public static readonly string IsAutenticado = "IsAutenticado";
-    public static readonly string UsuarioId = "UsuarioId";
-    public static readonly string UsuarioEmailAddress = "UsuarioEmailAddress";
+    public static readonly string UserId = "UserId";
+    public static readonly string UserEmailAddress = "UserEmailAddress";
     public static readonly string Environment = "Environment";
     public static readonly string IsBot = "IsBot";
+    public static readonly string IsThirdPartyUser = "IsThirdPartyUser";    
     #endregion
 
     #region Invoke
-    public static Claim[] Invoke(Usuario usuario)
+    public static Claim[] InvokeUsuario(string id, string email)
     {
         return
         [
-            new Claim(UsuarioId, usuario.Id.ToString()),
-            new Claim(UsuarioEmailAddress, usuario.Email.Address),
-            new Claim(IsBot, bool.FalseString)
+            new Claim(UserId, id),
+            new Claim(UserEmailAddress, email),
+            new Claim(IsBot, bool.FalseString),
+            new Claim(IsThirdPartyUser, bool.FalseString)
         ];
     }
 
@@ -31,9 +32,21 @@ public static class ClaimHelper
     {
         return
         [
-            new Claim(UsuarioId, "1"),
-            new Claim(UsuarioEmailAddress, "bot@nacoes.com"),
-            new Claim(IsBot, bool.TrueString)
+            new Claim(UserId, "1"),
+            new Claim(UserEmailAddress, "bot@nacoes.com"),
+            new Claim(IsBot, bool.TrueString),
+            new Claim(IsThirdPartyUser, bool.FalseString)
+        ];
+    }
+    
+    public static Claim[] InvokeThirdPartyUser(string id, string? email)
+    {
+        return
+        [
+            new Claim(UserId, id),
+            new Claim(UserEmailAddress, email ?? "voluntario-sem-email@nacoes.com"),
+            new Claim(IsBot, bool.FalseString),
+            new Claim(IsThirdPartyUser, bool.TrueString)
         ];
     }
     #endregion
@@ -46,16 +59,16 @@ public static class ClaimHelper
     #endregion
 
     #region GetUserId
-    public static UsuarioId GetUsusarioId(IHttpContextAccessor context)
+    public static string GetUserId(IHttpContextAccessor context)
     {
-        return new UsuarioId(context.GetClaim(UsuarioId).Value);
+        return context.GetClaim(UserId).Value;
     }
     #endregion
 
-    #region GetUsusarioEmailAddress
-    public static string GetUsusarioEmailAddress(IHttpContextAccessor context)
+    #region GetUserEmailAddress
+    public static string GetUserEmailAddress(IHttpContextAccessor context)
     {
-        return context.GetClaim(UsuarioEmailAddress).Value;
+        return context.GetClaim(UserEmailAddress).Value;
     }
     #endregion
     
@@ -63,6 +76,13 @@ public static class ClaimHelper
     public static bool GetIsBot(IHttpContextAccessor context)
     {
         return bool.Parse(context.GetClaim(IsBot).Value);
+    }
+    #endregion
+    
+    #region GetIsThirdPartyUser
+    public static bool GetIsThirdPartyUser(IHttpContextAccessor context)
+    {
+        return bool.Parse(context.GetClaim(IsThirdPartyUser).Value);
     }
     #endregion
 
