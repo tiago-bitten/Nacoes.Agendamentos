@@ -20,15 +20,6 @@ public sealed class VoluntariosController : NacoesAuthenticatedController
 
         return result.AsHttpResult(mensagem: "Voluntario adicionado com sucesso.");
     }
-    
-    [HttpPost("site")]
-    public async Task<IActionResult> AdicionarPorSite([FromServices] ICommandHandler<AdicionarVoluntarioCommand, Id<Voluntario>> handler,
-                                                      [FromBody] AdicionarVoluntarioCommand command)
-    {
-        var result = await handler.Handle(command);
-
-        return result.AsHttpResult(mensagem: "Voluntario adicionado com sucesso.");
-    }
     #endregion
 
     #region VincularMinisterio

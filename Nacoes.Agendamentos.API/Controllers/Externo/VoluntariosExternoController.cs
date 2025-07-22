@@ -21,7 +21,7 @@ public sealed class VoluntariosExternoController : NacoesController
         ambienteContext.StartBotSession();
         var result = await handler.Handle(command);
 
-        return result.AsHttpResult(mensagem: "Voluntario adicionado com sucesso.");
+        return result.AsHttpResult(mensagem: "Cadastro realizado com sucesso.");
     }
     #endregion
 }
