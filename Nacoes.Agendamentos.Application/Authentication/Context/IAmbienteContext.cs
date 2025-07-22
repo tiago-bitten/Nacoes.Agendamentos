@@ -3,4 +3,7 @@
 public interface IAmbienteContext
 {
     Guid UsuarioId { get; }
+    bool IsUsuarioAuthenticated { get; }
+    bool IsBot { get; }
+    void StartBotSession();
 }

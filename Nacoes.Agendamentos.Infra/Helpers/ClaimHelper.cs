@@ -58,6 +58,13 @@ public static class ClaimHelper
         return context.GetClaim(UsuarioEmailAddress).Value;
     }
     #endregion
+    
+    #region GetIsBot
+    public static bool GetIsBot(IHttpContextAccessor context)
+    {
+        return bool.Parse(context.GetClaim(IsBot).Value);
+    }
+    #endregion
 
     //#region GetEnvironment
     //public static EEnvironment GetEnvironment(IHttpContextAccessor context)

@@ -1,8 +1,7 @@
-﻿using Microsoft.CSharp.RuntimeBinder;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
+using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
@@ -10,13 +9,9 @@ using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Infra.Contexts;
 
-public class NacoesDbContext : DbContext
+public class NacoesDbContext(DbContextOptions<NacoesDbContext> options) 
+    : DbContext(options)
 {
-    public NacoesDbContext(DbContextOptions<NacoesDbContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<UsuarioConvite> Convites { get; set; }
     public DbSet<Agenda> Agendas { get; set; }
@@ -24,6 +19,7 @@ public class NacoesDbContext : DbContext
     public DbSet<Voluntario> Voluntarios { get; set; }
     public DbSet<VoluntarioMinisterio> VoluntariosMinisterios { get; set; }
     public DbSet<Ministerio> Ministerios { get; set; }
+    public DbSet<Historico> Historicos { get; set; }
 
     #region OnModelCreating
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,6 +63,7 @@ public class NacoesDbContext : DbContext
 
         if (type.IsEntityId())
         {
+            // TODO: incrementar o id de um jeito mais inteligente
             ((dynamic)newEntity).Salvar(); 
         }
     }

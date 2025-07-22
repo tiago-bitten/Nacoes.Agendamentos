@@ -2,7 +2,12 @@
 
 namespace Nacoes.Agendamentos.Domain.Abstracts;
 
-public abstract class EntityId<T> where T : class
+public interface IEntity<T>
+{
+    Id<T> Id { get; }
+}
+
+public abstract class EntityId<T> : IEntity<T> where T : class
 {
     public Id<T> Id { get; private set; } = new(Guid.Empty.ToString());
     public DateTimeOffset DataCriacao { get; private set; } = DateTimeOffset.UtcNow;
