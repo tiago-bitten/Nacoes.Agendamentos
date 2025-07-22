@@ -26,10 +26,10 @@ public class VoluntarioRepository : BaseRepository<Voluntario>, IVoluntarioRepos
     #endregion
     
     #region RecuperarPorEmailAddress
-    public Task<Voluntario?> RecuperarPorEmailAddressAsync(string emailAddress)
+    public IQueryable<Voluntario> RecuperarPorEmailAddress(string emailAddress)
     {
         return GetAll()
-            .SingleOrDefaultAsync(x => x.Email == emailAddress);
+            .Where(x => x.Email != null && x.Email.Address == emailAddress);
     }
 
     #endregion

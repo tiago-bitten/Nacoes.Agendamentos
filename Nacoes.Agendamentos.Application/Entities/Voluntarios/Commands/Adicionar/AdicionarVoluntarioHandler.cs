@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Mappings;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
+using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 using VoluntarioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Voluntarios.Voluntario>;
 
@@ -11,7 +13,8 @@ namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adiciona
 
 public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
                                                IValidator<AdicionarVoluntarioCommand> commandValidator,
-                                               IVoluntarioRepository voluntarioRepository)
+                                               IVoluntarioRepository voluntarioRepository,
+                                               IHistoricoRegister historico)
     : ICommandHandler<AdicionarVoluntarioCommand, VoluntarioId>
 {
     public async Task<Result<VoluntarioId>> Handle(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
@@ -21,11 +24,15 @@ public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
         {
             return commandResult.Error;
         }
-        
-        var existeVoluntarioComEmail = await voluntarioRepository.RecuperarPorEmailAddressAsync(command.Email ?? string.Empty);
-        if (existeVoluntarioComEmail is not null)
+
+        if (!string.IsNullOrEmpty(command.Email))
         {
-            // TODO: Add warning, voluntario pode ter email duplicado, pois pode ser dependente
+            var existeVountarioComEmail = await voluntarioRepository.RecuperarPorEmailAddress(command.Email)
+                                                                    .AnyAsync(cancellation);
+            if (existeVountarioComEmail)
+            {
+                // TODO: Add WarningContext, voluntario pode ter email duplicado, pois pode ser dependente
+            }
         }
 
         var voluntarioResult = command.ToDomain();
@@ -38,6 +45,8 @@ public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
         await uow.BeginAsync();
         await voluntarioRepository.AddAsync(voluntario);
         await uow.CommitAsync(cancellation);
+
+        await historico.AcaoCriarAsync(voluntario);
         
         return Result<VoluntarioId>.Success(voluntario.Id);
     }

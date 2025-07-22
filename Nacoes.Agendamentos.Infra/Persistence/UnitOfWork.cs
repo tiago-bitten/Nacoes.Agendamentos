@@ -49,6 +49,13 @@ public class UnitOfWork : IUnitOfWork
             _transaction = null;
         }
     }
+    
+    public async Task CommitAsync(Func<Task> action, CancellationToken cancellationToken = default)
+    {
+        await BeginAsync();
+        await action();
+        await CommitAsync(cancellationToken);
+    }
     #endregion
 
     #region RollbackAsync

@@ -24,6 +24,7 @@ using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMin
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
+using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
@@ -32,6 +33,7 @@ using Nacoes.Agendamentos.Infra.BackgroundJobs;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Nacoes.Agendamentos.Infra.CronJobs.Implementations;
 using Nacoes.Agendamentos.Infra.Entities.Agendas;
+using Nacoes.Agendamentos.Infra.Entities.Historicos;
 using Nacoes.Agendamentos.Infra.Entities.Ministerios;
 using Nacoes.Agendamentos.Infra.Entities.Usuarios;
 using Nacoes.Agendamentos.Infra.Entities.Voluntarios;
@@ -88,6 +90,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IVoluntarioMinisterioRepository, VoluntarioMinisterioRepository>();
         services.AddScoped<IAtividadeRepository, AtividadeRepository>();
         services.AddScoped<IUsuarioConviteRepository, UsuarioConviteRepository>();
+        services.AddScoped<IHistoricoRepository, HistoricoRepository>();
         
         return services;
     }
@@ -117,6 +120,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<ITokenGenerator, TokenGenerator>();
         services.AddScoped<GoogleAuthStrategy>();
         services.AddScoped<LocalAuthStrategy>();
+        services.AddScoped<IHistoricoRegister, HistoricoRegister>();
 
         services.AddScoped<IAmbienteContext, AmbienteContext>();
         
@@ -156,15 +160,15 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddAppHandlers(this IServiceCollection services)
     {
         services.Scan(scan => scan.FromAssembliesOf(typeof(AdicionarUsuarioCommand))
-            .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), publicOnly: false)
-            .AsImplementedInterfaces()
-            .WithScopedLifetime()
-            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), publicOnly: false)
-            .AsImplementedInterfaces()
-            .WithScopedLifetime()
-            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), publicOnly: false)
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
+                .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
 
         return services;
     }

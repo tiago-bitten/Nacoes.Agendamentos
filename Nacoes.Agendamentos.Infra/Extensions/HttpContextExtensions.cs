@@ -6,18 +6,24 @@ namespace Nacoes.Agendamentos.Infra.Extensions;
 
 public static class HttpContextExtensions
 {
-    public static ClaimsPrincipal GetUsuario(this IHttpContextAccessor context)
+    public static ClaimsPrincipal GetUser(this IHttpContextAccessor context)
     {
         return context.HttpContext?.User ?? throw new Exception("Erro ao obter usuário.");
+    }
+    
+    public static void SetUser(this IHttpContextAccessor context, ClaimsPrincipal user)
+    {
+        context.GetUser();
+        context.HttpContext!.User = user;
     }
 
     public static IIdentity GetIdentity(this IHttpContextAccessor context)
     {
-        return context.GetUsuario().Identity ?? throw new Exception("Erro ao obter identity");
+        return context.GetUser().Identity ?? throw new Exception("Erro ao obter identity");
     }
 
     public static Claim GetClaim(this IHttpContextAccessor context, string claimType)
     {
-        return context.GetUsuario().FindFirst(claimType) ?? throw new Exception($"Erro ao obter claim {claimType}.");
+        return context.GetUser().FindFirst(claimType) ?? throw new Exception($"Erro ao obter claim {claimType}.");
     }
 }

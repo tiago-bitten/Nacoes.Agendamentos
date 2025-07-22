@@ -2,7 +2,7 @@
 
 namespace Nacoes.Agendamentos.API.Controllers.Abstracts;
 
-[Authorize]
+//[Authorize]
 public abstract class NacoesAuthenticatedController : NacoesController
 {
 }

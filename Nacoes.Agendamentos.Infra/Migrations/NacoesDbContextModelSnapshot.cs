@@ -112,6 +112,55 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Historicos.Historico", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Acao")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("acao");
+
+                    b.Property<DateTimeOffset>("Data")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("data");
+
+                    b.Property<DateTimeOffset>("DataCriacao")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Detalhes")
+                        .HasColumnType("text")
+                        .HasColumnName("detalhes");
+
+                    b.Property<string>("EntidadeId")
+                        .HasColumnType("text")
+                        .HasColumnName("entidade_id");
+
+                    b.Property<bool>("Inativo")
+                        .HasColumnType("boolean")
+                        .HasColumnName("inactive");
+
+                    b.Property<string>("TipoAcao")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("tipo_acao");
+
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("text")
+                        .HasColumnName("usuario_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_historico");
+
+                    b.HasIndex("Id", "DataCriacao")
+                        .HasDatabaseName("ix_historico_id_created_at");
+
+                    b.ToTable("historico", (string)null);
+                });
+
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Ministerios.Atividade", b =>
                 {
                     b.Property<Guid>("Id")
@@ -299,6 +348,10 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("nome");
+
+                    b.Property<int>("OrigemCadastro")
+                        .HasColumnType("integer")
+                        .HasColumnName("origem_cadastro");
 
                     b.HasKey("Id")
                         .HasName("pk_voluntario");

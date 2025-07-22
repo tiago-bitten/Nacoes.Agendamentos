@@ -9,12 +9,21 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.API.Controllers.Voluntarios;
 
-public sealed class VoluntariosController : NacoesController
+public sealed class VoluntariosController : NacoesAuthenticatedController
 {
     #region Adicionar
     [HttpPost]
     public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarVoluntarioCommand, Id<Voluntario>> handler,
                                                [FromBody] AdicionarVoluntarioCommand command)
+    {
+        var result = await handler.Handle(command);
+
+        return result.AsHttpResult(mensagem: "Voluntario adicionado com sucesso.");
+    }
+    
+    [HttpPost("site")]
+    public async Task<IActionResult> AdicionarPorSite([FromServices] ICommandHandler<AdicionarVoluntarioCommand, Id<Voluntario>> handler,
+                                                      [FromBody] AdicionarVoluntarioCommand command)
     {
         var result = await handler.Handle(command);
 
