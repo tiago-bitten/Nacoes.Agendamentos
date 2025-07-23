@@ -14,7 +14,7 @@ public static class ApiResponseExtensions
 
         return new ObjectResult(response)
         {
-            StatusCode = result.GetStatusCode()
+            StatusCode = result.GetStatusCode
         };
     }
 
@@ -26,7 +26,7 @@ public static class ApiResponseExtensions
 
         return new ObjectResult(response)
         {
-            StatusCode = result.GetStatusCode()
+            StatusCode = result.GetStatusCode
         };
     }
 }

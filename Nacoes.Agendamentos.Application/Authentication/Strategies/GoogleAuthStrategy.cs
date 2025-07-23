@@ -21,12 +21,12 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
             var usuario = await usuarioRepository.RecuperarPorEmailAddressAsync(payload.Email!);
             if (usuario is null)
             {
-                return GoogleAuthStrategyErrors.UsuarioNaoEncontrado;
+                return UsuarioErrors.NaoEncontrado;
             }
 
             if (usuario.AuthType is not EAuthType.Google)
             {
-                return GoogleAuthStrategyErrors.AuthTypeInvalido;
+                return UsuarioErrors.AutenticacaoInvalida;
             }
 
             return Result<Usuario>.Success(usuario);
@@ -38,7 +38,7 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
         
         catch (Exception)
         {
-            return GoogleAuthStrategyErrors.SenhaInvalida;
+            return UsuarioErrors.SenhaInvalida;
         }
     }
 
@@ -51,15 +51,6 @@ public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
 
 public static class GoogleAuthStrategyErrors
 {
-    public static readonly Error AuthTypeInvalido = 
-        new("Login.Google.AuthTypeInvalido", ErrorType.Unauthorized, "Autenticação inválida.");
-    
-    public static readonly Error SenhaInvalida = 
-        new("Login.Google.SenhaInvalida", ErrorType.Unauthorized, "Senha inválida.");
-    
     public static Error JwtInvalido(string googleMessage)
-        => new("Login.Google.JwtInvalido", ErrorType.Unauthorized, $"Erro: {googleMessage}");
-    
-    public static readonly Error UsuarioNaoEncontrado = 
-        new("Login.Google.UsuarioNaoEncontrado", ErrorType.Unauthorized, "Usuário não encontrado.");
+        => Error.Problem("Login.Google.JwtInvalido", $"Erro: {googleMessage}");
 }
