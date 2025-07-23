@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Historicos;
 
-public sealed class HistoricoRepository(NacoesDbContext context) : IHistoricoRepository
+internal sealed class HistoricoRepository(NacoesDbContext context) : IHistoricoRepository
 {
     private DbSet<Historico> Historicos => context.Set<Historico>(); 
     

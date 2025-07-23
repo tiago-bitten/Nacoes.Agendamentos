@@ -9,15 +9,9 @@ using VoluntarioMinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes
 
 namespace Nacoes.Agendamentos.Infra.Entities.Voluntarios;
 
-public class VoluntarioRepository : BaseRepository<Voluntario>, IVoluntarioRepository, IVoluntarioApplicationRepository
+internal sealed class VoluntarioRepository(NacoesDbContext dbContext) : BaseRepository<Voluntario>(dbContext),
+    IVoluntarioRepository, IVoluntarioApplicationRepository
 {
-    #region Constructors
-    public VoluntarioRepository(NacoesDbContext dbContext)
-        : base(dbContext)
-    {
-    }
-    #endregion
-
     #region RecuperarPorVoluntarioMinisterio
     public IQueryable<Voluntario> RecuperarPorVoluntarioMinisterio(VoluntarioMinisterioId voluntarioMinisterioId)
     {

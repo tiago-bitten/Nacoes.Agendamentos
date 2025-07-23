@@ -6,7 +6,7 @@ using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Abstracts;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>
+internal abstract class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>
 {
     #region Ctor
     private readonly NacoesDbContext _dbContext;

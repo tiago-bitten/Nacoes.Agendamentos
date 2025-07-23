@@ -5,11 +5,7 @@ using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Voluntarios;
 
-public sealed class VoluntarioMinisterioRepository : BaseRepository<VoluntarioMinisterio>, IVoluntarioMinisterioRepository
+internal sealed class VoluntarioMinisterioRepository(NacoesDbContext dbContext)
+    : BaseRepository<VoluntarioMinisterio>(dbContext), IVoluntarioMinisterioRepository
 {
-    #region Constutores
-    public VoluntarioMinisterioRepository(NacoesDbContext dbContext) : base(dbContext)
-    {
-    }
-    #endregion
 }

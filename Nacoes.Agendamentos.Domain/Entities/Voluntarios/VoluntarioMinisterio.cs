@@ -1,5 +1,6 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Common;
+using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
 using MinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio>;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios;

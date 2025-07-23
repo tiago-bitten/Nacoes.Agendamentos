@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Nacoes.Agendamentos.Domain.Entities.Usuarios;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Nacoes.Agendamentos.Infra.Extensions;
-using System.Security.Claims;
 
-namespace Nacoes.Agendamentos.Infra.Helpers;
+namespace Nacoes.Agendamentos.Infra.Authentication;
 
-public static class ClaimHelper
+internal static class ClaimHelper
 {
     #region Values
     public static readonly string IsAutenticado = "IsAutenticado";

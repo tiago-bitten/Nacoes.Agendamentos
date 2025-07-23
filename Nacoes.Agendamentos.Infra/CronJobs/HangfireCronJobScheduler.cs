@@ -4,7 +4,8 @@ using Nacoes.Agendamentos.Application.Abstracts.BackgroundJobs;
 
 namespace Nacoes.Agendamentos.Infra.CronJobs;
 
-public class HangfireCronJobScheduler(IServiceProvider serviceProvider, IBackgroundJobManager manager)
+internal class HangfireCronJobScheduler(IServiceProvider serviceProvider, 
+                                        IBackgroundJobManager manager)
     : ICronJobScheduler
 {
     public void ScheduleAll()

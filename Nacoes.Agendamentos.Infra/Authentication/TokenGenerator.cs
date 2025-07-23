@@ -7,11 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Application.Common.Settings;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
-using Nacoes.Agendamentos.Infra.Helpers;
 
 namespace Nacoes.Agendamentos.Infra.Authentication;
 
-public sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings) : ITokenGenerator
+internal sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings) : ITokenGenerator
 {
     private readonly JwtSettings _jwtSettings = authSettings.Value.Jwt;
 

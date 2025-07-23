@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Ministerios.Configurations;
 
-public class AtividadeConfiguration : EntityIdConfiguration<Atividade>
+internal class AtividadeConfiguration : EntityIdConfiguration<Atividade>
 {
     public override void Configure(EntityTypeBuilder<Atividade> builder)
     {

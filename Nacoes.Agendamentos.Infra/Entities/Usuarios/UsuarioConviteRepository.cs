@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Usuarios;
 
-public sealed class UsuarioConviteRepository(NacoesDbContext dbContext) 
+internal sealed class UsuarioConviteRepository(NacoesDbContext dbContext) 
     : BaseRepository<UsuarioConvite>(dbContext), IUsuarioConviteRepository
 {
     #region RecuperarAguardandoAceite

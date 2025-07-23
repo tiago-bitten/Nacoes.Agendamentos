@@ -6,7 +6,7 @@ using Nacoes.Agendamentos.Application.Reports.Queries.InfoDiariaUsoApp;
 
 namespace Nacoes.Agendamentos.Infra.CronJobs.Implementations;
 
-public sealed class DailyAppInfoJob : ICronJob
+internal sealed class DailyAppInfoJob : ICronJob
 {
     public void Schedule(IBackgroundJobManager manager)
     {

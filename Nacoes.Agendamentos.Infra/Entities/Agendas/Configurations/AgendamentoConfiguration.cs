@@ -6,7 +6,7 @@ using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Agendas.Configurations;
 
-public class AgendamentoConfiguration : EntityIdConfiguration<Agendamento>
+internal class AgendamentoConfiguration : EntityIdConfiguration<Agendamento>
 {
     public override void Configure(EntityTypeBuilder<Agendamento> builder)
     {

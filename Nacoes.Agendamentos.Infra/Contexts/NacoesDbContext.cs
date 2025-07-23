@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
@@ -11,9 +12,9 @@ using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Infra.Contexts;
 
-public class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
+internal class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
                              IDomainEventsDispatcher domainEventsDispatcher) 
-    : DbContext(options)
+    : DbContext(options), INacoesDbContext
 {
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<UsuarioConvite> Convites { get; set; }
@@ -22,7 +23,9 @@ public class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
     public DbSet<Voluntario> Voluntarios { get; set; }
     public DbSet<VoluntarioMinisterio> VoluntariosMinisterios { get; set; }
     public DbSet<Ministerio> Ministerios { get; set; }
+    public DbSet<Atividade> Atividades { get; set; }
     public DbSet<Historico> Historicos { get; set; }
+    
 
     #region OnModelCreating
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Nacoes.Agendamentos.Infra.BackgroundJobs;
 
-public sealed class HangfireBackgroundJobManager : IBackgroundJobManager
+internal sealed class HangfireBackgroundJobManager : IBackgroundJobManager
 {
     public void Dispatch(Expression<Action> methodCall, string queue = "default")
     {

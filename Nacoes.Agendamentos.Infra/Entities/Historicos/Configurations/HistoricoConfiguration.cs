@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Historicos.Configurations;
 
-public sealed class HistoricoConfiguration : EntityIdConfiguration<Historico>
+internal sealed class HistoricoConfiguration : EntityIdConfiguration<Historico>
 {
     public override void Configure(EntityTypeBuilder<Historico> builder)
     {

@@ -5,11 +5,7 @@ using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Ministerios;
 
-public sealed class AtividadeRepository : BaseRepository<Atividade>, IAtividadeRepository
+internal sealed class AtividadeRepository(NacoesDbContext dbContext)
+    : BaseRepository<Atividade>(dbContext), IAtividadeRepository
 {
-    #region Construtores
-    public AtividadeRepository(NacoesDbContext dbContext) : base(dbContext)
-    {
-    }
-    #endregion
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nacoes.Agendamentos.API.Controllers.Abstracts;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Common.Responses;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
@@ -13,7 +14,7 @@ namespace Nacoes.Agendamentos.API.Controllers;
 public class InternoController : NacoesController
 {
     [HttpPost("montar-ambiente")]
-    public async Task<IActionResult> MontarAmbiente([FromServices] NacoesDbContext context,
+    public async Task<IActionResult> MontarAmbiente([FromServices] INacoesDbContext context,
                                                     [FromServices] ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler)
     {
         var existeAlgumaCoisa = await context.Usuarios.AsNoTracking().AnyAsync() ||

@@ -7,7 +7,7 @@ using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Persistence;
 
-public class UnitOfWork : IUnitOfWork
+internal class UnitOfWork : IUnitOfWork
 {
     #region Constructor
     private readonly NacoesDbContext _context;
@@ -75,13 +75,6 @@ public class UnitOfWork : IUnitOfWork
     {
         _context.Dispose();
         _transaction?.Dispose();
-    }
-    #endregion
-
-    #region GetRepository
-    public IBaseRepository<T> GetRepository<T>() where T : EntityId<T>, IAggregateRoot
-    {
-        return new BaseRepository<T>(_context);
     }
     #endregion
 }
