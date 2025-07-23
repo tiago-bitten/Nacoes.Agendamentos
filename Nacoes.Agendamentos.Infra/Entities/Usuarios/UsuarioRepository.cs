@@ -5,15 +5,8 @@ using Nacoes.Agendamentos.Infra.Abstracts;
 using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Usuarios;
-public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
+internal class UsuarioRepository(NacoesDbContext dbContext) : BaseRepository<Usuario>(dbContext), IUsuarioRepository
 {
-    #region Construtor
-    public UsuarioRepository(NacoesDbContext dbContext)
-        : base(dbContext)
-    {
-    }
-    #endregion
-
     #region RecuperarPorEmailAddress
     public Task<Usuario?> RecuperarPorEmailAddressAsync(string emailAddress)
     {

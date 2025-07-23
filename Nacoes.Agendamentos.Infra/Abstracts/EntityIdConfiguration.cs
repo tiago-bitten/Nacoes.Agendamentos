@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 
 namespace Nacoes.Agendamentos.Infra.Abstracts;
 
-public abstract class EntityIdConfiguration<T> : IEntityTypeConfiguration<T> where T : EntityId<T>
+internal abstract class EntityIdConfiguration<T> : IEntityTypeConfiguration<T> where T : EntityId<T>
 {
     public virtual void Configure(EntityTypeBuilder<T> builder)
     {

@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Nacoes.Agendamentos.Infra.Extensions;
 
-public static class ModelBuilderExtensions
+internal static class ModelBuilderExtensions
 {
     public static void ApplyValueObjectConverters(this ModelBuilder modelBuilder)
     {

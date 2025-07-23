@@ -6,6 +6,7 @@ using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
+using Nacoes.Agendamentos.Domain.Entities.Voluntarios.DomainEvents;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 using VoluntarioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Voluntarios.Voluntario>;
 
@@ -25,6 +26,7 @@ public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
             return commandResult.Error;
         }
 
+        // TODO: move para domain event
         if (!string.IsNullOrEmpty(command.Email))
         {
             var existeVountarioComEmail = await voluntarioRepository.RecuperarPorEmailAddress(command.Email)
@@ -46,7 +48,10 @@ public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
         await voluntarioRepository.AddAsync(voluntario);
         await uow.CommitAsync(cancellation);
 
+        // TODO: move para domain event
         await historico.AcaoCriarAsync(voluntario);
+        
+        voluntario.Raise(new VoluntarioAdicionadoDomainEvent(voluntario.Id));
         
         return Result<VoluntarioId>.Success(voluntario.Id);
     }

@@ -1,6 +1,6 @@
 ﻿using Nacoes.Agendamentos.Domain.Common;
 
-namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios;
+namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
 
 public static class VoluntarioMinisterioErrors
 {

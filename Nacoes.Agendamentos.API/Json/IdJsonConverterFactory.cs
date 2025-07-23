@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Nacoes.Agendamentos.API.Json;
 
-public class IdJsonConverterFactory : JsonConverterFactory
+internal class IdJsonConverterFactory : JsonConverterFactory
 {
     public override bool CanConvert(Type typeToConvert)
     {

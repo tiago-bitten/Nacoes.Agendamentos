@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Usuarios.Configurations;
 
-public sealed class UsuarioConviteConfiguration : EntityIdConfiguration<UsuarioConvite>
+internal sealed class UsuarioConviteConfiguration : EntityIdConfiguration<UsuarioConvite>
 {
     public override void Configure(EntityTypeBuilder<UsuarioConvite> builder)
     {

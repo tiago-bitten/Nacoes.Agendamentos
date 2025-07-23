@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Usuarios.Configurations;
 
-public class UsuarioConfiguration : EntityIdConfiguration<Usuario>
+internal class UsuarioConfiguration : EntityIdConfiguration<Usuario>
 {
     public override void Configure(EntityTypeBuilder<Usuario> builder)
     {

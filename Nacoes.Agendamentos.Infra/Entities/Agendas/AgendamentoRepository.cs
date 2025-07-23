@@ -7,7 +7,7 @@ using AgendaId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.
 
 namespace Nacoes.Agendamentos.Infra.Entities.Agendas;
 
-public sealed class AgendamentoRepository(NacoesDbContext dbContext)
+internal sealed class AgendamentoRepository(NacoesDbContext dbContext)
     : BaseRepository<Agendamento>(dbContext), IAgendamentoRepository
 {
     #region RecuperarPorVoluntarioMinisterioAgenda

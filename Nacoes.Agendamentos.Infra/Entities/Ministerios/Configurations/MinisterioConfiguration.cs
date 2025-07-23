@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Ministerios.Configurations;
 
-public class MinisterioConfiguration : EntityIdConfiguration<Ministerio>
+internal class MinisterioConfiguration : EntityIdConfiguration<Ministerio>
 {
     public override void Configure(EntityTypeBuilder<Ministerio> builder)
     {

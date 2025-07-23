@@ -7,6 +7,7 @@ using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
+using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;

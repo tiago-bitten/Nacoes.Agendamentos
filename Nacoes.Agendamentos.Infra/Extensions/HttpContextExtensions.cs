@@ -4,7 +4,7 @@ using System.Security.Principal;
 
 namespace Nacoes.Agendamentos.Infra.Extensions;
 
-public static class HttpContextExtensions
+internal static class HttpContextExtensions
 {
     public static ClaimsPrincipal GetUser(this IHttpContextAccessor context)
     {

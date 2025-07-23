@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Agendas.Configurations;
-public class AgendaConfiguration : EntityIdConfiguration<Agenda>
+internal class AgendaConfiguration : EntityIdConfiguration<Agenda>
 {
     public override void Configure(EntityTypeBuilder<Agenda> builder)
     {

@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Domain.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.DomainEvents;
 
-public sealed class DomainEventsDispatcher(IServiceProvider serviceProvider) : IDomainEventsDispatcher
+internal sealed class DomainEventsDispatcher(IServiceProvider serviceProvider) : IDomainEventsDispatcher
 {
     private static readonly ConcurrentDictionary<Type, Type> HandlerTypeDictionary = new();
     private static readonly ConcurrentDictionary<Type, Type> WrapperTypeDictionary = new();

@@ -1,6 +1,6 @@
 ﻿namespace Nacoes.Agendamentos.Infra.Extensions;
 
-public static class TaskExtensions
+internal static class TaskExtensions
 {
     public static async Task<T> OrElse<T>(this Task<T?> task, Func<Exception> exceptionFactory)
     {

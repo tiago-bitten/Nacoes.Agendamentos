@@ -6,15 +6,9 @@ using AtividadeId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendament
 
 namespace Nacoes.Agendamentos.Infra.Entities.Ministerios;
 
-public class MinisterioRepository : BaseRepository<Ministerio>, IMinisterioRepository
+internal class MinisterioRepository(NacoesDbContext dbContext)
+    : BaseRepository<Ministerio>(dbContext), IMinisterioRepository
 {
-    #region Construtor
-    public MinisterioRepository(NacoesDbContext dbContext)
-        : base(dbContext)
-    {
-    }
-    #endregion
-
     #region RecuperarPorAtividade
     public IQueryable<Ministerio> RecuperarPorAtividade(AtividadeId atividadeId)
     {

@@ -6,7 +6,7 @@ using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Voluntarios.Configurations;
 
-public class VoluntarioConfiguration : EntityIdConfiguration<Voluntario>
+internal class VoluntarioConfiguration : EntityIdConfiguration<Voluntario>
 {
     public override void Configure(EntityTypeBuilder<Voluntario> builder)
     {
