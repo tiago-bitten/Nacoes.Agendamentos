@@ -61,5 +61,5 @@ public static class GoogleAuthStrategyErrors
         => new("Login.Google.JwtInvalido", ErrorType.Unauthorized, $"Erro: {googleMessage}");
     
     public static readonly Error UsuarioNaoEncontrado = 
-        new("Login.Google.UsuarioNaoEncontrado", ErrorType.NotFound, "Usuário não encontrado.");
+        new("Login.Google.UsuarioNaoEncontrado", ErrorType.Unauthorized, "Usuário não encontrado.");
 }

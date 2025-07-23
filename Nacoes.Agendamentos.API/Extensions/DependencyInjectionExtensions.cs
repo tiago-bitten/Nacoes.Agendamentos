@@ -22,6 +22,7 @@ using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
@@ -32,6 +33,7 @@ using Nacoes.Agendamentos.Infra.Authentication;
 using Nacoes.Agendamentos.Infra.BackgroundJobs;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Nacoes.Agendamentos.Infra.CronJobs.Implementations;
+using Nacoes.Agendamentos.Infra.DomainEvents;
 using Nacoes.Agendamentos.Infra.Entities.Agendas;
 using Nacoes.Agendamentos.Infra.Entities.Historicos;
 using Nacoes.Agendamentos.Infra.Entities.Ministerios;
@@ -91,6 +93,8 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IAtividadeRepository, AtividadeRepository>();
         services.AddScoped<IUsuarioConviteRepository, UsuarioConviteRepository>();
         services.AddScoped<IHistoricoRepository, HistoricoRepository>();
+
+        services.AddScoped<IVoluntarioApplicationRepository, VoluntarioRepository>();
         
         return services;
     }
@@ -123,6 +127,8 @@ public static class DependencyInjectionExtensions
         services.AddScoped<IHistoricoRegister, HistoricoRegister>();
 
         services.AddScoped<IAmbienteContext, AmbienteContext>();
+        
+        services.AddTransient<IDomainEventsDispatcher, DomainEventsDispatcher>();
         
         var infraAssembly = typeof(DailyAppInfoJob).Assembly;
         services.Scan(scan => scan.FromAssemblies(infraAssembly)

@@ -44,7 +44,7 @@ public sealed class EnviarUsuarioConviteHandler(IUnitOfWork uow,
             await usuarioConviteRepository.UpdateAsync(existeAguardandoAceite);
         }
 
-        var usuarioConviteResult = UsuarioConvite.Criar(command.Nome, command.Email, ambienteContext.UsuarioId);
+        var usuarioConviteResult = UsuarioConvite.Criar(command.Nome, command.Email, ambienteContext.UserId);
         if (usuarioConviteResult.IsFailure)
         {
             return usuarioConviteResult.Error;

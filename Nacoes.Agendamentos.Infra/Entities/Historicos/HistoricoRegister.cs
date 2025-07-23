@@ -39,7 +39,7 @@ public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
 
             if (ambienteContext.IsUsuarioAuthenticated)
             {
-                usuarioId = ambienteContext.UsuarioId.ToString();
+                usuarioId = ambienteContext.UserId.ToString();
             }
 
             return historicoRepository.AddAsync(Historico.Criar(entidadeId, dataHoje, usuarioId, acao, tipoAcao,

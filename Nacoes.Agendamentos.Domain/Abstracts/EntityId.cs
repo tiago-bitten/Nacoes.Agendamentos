@@ -2,16 +2,22 @@
 
 namespace Nacoes.Agendamentos.Domain.Abstracts;
 
-public interface IEntity<T>
+public interface IEntity
 {
-    Id<T> Id { get; }
+    List<IDomainEvent> DomainEvents { get; }
+    void ClearDomainEvents();
+    void Raise(IDomainEvent domainEvent);
 }
 
-public abstract class EntityId<T> : IEntity<T> where T : class
+public abstract class EntityId<T> : IEntity
 {
+    private readonly List<IDomainEvent> _domainEvents = [];
+    
     public Id<T> Id { get; private set; } = new(Guid.Empty.ToString());
     public DateTimeOffset DataCriacao { get; private set; } = DateTimeOffset.UtcNow;
     public bool Inativo { get; private set; }
+    
+    public List<IDomainEvent> DomainEvents => [.. _domainEvents];
 
     // USAR ISSO APENAS NO SAVECHANGES
     // Quando eu encontrar um jeito melhor de fazer isso, eu altero
@@ -23,4 +29,14 @@ public abstract class EntityId<T> : IEntity<T> where T : class
     }
 
     public void Inativar() => Inativo = true;
+    
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
+
+    public void Raise(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
 }

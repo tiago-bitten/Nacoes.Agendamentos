@@ -1,15 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
+using Nacoes.Agendamentos.Infra.DomainEvents;
 using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Infra.Contexts;
 
-public class NacoesDbContext(DbContextOptions<NacoesDbContext> options) 
+public class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
+                             IDomainEventsDispatcher domainEventsDispatcher) 
     : DbContext(options)
 {
     public DbSet<Usuario> Usuarios { get; set; }
@@ -33,7 +36,7 @@ public class NacoesDbContext(DbContextOptions<NacoesDbContext> options)
     #endregion
 
     #region SaveChanges
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entityEntries = ChangeTracker.Entries()
                                          .Where(x => x.State is EntityState.Added or EntityState.Modified);
@@ -53,10 +56,14 @@ public class NacoesDbContext(DbContextOptions<NacoesDbContext> options)
         }
 
 
-        return base.SaveChangesAsync(cancellationToken);
+        var result = await base.SaveChangesAsync(cancellationToken);
+        
+        await PublishDomainEventsAsync();
+        
+        return result;
     }
 
-    private void SaveAdded(EntityEntry entityEntry)
+    private static void SaveAdded(EntityEntry entityEntry)
     {
         var newEntity = entityEntry.Entity;
         var type = newEntity.GetType();
@@ -68,9 +75,23 @@ public class NacoesDbContext(DbContextOptions<NacoesDbContext> options)
         }
     }
 
-    private void SaveModified(EntityEntry entityEntry)
+    private static void SaveModified(EntityEntry entityEntry)
     {
         entityEntry.Property("DataCriacao").IsModified = false;
+    }
+    
+    private async Task PublishDomainEventsAsync()
+    {
+        var domainEvents = ChangeTracker.Entries<IEntity>()
+                                        .Select(entry => entry.Entity)
+                                        .SelectMany(entity => 
+                                        { 
+                                            var domainEvents = entity.DomainEvents;
+                                            entity.ClearDomainEvents();
+                                            return domainEvents; 
+                                        }).ToList();
+
+        await domainEventsDispatcher.DispatchAsync(domainEvents);
     }
     #endregion
 }

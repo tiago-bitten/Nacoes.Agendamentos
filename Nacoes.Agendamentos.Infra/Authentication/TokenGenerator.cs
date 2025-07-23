@@ -22,7 +22,7 @@ public sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings
     public string GenerateAuth(Usuario usuario)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var claims = ClaimHelper.Invoke(usuario);
+        var claims = ClaimHelper.InvokeUsuario(usuario.Id, usuario.Email.Address);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
