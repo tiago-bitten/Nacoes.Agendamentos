@@ -13,32 +13,20 @@ public class LocalAuthStrategy(IUsuarioRepository usuarioRepository) : IAuthStra
         var usuario = await usuarioRepository.RecuperarPorEmailAddressAsync(command.Email!);
         if (usuario is null)
         {
-            return LocalAuthStrategyErrors.UsuarioNaoEncontrado;
+            return UsuarioErrors.NaoEncontrado;
         }
             
         if (usuario.AuthType is not EAuthType.Local)
         {
-            return LocalAuthStrategyErrors.AutenticacaTipoInvalido;
+            return UsuarioErrors.AutenticacaoInvalida;
         }
 
         var senhaValida = PasswordHelper.Verify(command.Senha!, usuario.Senha!);
         if (!senhaValida)
         {
-            return LocalAuthStrategyErrors.SenhaInvalida;
+            return UsuarioErrors.SenhaInvalida;
         }
 
         return Result<Usuario>.Success(usuario);
     }
-}
-
-public static class LocalAuthStrategyErrors
-{
-    public static readonly Error SenhaInvalida = 
-        new("Login.Local.SenhaInvalida", ErrorType.Unauthorized, "A senha informada é inválida.");
-    
-    public static readonly Error AutenticacaTipoInvalido = 
-        new("Login.Local.AutenticacaTipoInvalido", ErrorType.Unauthorized, "O tipo de autenticação informado é inválido.");
-    
-    public static readonly Error UsuarioNaoEncontrado = 
-        new("Login.Local.UsuarioNaoEncontrado", ErrorType.NotFound, "O usuário informado não foi encontrado.");
 }

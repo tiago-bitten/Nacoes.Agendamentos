@@ -5,6 +5,7 @@ using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Common.Responses;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
+using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
 
 namespace Nacoes.Agendamentos.Application.Common.Filters;
 
@@ -20,7 +21,7 @@ public sealed class VoluntarioAuthorizationAttribute : Attribute, IAsyncActionFi
         {
             httpContext.Response.StatusCode = 401;
             httpContext.Response.ContentType = "application/json";
-            var error = new Error("Voluntario.Login", ErrorType.Unauthorized, "Cpf e/ou data de nascimento não informados.");
+            var error = VoluntarioErrors.AutenticacaoInvalida;
             await httpContext.Response.WriteAsJsonAsync(ApiResponse.Erro(error));
             return;
         }
@@ -35,7 +36,7 @@ public sealed class VoluntarioAuthorizationAttribute : Attribute, IAsyncActionFi
         {
             httpContext.Response.StatusCode = 401;
             httpContext.Response.ContentType = "application/json";
-            var error = new Error("Voluntario.Login", ErrorType.Unauthorized, "Não foi possível localizar seu cadastro.");
+            var error = VoluntarioErrors.VoluntarioLoginNaoEncontrado;
             await httpContext.Response.WriteAsJsonAsync(ApiResponse.Erro(error));
             return;
         }

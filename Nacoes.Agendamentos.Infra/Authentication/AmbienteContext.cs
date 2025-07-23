@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Google.Apis.Util;
 using Microsoft.AspNetCore.Http;
 using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Infra.Extensions;
