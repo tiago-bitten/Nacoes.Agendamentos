@@ -10,19 +10,12 @@ using AgendaId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.
 
 namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
 
-public class AdicionarAgendaHandler(IUnitOfWork uow,
-                                    IValidator<AdicionarAgendaCommand> agendaValidator,
-                                    IAgendaRepository agendaRepository)
+internal sealed class AdicionarAgendaHandler(IUnitOfWork uow,
+                                             IAgendaRepository agendaRepository)
     : ICommandHandler<AdicionarAgendaCommand, AgendaId>
 {
     public async Task<Result<AgendaId>> Handle(AdicionarAgendaCommand command, CancellationToken cancellation = default)
     {
-        var commandResult = await agendaValidator.CheckAsync(command, cancellation);
-        if (commandResult.IsFailure)
-        {
-            return commandResult.Error;
-        }
-        
         var agendaResult = command.ToEntity();
         if (agendaResult.IsFailure)
         {

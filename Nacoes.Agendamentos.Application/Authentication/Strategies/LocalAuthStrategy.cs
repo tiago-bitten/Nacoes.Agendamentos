@@ -6,7 +6,7 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Strategies;
 
-public class LocalAuthStrategy(IUsuarioRepository usuarioRepository) : IAuthStrategy
+internal class LocalAuthStrategy(IUsuarioRepository usuarioRepository) : IAuthStrategy
 {
     public async Task<Result<Usuario>> AutenticarAsync(LoginCommand command)
     {

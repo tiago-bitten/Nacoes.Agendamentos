@@ -44,7 +44,7 @@ public static class DependencyInjection
         services.AddAuthenticationInternal(configuration);
         services.AddRepositories();
         services.AddHangfireInternal();
-        
+
         return services;
     }
 
@@ -95,27 +95,27 @@ public static class DependencyInjection
             
             options.UseNpgsql(dbSettings.Postgres)
                    .UseSnakeCaseNamingConvention();
-            
-            var devSettings = sp.GetRequiredService<DevSettings>();
-            if (devSettings!.RecriarBanco)
-            {
-                using var scope = services.BuildServiceProvider().CreateScope();
-                var context = scope.ServiceProvider.GetRequiredService<NacoesDbContext>();
-                var entityTypes = context.Model.GetEntityTypes();
-
-                foreach (var type in entityTypes)
-                {
-                    var tableName = type.GetTableName();
-                    var sql = $"TRUNCATE TABLE {tableName} CASCADE;";
-                    Task.Run(() => context.Database.ExecuteSqlRawAsync(sql));
-                }
-                Task.Run(() => context.SaveChangesAsync());
-            }
         });
         
         services.AddScoped<INacoesDbContext>(sp => sp.GetRequiredService<NacoesDbContext>());
         
-        
+        var devSettings = services.BuildServiceProvider().GetRequiredService<DevSettings>();
+        if (devSettings.RecriarBanco)
+        {
+            using var scope = services.BuildServiceProvider().CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<NacoesDbContext>();
+            var entityTypes = context.Model.GetEntityTypes();
+
+            foreach (var type in entityTypes)
+            {
+                var tableName = type.GetTableName();
+                var sql = $"TRUNCATE TABLE {tableName} CASCADE;";
+                context.Database.ExecuteSqlRaw(sql);
+                
+                Console.WriteLine($"Tabela {tableName} truncada.");
+            }
+            context.SaveChanges();
+        }
         
         return services;
     }

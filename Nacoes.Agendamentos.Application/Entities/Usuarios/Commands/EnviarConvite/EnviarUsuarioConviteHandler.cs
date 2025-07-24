@@ -10,20 +10,13 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.EnviarConvite;
 
-public sealed class EnviarUsuarioConviteHandler(IUnitOfWork uow,
-                                                IValidator<EnviarUsuarioConviteCommand> commandValidator,
-                                                IUsuarioConviteRepository usuarioConviteRepository,
-                                                IAmbienteContext ambienteContext)               
+internal sealed class EnviarUsuarioConviteHandler(IUnitOfWork uow,
+                                                  IUsuarioConviteRepository usuarioConviteRepository,
+                                                  IAmbienteContext ambienteContext)               
     : ICommandHandler<EnviarUsuarioConviteCommand, string>
 {
     public async Task<Result<string>> Handle(EnviarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
-        var commandResult = await commandValidator.CheckAsync(command, cancellationToken);
-        if (commandResult.IsFailure)
-        {
-            return commandResult.Error;
-        }
-
         var existeAguardandoAceite = await usuarioConviteRepository.RecuperarAguardandoAceite()
                                                                    .Where(x => x.Email == command.Email)
                                                                    .SingleOrDefaultAsync(cancellationToken);

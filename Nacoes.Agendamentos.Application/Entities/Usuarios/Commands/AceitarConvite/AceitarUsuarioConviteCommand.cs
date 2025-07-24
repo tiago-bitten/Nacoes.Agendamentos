@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 
-public record AceitarUsuarioConviteCommand : ICommand<AceitarUsuarioConviteResponse>
+public sealed record AceitarUsuarioConviteCommand : ICommand<AceitarUsuarioConviteResponse>
 {
     public Guid UsuarioConviteId { get; init; }
     public string? TokenExterno { get; init; }

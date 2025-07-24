@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
-using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
-namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Validators;
+namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
 
 public sealed class AdicionarUsuarioCommandValidator : AbstractValidator<AdicionarUsuarioCommand>
-{
+{ 
   public AdicionarUsuarioCommandValidator()
   {
     RuleFor(x => x.Nome).NotEmpty();

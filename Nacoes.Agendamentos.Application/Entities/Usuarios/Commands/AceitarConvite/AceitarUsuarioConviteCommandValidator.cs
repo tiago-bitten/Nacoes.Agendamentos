@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
-using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
-namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Validators;
+namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 
 public sealed class AceitarUsuarioConviteCommandValidator : AbstractValidator<AceitarUsuarioConviteCommand>
 {

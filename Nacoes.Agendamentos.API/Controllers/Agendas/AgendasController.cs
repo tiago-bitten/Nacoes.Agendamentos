@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nacoes.Agendamentos.API.Controllers.Abstracts;
+using Nacoes.Agendamentos.API.Extensions;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Common.Responses;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
+using Nacoes.Agendamentos.Domain.Entities.Agendas;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.API.Controllers.Agendas;
 
@@ -10,18 +14,18 @@ public class AgendasController : NacoesController
 {
     #region Adicionar
     [HttpPost]
-    public async Task<IActionResult> Adicionar([FromServices] IAdicionarAgendaHandler handler,
+    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarAgendaCommand, Id<Agenda>> handler,
                                                [FromBody] AdicionarAgendaCommand command)
     {
-        var resposta = await handler.ExecutarAsync(command);
+        var result = await handler.Handle(command);
 
-        return Ok();
+        return result.AsHttpResult(mensagem: "Agenda adicionada com sucesso.");
     }
     #endregion
 
     #region Recuperar Agendamentos
     [HttpGet("{agendaId:guid}/agendamentos")]
-    public async Task<IActionResult> RecuperarAgendamentos()
+    public Task<IActionResult> RecuperarAgendamentos()
     {
         throw new NotImplementedException();
     }

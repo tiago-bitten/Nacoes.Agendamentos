@@ -10,21 +10,12 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
 
-public sealed class AdicionarUsuarioHandler(
-    IUnitOfWork uow,
-    IValidator<AdicionarUsuarioCommand> commandValidator,
-    IUsuarioRepository usuarioRepository)
+internal sealed class AdicionarUsuarioHandler(IUnitOfWork uow,
+                                              IUsuarioRepository usuarioRepository)
     : ICommandHandler<AdicionarUsuarioCommand, Guid>
 {
-    public async Task<Result<Guid>> Handle(AdicionarUsuarioCommand command,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<Guid>> Handle(AdicionarUsuarioCommand command, CancellationToken cancellationToken = default)
     {
-        var commandResult = await commandValidator.CheckAsync(command, cancellationToken);
-        if (commandResult.IsFailure)
-        {
-            return commandResult.Error;
-        }
-
         var existeUsuarioComEmail = await usuarioRepository.RecuperarPorEmailAddressAsync(command.Email);
         if (existeUsuarioComEmail is not null)
         {

@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Common.Responses;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Interfaces;
-using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
 
 namespace Nacoes.Agendamentos.Application.Common.Filters;

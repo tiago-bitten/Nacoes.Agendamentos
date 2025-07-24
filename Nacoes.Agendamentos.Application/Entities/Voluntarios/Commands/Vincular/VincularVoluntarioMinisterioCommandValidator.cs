@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
 
-namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Validators;
+namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
 
 public sealed class VincularVoluntarioMinisterioCommandValidator : AbstractValidator<VincularVoluntarioMinisterioCommand>
 {

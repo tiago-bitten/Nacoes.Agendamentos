@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using Nacoes.Agendamentos.Application.Abstracts.Behaviors;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
 using Nacoes.Agendamentos.Application.Authentication.Strategies;
-using Nacoes.Agendamentos.Application.Authentication.Validators;
+using Nacoes.Agendamentos.Domain.Abstracts;
 
 namespace Nacoes.Agendamentos.Application;
 
@@ -15,6 +16,7 @@ public static class DependencyInjection
         services.AddValidators();
         services.AddFactories();
         services.AddServices();
+        services.AddDecorators();
         
         return services;
     }
@@ -60,6 +62,32 @@ public static class DependencyInjection
     {
         services.AddScoped<GoogleAuthStrategy>();
         services.AddScoped<LocalAuthStrategy>();
+
+        return services;
+    }
+    #endregion
+    
+    #region AddDecorators
+    private static IServiceCollection AddDecorators(this IServiceCollection services)
+    {
+        services.Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
+                .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
+                .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
+
+        services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationDecorator.CommandHandler<,>));
+        services.Decorate(typeof(ICommandHandler<>), typeof(ValidationDecorator.CommandBaseHandler<>));
+
+        services.Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
+                .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
 
         return services;
     }

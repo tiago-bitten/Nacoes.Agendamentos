@@ -9,15 +9,12 @@ using AtividadeId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendament
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 
-public sealed class AdicionarAtividadeHandler(IUnitOfWork uow,
-                                              IValidator<AdicionarAtividadeCommand> atividadeValidator,
+internal sealed class AdicionarAtividadeHandler(IUnitOfWork uow,
                                               IMinisterioRepository ministerioRepository)
     : ICommandHandler<AdicionarAtividadeCommand, AtividadeId>
 {
     public async Task<Result<AtividadeId>> Handle(AdicionarAtividadeCommand command, CancellationToken cancellation = default)
     {
-        await atividadeValidator.CheckAsync(command, cancellation);
-
         var ministerio = await ministerioRepository.GetByIdAsync(command.MinisterioId);
 
         /*var nomeExistente = await GetSpecification(new AtividadeComNomeExistenteSpecification(command.Nome, ministerioId),

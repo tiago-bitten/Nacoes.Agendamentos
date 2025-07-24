@@ -1,8 +1,6 @@
-﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Mappings;
-using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
@@ -12,20 +10,13 @@ using VoluntarioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamen
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 
-public sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
-                                               IValidator<AdicionarVoluntarioCommand> commandValidator,
-                                               IVoluntarioRepository voluntarioRepository,
-                                               IHistoricoRegister historico)
+internal sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
+                                                IVoluntarioRepository voluntarioRepository,
+                                                IHistoricoRegister historico)
     : ICommandHandler<AdicionarVoluntarioCommand, VoluntarioId>
 {
     public async Task<Result<VoluntarioId>> Handle(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
     {
-        var commandResult = await commandValidator.CheckAsync(command, cancellation);
-        if (commandResult.IsFailure)
-        {
-            return commandResult.Error;
-        }
-
         // TODO: move para domain event
         if (!string.IsNullOrEmpty(command.Email))
         {

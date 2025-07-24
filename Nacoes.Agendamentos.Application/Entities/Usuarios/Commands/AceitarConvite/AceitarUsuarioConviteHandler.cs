@@ -10,21 +10,14 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 
-public sealed class AceitarUsuarioConviteHandler(IUnitOfWork uow,
-                                                 IValidator<AceitarUsuarioConviteCommand> commandValidator,
-                                                 IUsuarioConviteRepository usuarioConviteRepository,
-                                                 ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler,
-                                                 ICommandHandler<LoginCommand, LoginResponse> loginHandler)
+internal sealed class AceitarUsuarioConviteHandler(IUnitOfWork uow,
+                                                  IUsuarioConviteRepository usuarioConviteRepository,
+                                                  ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler,
+                                                  ICommandHandler<LoginCommand, LoginResponse> loginHandler)
     : ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse>
 {
     public async Task<Result<AceitarUsuarioConviteResponse>> Handle(AceitarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
-        var commandResult = await commandValidator.CheckAsync(command, cancellationToken);
-        if (commandResult.IsFailure)
-        {
-            return commandResult.Error;
-        }
-        
         var usuarioConvite = await usuarioConviteRepository.GetByIdAsync(command.UsuarioConviteId);
         if (usuarioConvite is null)
         {

@@ -10,7 +10,7 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.API.Controllers.Externo;
 
-[VoluntarioAuthorization]
+//[VoluntarioAuthorization]
 [Route("api/voluntarios-externo")]
 public sealed class VoluntariosExternoController : NacoesController
 {
