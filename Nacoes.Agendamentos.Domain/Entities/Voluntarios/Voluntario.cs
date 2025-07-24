@@ -65,7 +65,7 @@ public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
                 dadosObrigatoriosAusentes.Add("data de nascimento");
             }
             
-            var dadosObrigatoriosFormatado = ErrorFormatter.FormatList(dadosObrigatoriosAusentes);
+            var dadosObrigatoriosFormatado = dadosObrigatoriosAusentes.ToSingleMessage();
             return VoluntarioErrors.DadosPessoaisObrigatorio(dadosObrigatoriosFormatado);
         }
 
