@@ -5,7 +5,7 @@ public record Error(string Codigo, string Descricao, ErrorType Tipo)
     public static readonly Error None = new(string.Empty, string.Empty, ErrorType.Failure);
     public static readonly Error NullValue = new("Geral.Null", "O campo não pode ser nulo", ErrorType.Failure);
 
-    public int GetStatusCode => Tipo switch
+    public int StatusCode => Tipo switch
     {
         ErrorType.Failure => 500,
         ErrorType.Validation => 400,
