@@ -8,7 +8,7 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Strategies;
 
-public sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
+internal sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
                                        IOptions<AuthenticationSettings> authSettings) 
     : IAuthStrategy
 {

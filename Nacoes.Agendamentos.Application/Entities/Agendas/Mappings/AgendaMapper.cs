@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Agendas.Mappings;
 
-public static class AgendaMapper
+internal static class AgendaMapper
 {
     public static Result<Agenda> ToEntity(this AdicionarAgendaCommand command)
         => Agenda.Criar(command.Descricao,

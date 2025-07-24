@@ -3,7 +3,7 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
 
-public record AdicionarUsuarioCommand : ICommand<Guid>
+public sealed record AdicionarUsuarioCommand : ICommand<Guid>
 {
     public required string Nome { get; init; }
     public required string Email { get; init; }

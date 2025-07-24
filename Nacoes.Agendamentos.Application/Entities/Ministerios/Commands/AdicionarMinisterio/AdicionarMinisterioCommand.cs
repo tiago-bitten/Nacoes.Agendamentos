@@ -3,7 +3,7 @@ using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
-public record AdicionarMinisterioCommand : ICommand<Id<Ministerio>>
+public sealed record AdicionarMinisterioCommand : ICommand<Id<Ministerio>>
 {
     public string Nome { get; set; }
     public string? Descricao { get; set; }

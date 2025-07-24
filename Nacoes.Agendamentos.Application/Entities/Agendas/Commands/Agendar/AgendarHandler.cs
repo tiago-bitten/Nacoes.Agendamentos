@@ -1,8 +1,5 @@
-using FluentValidation;
-using Nacoes.Agendamentos.Application.Abstracts;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
-using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
@@ -12,8 +9,7 @@ using AgendamentoId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendame
 
 namespace Nacoes.agendamentos.application.entities.agendas.commands.agendar;
 
-public sealed class AgendarHandler(IUnitOfWork uow,
-                                   IValidator<AgendarCommand> agendarValidator,
+internal sealed class AgendarHandler(IUnitOfWork uow,
                                    IAgendaRepository agendaRepository,
                                    IVoluntarioMinisterioRepository voluntarioMinisterioRepository,
                                    IAtividadeRepository atividadeRepository)
@@ -21,7 +17,6 @@ public sealed class AgendarHandler(IUnitOfWork uow,
 {
     public async Task<Result<AgendamentoId>> Handle(AgendarCommand command, CancellationToken cancellation = default)
     {
-        await agendarValidator.CheckAsync(command, cancellation);
         throw new NotImplementedException();
     }
 }

@@ -20,4 +20,9 @@
     <ProjectReference Include="..\Nacoes.Agendamentos.Domain\Nacoes.Agendamentos.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authentication\Validators\" />
+    <Folder Include="Entities\Ministerios\Validators\" />
+  </ItemGroup>
+
 </Project>

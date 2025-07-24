@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
-using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
 
-namespace Nacoes.Agendamentos.Application.Entities.Agendas.Validators;
+namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
 
-public sealed class AdicionarAgendaCommandValidator : AbstractValidator<AdicionarAgendaCommand>
+internal sealed class AdicionarAgendaCommandValidator : AbstractValidator<AdicionarAgendaCommand>
 {
     public AdicionarAgendaCommandValidator()
     {

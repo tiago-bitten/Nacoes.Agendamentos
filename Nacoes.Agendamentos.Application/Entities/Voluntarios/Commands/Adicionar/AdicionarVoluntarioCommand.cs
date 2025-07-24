@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 
-public record AdicionarVoluntarioCommand : ICommand<Id<Voluntario>>
+public sealed record AdicionarVoluntarioCommand : ICommand<Id<Voluntario>>
 {
     public required string Nome { get; init; }
     public string? Email { get; init; }

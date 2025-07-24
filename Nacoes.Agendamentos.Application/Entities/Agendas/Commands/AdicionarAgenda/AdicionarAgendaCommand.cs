@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
 
-public record AdicionarAgendaCommand : ICommand<Id<Agenda>>
+public sealed record AdicionarAgendaCommand : ICommand<Id<Agenda>>
 {
     public string Descricao { get; set; } = string.Empty;
     public HorarioItem Horario { get; set; } = new();

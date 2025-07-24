@@ -10,15 +10,12 @@ using MinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamen
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
 
-public sealed class AdicionarMinisterioHandler(IUnitOfWork uow,
-                                               IValidator<AdicionarMinisterioCommand> ministerioValidator,
-                                               IMinisterioRepository ministerioRepository)
+internal sealed class AdicionarMinisterioHandler(IUnitOfWork uow,
+                                                IMinisterioRepository ministerioRepository)
     : ICommandHandler<AdicionarMinisterioCommand, MinisterioId>
 {
     public async Task<Result<MinisterioId>> Handle(AdicionarMinisterioCommand command, CancellationToken cancellationToken = default)
     {
-        await ministerioValidator.CheckAsync(command, cancellationToken);
-
         var ministerio = command.GetEntidade();
 
         /*var nomeExistente = await GetSpecification(new MinisterioComNomeExistenteSpecification(ministerio.Nome),
