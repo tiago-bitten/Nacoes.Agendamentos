@@ -19,7 +19,7 @@ public class Result
     public bool IsFailure => !IsSuccess;
     public Error Error { get; }
 
-    public int GetStatusCode => IsSuccess ? 200 : Error.GetStatusCode;
+    public int StatusCode => IsSuccess ? 200 : Error.StatusCode;
     public static Result Success() => new(true, Error.None);
     public static Result Failure(Error error) => new(false, error);
     public static Result<TValue> Failure<TValue>(Error error) => new(false, default!, error);
