@@ -15,12 +15,12 @@ internal static class ValidationDecorator
             {
                 var validationFailures = await ValidateAsync(command, validators);
         
-                if (validationFailures.Length == 0)
+                if (validationFailures.Length is 0)
                 {
                     return await innerHandler.Handle(command, cancellationToken);
                 }
         
-                return Result.Failure<TResponse>(CreateValidationError(validationFailures));
+                return CreateValidationError(validationFailures);
             }
         }
 
@@ -32,12 +32,12 @@ internal static class ValidationDecorator
         {
             var validationFailures = await ValidateAsync(command, validators);
 
-            if (validationFailures.Length == 0)
+            if (validationFailures.Length is 0)
             {
                 return await innerHandler.Handle(command, cancellationToken);
             }
 
-            return Result.Failure(CreateValidationError(validationFailures));
+            return CreateValidationError(validationFailures);
         }
     }
 
@@ -45,24 +45,27 @@ internal static class ValidationDecorator
                                                                            IEnumerable<IValidator<TCommand>> validators)
     {
         var enumerable = validators as IValidator<TCommand>[] ?? validators.ToArray();
-        if (enumerable.Length == 0)
+        if (enumerable.Length is 0)
         {
             return [];
         }
 
         var context = new ValidationContext<TCommand>(command);
 
-        var validationResults = await Task.WhenAll(
-            enumerable.Select(validator => validator.ValidateAsync(context)));
+        var validationRusultsTasks = enumerable.Select(validator => validator.ValidateAsync(context));
+        var validationResults = await Task.WhenAll(validationRusultsTasks);
 
-        var validationFailures = validationResults
-            .Where(validationResult => !validationResult.IsValid)
-            .SelectMany(validationResult => validationResult.Errors)
-            .ToArray();
-
+        var validationFailures = validationResults.Where(validationResult => !validationResult.IsValid)
+                                                  .SelectMany(validationResult => validationResult.Errors)
+                                                  .ToArray();
         return validationFailures;
     }
 
-    private static ValidationError CreateValidationError(ValidationFailure[] validationFailures) =>
-        new(validationFailures.Select(f => Error.Problem(f.ErrorCode, f.ErrorMessage)).ToArray());
+    private static Error CreateValidationError(ValidationFailure[] validationFailures)
+    {
+        var validationMessages = validationFailures.Select(x => x.ErrorMessage)
+                                                   .ToArray()
+                                                   .ToSingleMessage();
+        return new Error("Validation.General", validationMessages, ErrorType.Validation);
+    }
 }

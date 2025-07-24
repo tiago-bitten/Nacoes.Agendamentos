@@ -1,8 +1,8 @@
 ﻿namespace Nacoes.Agendamentos.Domain.Common;
 
-public static class ErrorFormatter
+public static class ErrorFormatterExtensions
 {
-    public static string FormatList(List<string>? items)
+    public static string ToSingleMessage(this List<string>? items)
     {
         if (items is null || items.Count is 0)
         {
@@ -19,4 +19,6 @@ public static class ErrorFormatter
 
         return $"{string.Join(", ", otherItems)} e {lastItem}";
     }
+    
+    public static string ToSingleMessage(this string[]? items) => ToSingleMessage(items?.ToList());
 }
