@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.Domain.ValueObjects;
+﻿using Nacoes.Agendamentos.Domain.Common;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Abstracts;
 
@@ -13,22 +14,22 @@ public abstract class EntityId<T> : IEntity
 {
     private readonly List<IDomainEvent> _domainEvents = [];
     
-    public Id<T> Id { get; private set; } = new(Guid.Empty.ToString());
+    public Id<T> Id { get; private set; } = Id<T>.Novo();
     public DateTimeOffset DataCriacao { get; private set; } = DateTimeOffset.UtcNow;
     public bool Inativo { get; private set; }
     
     public List<IDomainEvent> DomainEvents => [.. _domainEvents];
 
-    // USAR ISSO APENAS NO SAVECHANGES
-    // Quando eu encontrar um jeito melhor de fazer isso, eu altero
-    public EntityId<T> Salvar()
+    public Result Inativar()
     {
-        Id = Id<T>.Novo();
-
-        return this;
+        if (Inativo)
+        {
+            // TODO: return EntityIdErrors.JaEstaInativo;
+        }
+        
+        Inativo = true;
+        return Result.Success();
     }
-
-    public void Inativar() => Inativo = true;
     
     public void ClearDomainEvents()
     {

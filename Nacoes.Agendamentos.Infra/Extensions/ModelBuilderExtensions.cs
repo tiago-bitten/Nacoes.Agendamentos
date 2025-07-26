@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nacoes.Agendamentos.Domain.ValueObjects;
-using Nacoes.Agendamentos.Infra.Converters;
 using System.Linq.Expressions;
 using System.Reflection;
+using Nacoes.Agendamentos.Infra.Abstracts.Converters;
 
 namespace Nacoes.Agendamentos.Infra.Extensions;
 

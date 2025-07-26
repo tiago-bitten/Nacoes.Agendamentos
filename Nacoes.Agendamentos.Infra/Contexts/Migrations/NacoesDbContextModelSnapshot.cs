@@ -296,7 +296,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnName("inactive");
 
                     b.Property<string>("Motivo")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("motivo");
 

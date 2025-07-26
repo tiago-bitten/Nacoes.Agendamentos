@@ -1,4 +1,5 @@
 ﻿using Google.Apis.Auth;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Common.Settings;
@@ -9,7 +10,7 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 namespace Nacoes.Agendamentos.Application.Authentication.Strategies;
 
 internal sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
-                                       IOptions<AuthenticationSettings> authSettings) 
+                                         IOptions<AuthenticationSettings> authSettings) 
     : IAuthStrategy
 {
     public async Task<Result<Usuario>> AutenticarAsync(LoginCommand command)
@@ -18,15 +19,13 @@ internal sealed class GoogleAuthStrategy(IUsuarioRepository usuarioRepository,
         {
             var payload = await GoogleJsonWebSignature.ValidateAsync(command.TokenExterno!, GoogleSettings);
 
-            var usuario = await usuarioRepository.RecuperarPorEmailAddressAsync(payload.Email!);
+            var usuario = await usuarioRepository.RecuperarPorEmailAddress(payload.Email!)
+                                                 .Where(x => x.AuthType == EAuthType.Google)
+                                                 .AsNoTracking()
+                                                 .SingleOrDefaultAsync();
             if (usuario is null)
             {
                 return UsuarioErrors.NaoEncontrado;
-            }
-
-            if (usuario.AuthType is not EAuthType.Google)
-            {
-                return UsuarioErrors.AutenticacaoInvalida;
             }
 
             return Result<Usuario>.Success(usuario);

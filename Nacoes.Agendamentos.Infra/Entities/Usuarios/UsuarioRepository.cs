@@ -8,10 +8,10 @@ namespace Nacoes.Agendamentos.Infra.Entities.Usuarios;
 internal class UsuarioRepository(NacoesDbContext dbContext) : BaseRepository<Usuario>(dbContext), IUsuarioRepository
 {
     #region RecuperarPorEmailAddress
-    public Task<Usuario?> RecuperarPorEmailAddressAsync(string emailAddress)
+    public IQueryable<Usuario> RecuperarPorEmailAddress(string emailAddress)
     {
-        return GetAll().AsNoTracking()
-                       .SingleOrDefaultAsync(x => x.Email.Address == emailAddress);
+        return GetAll()
+            .Where(x => x.Email.Address == emailAddress);
     }
     #endregion
 }

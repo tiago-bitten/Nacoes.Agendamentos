@@ -34,5 +34,6 @@ public enum EHistoricoTipoAcao
     Criar = 0,
     Atualizar = 1,
     Remover = 2,
-    Login = 3
+    Login = 3,
+    Outro = 4
 }

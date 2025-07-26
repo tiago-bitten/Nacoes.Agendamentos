@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Nacoes.Agendamentos.Application.Common.Enums;
 using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Infra.Authentication;
@@ -16,36 +17,35 @@ internal static class ClaimHelper
     #endregion
 
     #region Invoke
-    public static Claim[] InvokeUsuario(string id, string email)
+    public static Claim[] InvokeUsuario(string id, string email, EEnvironment environment)
+    {
+        return GetContractClaims(id, email, isBot: false, isThirdPartyUser: false, environment);
+    }
+
+    public static Claim[] InvokeBot(EEnvironment environment)
+    {
+       return GetContractClaims("1", "bot@nacoes.com", isBot: true, isThirdPartyUser: false, environment);
+    }
+    
+    public static Claim[] InvokeThirdPartyUser(string id, string? email, EEnvironment environment)
+    {
+        return GetContractClaims(id, email ?? "voluntario-sem-email@nacoes.com", isBot: false, isThirdPartyUser: true,
+            environment);
+    }
+    
+    private static Claim[] GetContractClaims(string id,
+                                             string email,
+                                             bool isBot,
+                                             bool isThirdPartyUser,
+                                             EEnvironment environment)
     {
         return
         [
             new Claim(UserId, id),
             new Claim(UserEmailAddress, email),
-            new Claim(IsBot, bool.FalseString),
-            new Claim(IsThirdPartyUser, bool.FalseString)
-        ];
-    }
-
-    public static Claim[] InvokeBot()
-    {
-        return
-        [
-            new Claim(UserId, "1"),
-            new Claim(UserEmailAddress, "bot@nacoes.com"),
-            new Claim(IsBot, bool.TrueString),
-            new Claim(IsThirdPartyUser, bool.FalseString)
-        ];
-    }
-    
-    public static Claim[] InvokeThirdPartyUser(string id, string? email)
-    {
-        return
-        [
-            new Claim(UserId, id),
-            new Claim(UserEmailAddress, email ?? "voluntario-sem-email@nacoes.com"),
-            new Claim(IsBot, bool.FalseString),
-            new Claim(IsThirdPartyUser, bool.TrueString)
+            new Claim(IsBot, isBot.ToString()),
+            new Claim(IsThirdPartyUser, isThirdPartyUser.ToString()),
+            new Claim(Environment, ((int)environment).ToString())
         ];
     }
     #endregion
@@ -85,10 +85,10 @@ internal static class ClaimHelper
     }
     #endregion
 
-    //#region GetEnvironment
-    //public static EEnvironment GetEnvironment(IHttpContextAccessor context)
-    //{
-    //    return (EEnvironment)int.Parse(context.GetClaim(Environment).Value);
-    //}
-    //#endregion
+    #region GetEnvironment
+    public static EEnvironment GetEnvironment(IHttpContextAccessor context)
+    {
+        return (EEnvironment)int.Parse(context.GetClaim(Environment).Value);
+    }
+    #endregion
 }

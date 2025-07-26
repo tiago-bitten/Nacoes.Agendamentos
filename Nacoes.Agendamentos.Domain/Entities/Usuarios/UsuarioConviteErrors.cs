@@ -33,4 +33,10 @@ public static class UsuarioConviteErrors
     
     public static readonly Error StatusInvalidoParaPendenciar =
         Error.Problem("UsuarioConvite.StatusInvalidoParaPendenciar", "Apenas convites com a situação enviado podem ser pendenciados.");
+    
+    public static readonly Error StatusInvalidoParaEnviar =
+        Error.Problem("UsuarioConvite.StatusInvalidoParaEnviar", "Apenas convites com a situação gerado podem ser enviados.");
+    
+    public static readonly Error ConviteEnviado =
+        Error.Problem("UsuarioConvite.ConviteEnviado", "Já existe um convite sendo enviado. Por favor, aguarde.");
 }

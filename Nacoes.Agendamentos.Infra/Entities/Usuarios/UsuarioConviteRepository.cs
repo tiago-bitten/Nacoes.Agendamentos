@@ -8,9 +8,9 @@ namespace Nacoes.Agendamentos.Infra.Entities.Usuarios;
 internal sealed class UsuarioConviteRepository(NacoesDbContext dbContext) 
     : BaseRepository<UsuarioConvite>(dbContext), IUsuarioConviteRepository
 {
-    #region RecuperarAguardandoAceite
-    public IQueryable<UsuarioConvite> RecuperarAguardandoAceite()
-        => GetAll().Where(x => x.Status == EConviteStatus.Pendente || x.Status == EConviteStatus.Enviado);
+    #region RecuperarPendentes
+    public IQueryable<UsuarioConvite> RecuperarPendentes()
+        => GetAll().Where(x => x.Status == EConviteStatus.Pendente);
 
     #endregion
 }

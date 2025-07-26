@@ -10,10 +10,12 @@ using Microsoft.IdentityModel.Tokens;
 using Nacoes.Agendamentos.Application.Abstracts.BackgroundJobs;
 using Nacoes.Agendamentos.Application.Abstracts.CronJobs;
 using Nacoes.Agendamentos.Application.Abstracts.Data;
+using Nacoes.Agendamentos.Application.Abstracts.Notifications;
 using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Application.Common.Settings;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Interfaces;
+using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
@@ -24,12 +26,14 @@ using Nacoes.Agendamentos.Infra.Authentication;
 using Nacoes.Agendamentos.Infra.BackgroundJobs;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Nacoes.Agendamentos.Infra.CronJobs.Implementations;
-using Nacoes.Agendamentos.Infra.DomainEvents;
 using Nacoes.Agendamentos.Infra.Entities.Agendas;
+using Nacoes.Agendamentos.Infra.Entities.DomainEvents;
 using Nacoes.Agendamentos.Infra.Entities.Historicos;
 using Nacoes.Agendamentos.Infra.Entities.Ministerios;
 using Nacoes.Agendamentos.Infra.Entities.Usuarios;
 using Nacoes.Agendamentos.Infra.Entities.Voluntarios;
+using Nacoes.Agendamentos.Infra.Notifications;
+using Nacoes.Agendamentos.Infra.Notifications.Emails;
 using Nacoes.Agendamentos.Infra.Persistence;
 
 namespace Nacoes.Agendamentos.Infra;
@@ -64,6 +68,16 @@ public static class DependencyInjection
                 .Bind(configuration.GetSection("Dev"))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
+        
+        services.AddOptions<AmbienteSettings>()
+                .Bind(configuration.GetSection("Ambiente"))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+        
+        services.AddOptions<NotificationsSettings>()
+                .Bind(configuration.GetSection("Notifications"))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
         services.AddSingleton(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
         services.AddSingleton(sp => sp.GetRequiredService<IOptions<AuthenticationSettings>>().Value);
@@ -75,14 +89,23 @@ public static class DependencyInjection
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddTransient<IDomainEventsDispatcher, DomainEventsDispatcher>();
+        
+        services.Scan(scan => scan.FromAssembliesOf(typeof(Application.DependencyInjection))
+                .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
 
         services.AddScoped<IHistoricoRegister, HistoricoRegister>();
+        
+        services.AddScoped<ITemplateRenderer, TemplateRenderer>();
         
         var infraAssembly = typeof(DependencyInjection).Assembly;
         services.Scan(scan => scan.FromAssemblies(infraAssembly)
                 .AddClasses(classes => classes.AssignableTo<ICronJob>())
                 .AsImplementedInterfaces()
                 .WithScopedLifetime());
+
+        services.AddScoped<IEmailSenderFactory, EmailSenderFactory>();
         
         return services;
     }

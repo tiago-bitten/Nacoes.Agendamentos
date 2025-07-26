@@ -2,9 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nacoes.Agendamentos.Application.Abstracts.Behaviors;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Application.Abstracts.Notifications;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
 using Nacoes.Agendamentos.Application.Authentication.Strategies;
+using Nacoes.Agendamentos.Application.Common.Factories;
 using Nacoes.Agendamentos.Domain.Abstracts;
+using Nacoes.Agendamentos.Domain.Common.Factories;
 
 namespace Nacoes.Agendamentos.Application;
 
@@ -52,6 +55,7 @@ public static class DependencyInjection
     private static IServiceCollection AddFactories(this IServiceCollection services)
     {
         services.AddScoped<IAuthStrategyFactory, AuthStrategyFactory>();
+        services.AddScoped<ILinkFactory, LinkFactory>();
 
         return services;
     }
@@ -62,7 +66,7 @@ public static class DependencyInjection
     {
         services.AddScoped<GoogleAuthStrategy>();
         services.AddScoped<LocalAuthStrategy>();
-
+        
         return services;
     }
     #endregion
@@ -83,12 +87,7 @@ public static class DependencyInjection
 
         services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationDecorator.CommandHandler<,>));
         services.Decorate(typeof(ICommandHandler<>), typeof(ValidationDecorator.CommandBaseHandler<>));
-
-        services.Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
-                .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
-                .AsImplementedInterfaces()
-                .WithScopedLifetime());
-
+        
         return services;
     }
     #endregion

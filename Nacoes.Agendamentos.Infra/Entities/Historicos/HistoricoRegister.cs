@@ -11,38 +11,34 @@ public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
                                       IUnitOfWork uow) 
     : IHistoricoRegister
 {
-    public Task AcaoCriarAsync<T>(T entidade, string acao = "Adicionado.") where T : EntityId<T>
+    public Task AuditAsync(string entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
     {
-        return RegistrarAsync(entidade.Id, acao, EHistoricoTipoAcao.Criar, null);
+        return RegistrarAsync(entidadeId, acao, tipoAcao, detalhes);
     }
 
-    public Task AcaoEditarAsync<T>(T entidade, string? detalhes, string acao = "Atualizado.") where T : EntityId<T>
+    public Task AuditAsync<T>(T entidade, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes) where T : EntityId<T>
     {
-        return RegistrarAsync(entidade.Id, acao, EHistoricoTipoAcao.Atualizar, detalhes);
+        return RegistrarAsync(entidade.Id, acao, tipoAcao, detalhes);
     }
 
-    public Task AcaoRemoverAsync<T>(T entidade, string acao = "Removido.") where T : EntityId<T>
+    private async Task RegistrarAsync(string? entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
     {
-        return RegistrarAsync(entidade.Id, acao, EHistoricoTipoAcao.Remover, null);
-    }
-
-    public Task AcaoLoginAsync(string acao, string detalhes)
-    {
-        return RegistrarAsync(null, acao, EHistoricoTipoAcao.Login, detalhes);
-    }
-
-    private Task RegistrarAsync(string? entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes) 
-        => uow.CommitAsync(() =>
+        if (uow.HasActiveTransaction)
         {
             var dataHoje = DateTimeOffset.UtcNow;
             var usuarioId = string.Empty;
 
             if (ambienteContext.IsUsuarioAuthenticated)
             {
-                usuarioId = ambienteContext.UserId.ToString();
+                usuarioId = ambienteContext.UserId;
             }
 
-            return historicoRepository.AddAsync(Historico.Criar(entidadeId, dataHoje, usuarioId, acao, tipoAcao,
-                detalhes));
-        });
+            await historicoRepository.AddAsync(Historico.Criar(entidadeId, dataHoje, usuarioId, acao, tipoAcao, detalhes));
+            return;
+        }
+
+        await uow.BeginAsync();
+        await RegistrarAsync(entidadeId, acao, tipoAcao, detalhes);
+        await uow.CommitAsync();
+    }
 }

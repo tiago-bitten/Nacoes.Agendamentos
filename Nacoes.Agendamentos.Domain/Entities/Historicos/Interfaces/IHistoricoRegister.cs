@@ -4,8 +4,6 @@ namespace Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
 
 public interface IHistoricoRegister
 {
-    Task AcaoCriarAsync<T>(T entidade, string acao = "Adicionado.") where T : EntityId<T>;
-    Task AcaoEditarAsync<T>(T entidade, string? detalhes, string acao = "Editado.") where T : EntityId<T>;
-    Task AcaoRemoverAsync<T>(T entidade, string acao = "Removido.") where T : EntityId<T>;
-    Task AcaoLoginAsync(string acao, string detalhes);
+    Task AuditAsync(string entidadeId, string acao, EHistoricoTipoAcao tipoAcao = EHistoricoTipoAcao.Outro, string? detalhes = null);
+    Task AuditAsync<T>(T entidade, string acao, EHistoricoTipoAcao tipoAcao = EHistoricoTipoAcao.Outro, string? detalhes = null) where T : EntityId<T>;
 }

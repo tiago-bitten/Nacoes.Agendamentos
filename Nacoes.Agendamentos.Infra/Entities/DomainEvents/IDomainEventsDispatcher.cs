@@ -1,6 +1,6 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 
-namespace Nacoes.Agendamentos.Infra.DomainEvents;
+namespace Nacoes.Agendamentos.Infra.Entities.DomainEvents;
 
 public interface IDomainEventsDispatcher
 {

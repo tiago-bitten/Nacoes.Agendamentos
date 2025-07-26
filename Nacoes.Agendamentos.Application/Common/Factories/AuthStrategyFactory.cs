@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Nacoes.Agendamentos.Application.Authentication.Factories;
 using Nacoes.Agendamentos.Application.Authentication.Strategies;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
-namespace Nacoes.Agendamentos.Application.Authentication.Factories;
+namespace Nacoes.Agendamentos.Application.Common.Factories;
 
-public class AuthStrategyFactory(IServiceProvider serviceProvider) : IAuthStrategyFactory
+internal class AuthStrategyFactory(IServiceProvider serviceProvider) : IAuthStrategyFactory
 {
     public IAuthStrategy Criar(EAuthType tipo) => tipo switch
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
@@ -20,4 +21,6 @@ public interface INacoesDbContext
     DbSet<Atividade> Atividades { get; set; }
     
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    List<IDomainEvent> GetDomainEvents();
+    Task PublishDomainEventsAsync(List<IDomainEvent> domainEvents);
 }

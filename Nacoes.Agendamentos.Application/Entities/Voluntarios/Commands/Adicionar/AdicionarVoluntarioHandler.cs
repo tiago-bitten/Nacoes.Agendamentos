@@ -3,6 +3,7 @@ using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Mappings;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
+using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.DomainEvents;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
@@ -11,8 +12,8 @@ using VoluntarioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamen
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 
 internal sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
-                                                IVoluntarioRepository voluntarioRepository,
-                                                IHistoricoRegister historico)
+                                                 IVoluntarioRepository voluntarioRepository,
+                                                 IHistoricoRegister historicoRegister)
     : ICommandHandler<AdicionarVoluntarioCommand, VoluntarioId>
 {
     public async Task<Result<VoluntarioId>> Handle(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
@@ -40,7 +41,7 @@ internal sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
         await uow.CommitAsync(cancellation);
 
         // TODO: move para domain event
-        await historico.AcaoCriarAsync(voluntario);
+        await historicoRegister.AuditAsync(voluntario, acao: "Voluntário adicionado.", EHistoricoTipoAcao.Criar);
         
         voluntario.Raise(new VoluntarioAdicionadoDomainEvent(voluntario.Id));
         

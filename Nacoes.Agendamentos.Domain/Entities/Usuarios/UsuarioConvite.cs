@@ -39,6 +39,8 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
     public Usuario EnviadoPor { get; private set; } = null!;
     public Usuario? EnviadoPara { get; private set; }
     
+    public string Path => $"usuarios/convites/{Token}";
+    
     #region Criar
     public static Result<UsuarioConvite> Criar(string nome, Email email, EnviadoPorId enviadoPorId)
     {
@@ -49,23 +51,9 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
         
         var dataExpiracao = DateTimeOffset.UtcNow.AddDays(ExpiracaoEmDias);
         var token = Guid.NewGuid().ToString("N");
-        var usuarioConvite = new UsuarioConvite(nome, email, enviadoPorId, EConviteStatus.Enviado, dataExpiracao, token);
+        var usuarioConvite = new UsuarioConvite(nome, email, enviadoPorId, EConviteStatus.Pendente, dataExpiracao, token);
         
         return Result<UsuarioConvite>.Success(usuarioConvite);
-    }
-    #endregion
-    
-    #region Pendenciar
-    public Result Pendenciar()
-    {
-        if (Status is not EConviteStatus.Enviado)
-        {
-            return UsuarioConviteErrors.StatusInvalidoParaPendenciar;
-        }
-
-        Status = EConviteStatus.Pendente;
-        
-        return Result.Success();
     }
     #endregion
     
@@ -151,11 +139,10 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
 
 public enum EConviteStatus
 {
-    Enviado = 0,
-    Pendente = 1,
-    Aceito = 2,
-    Recusado = 3,
-    Expirado = 4,
-    Cancelado = 5,
-    Erro = 6
+    Pendente = 0,
+    Aceito = 1,
+    Recusado = 2,
+    Expirado = 3,
+    Cancelado = 4,
+    Erro = 5
 }
