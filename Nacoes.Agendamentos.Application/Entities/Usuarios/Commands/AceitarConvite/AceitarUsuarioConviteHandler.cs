@@ -6,14 +6,15 @@ using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
+using Nacoes.Agendamentos.Domain.Entities.Usuarios.DomainEvents;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 
 internal sealed class AceitarUsuarioConviteHandler(IUnitOfWork uow,
-                                                  IUsuarioConviteRepository usuarioConviteRepository,
-                                                  ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler,
-                                                  ICommandHandler<LoginCommand, LoginResponse> loginHandler)
+                                                   IUsuarioConviteRepository usuarioConviteRepository,
+                                                   ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler,
+                                                   ICommandHandler<LoginCommand, LoginResponse> loginHandler)
     : ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse>
 {
     public async Task<Result<AceitarUsuarioConviteResponse>> Handle(AceitarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
@@ -41,6 +42,8 @@ internal sealed class AceitarUsuarioConviteHandler(IUnitOfWork uow,
         }
         
         await usuarioConviteRepository.UpdateAsync(usuarioConvite);
+        
+        usuarioConvite.Raise(new UsuarioConviteAceitoDomainEvent(usuarioConvite.Id));
         await uow.CommitAsync(cancellationToken);
         
         var loginResult = await loginHandler.Handle(command.ToLoginCommand(usuarioConvite.Email), cancellationToken);

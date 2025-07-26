@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.Domain.Entities.Ministerios;
+﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
 using Nacoes.Agendamentos.Infra.Abstracts;
 using Nacoes.Agendamentos.Infra.Contexts;
@@ -14,6 +15,15 @@ internal class MinisterioRepository(NacoesDbContext dbContext)
     {
         return GetAll()
             .Where(m => m.Atividades.Any(a => a.Id == atividadeId));
+    }
+    #endregion
+    
+    #region RecuperarPorNomeAtividade
+    public IQueryable<Ministerio> RecuperarPorNomeAtividade(string nomeAtividade)
+    {
+        return GetAll(includes: "Atividades")
+            .Where(m => m.Atividades.Any(a => a.Nome == nomeAtividade))
+            .AsSplitQuery();
     }
     #endregion
 }

@@ -5,4 +5,5 @@ namespace Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
 public interface IMinisterioRepository : IBaseRepository<Ministerio>
 {
     IQueryable<Ministerio> RecuperarPorAtividade(AtividadeId atividadeId);
+    IQueryable<Ministerio> RecuperarPorNomeAtividade(string nomeAtividade);
 }

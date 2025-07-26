@@ -1,14 +1,11 @@
-﻿using FluentValidation;
-using Nacoes.Agendamentos.Application.Abstracts;
-using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Mappings;
-using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
 using MinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio>;
 
-namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
+namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adicionar;
 
 internal sealed class AdicionarMinisterioHandler(IUnitOfWork uow,
                                                 IMinisterioRepository ministerioRepository)

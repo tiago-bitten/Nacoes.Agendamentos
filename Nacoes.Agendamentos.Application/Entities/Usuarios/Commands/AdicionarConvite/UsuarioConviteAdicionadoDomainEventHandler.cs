@@ -24,7 +24,7 @@ internal sealed class UsuarioConviteAdicionadoDomainEventHandler(IUsuarioConvite
         {
             if (usuarioConvite is null)
             {
-                throw new Exception("Convite não encontrado.");
+                return;
             }
             await historicoRegister.AuditAsync(usuarioConvite, acao: "Convite enviado por e-mail.");
             var (email, title, html) = GetTemplate(usuarioConvite);

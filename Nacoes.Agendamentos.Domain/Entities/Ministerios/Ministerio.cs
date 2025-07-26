@@ -1,15 +1,17 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
+using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Ministerios;
 
 public sealed class Ministerio : EntityId<Ministerio>, IAggregateRoot
 {
-    #region Construtores
+    private readonly List<Atividade> _atividades = [];
+    
     internal Ministerio() { }
 
-    public Ministerio(string nome, string descricao, Cor? cor = default)
+    public Ministerio(string nome, string descricao, Cor? cor = null)
     {
         if (string.IsNullOrWhiteSpace(nome))
         {
@@ -20,13 +22,11 @@ public sealed class Ministerio : EntityId<Ministerio>, IAggregateRoot
         Descricao = descricao;
         Cor = cor ?? Cor.Default;
     }
-    #endregion
 
-    public string Nome { get; private set; }
+    public string Nome { get; private set; } = null!;
     public string? Descricao { get; private set; }
-    public Cor Cor { get; private set; }
+    public Cor Cor { get; private set; } = null!;
 
-    private IList<Atividade> _atividades = [];
     public IReadOnlyCollection<Atividade> Atividades => _atividades.AsReadOnly();
 
     public void AtualizarNome(string nome) => Nome = nome;
@@ -35,8 +35,17 @@ public sealed class Ministerio : EntityId<Ministerio>, IAggregateRoot
     
     public void AtualizarCor(Cor cor) => Cor = cor;
 
-    public void AdicionarAtividade(string nome, string? descricao)
+    public Result<Atividade> AdicionarAtividade(string nome, string? descricao)
     {
-        _atividades.Add(new Atividade(nome, descricao));
+        var atividadeResult = Atividade.Criar(nome, descricao);
+        if (atividadeResult.IsFailure)
+        {
+            return atividadeResult.Error;
+        }
+        
+        var atividade = atividadeResult.Value;
+        _atividades.Add(atividade);
+        
+        return Result<Atividade>.Success(atividade);
     }
 }
