@@ -3,7 +3,7 @@ using Nacoes.Agendamentos.API.Controllers.Abstracts;
 using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Common.Responses;
-using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
+using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Adicionar;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.ValueObjects;
