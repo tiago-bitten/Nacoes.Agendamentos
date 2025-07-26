@@ -1,4 +1,4 @@
-﻿using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgenda;
+﻿using Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Adicionar;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.ValueObjects;
