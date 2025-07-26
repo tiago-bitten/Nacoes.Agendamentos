@@ -3,8 +3,8 @@ using Nacoes.Agendamentos.API.Controllers.Abstracts;
 using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Common.Responses;
+using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adicionar;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
-using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 

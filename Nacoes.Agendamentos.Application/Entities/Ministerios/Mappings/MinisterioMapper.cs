@@ -1,4 +1,4 @@
-﻿using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
+﻿using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adicionar;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 

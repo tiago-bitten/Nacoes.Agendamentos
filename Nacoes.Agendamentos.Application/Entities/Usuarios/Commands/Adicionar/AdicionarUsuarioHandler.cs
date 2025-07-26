@@ -7,6 +7,7 @@ using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
+using Nacoes.Agendamentos.Domain.Entities.Usuarios.DomainEvents;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
@@ -40,6 +41,8 @@ internal sealed class AdicionarUsuarioHandler(IUnitOfWork uow,
 
         await uow.BeginAsync();
         await usuarioRepository.AddAsync(usuario);
+        
+        usuario.Raise(new UsuarioAdicionadoDomainEvent(usuario.Id));
         await uow.CommitAsync(cancellationToken);
 
         return Result<Guid>.Success(usuario.Id);

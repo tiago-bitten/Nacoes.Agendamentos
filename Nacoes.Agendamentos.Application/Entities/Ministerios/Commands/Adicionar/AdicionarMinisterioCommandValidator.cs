@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarMinisterio;
+namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adicionar;
 
 public sealed class AdicionarMinisterioCommandValidator : AbstractValidator<AdicionarMinisterioCommand>
 {
