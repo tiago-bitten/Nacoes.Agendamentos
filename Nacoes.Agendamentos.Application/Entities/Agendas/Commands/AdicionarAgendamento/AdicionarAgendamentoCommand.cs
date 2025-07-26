@@ -2,9 +2,9 @@
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
-namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Agendar;
+namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgendamento;
 
-internal sealed record AgendarCommand : ICommand<Id<Agendamento>>
+internal sealed record AdicionarAgendamentoCommand : ICommand<Id<Agendamento>>
 {
     public Guid AgendaId { get; init; }
     public Guid VoluntarioMinisterioId { get; init; }
