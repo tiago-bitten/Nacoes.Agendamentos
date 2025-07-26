@@ -7,7 +7,7 @@ using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
-using Nacoes.Agendamentos.Infra.DomainEvents;
+using Nacoes.Agendamentos.Infra.Entities.DomainEvents;
 using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Infra.Contexts;
@@ -57,13 +57,7 @@ internal class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
                     break;
             }
         }
-
-
-        var result = await base.SaveChangesAsync(cancellationToken);
-        
-        await PublishDomainEventsAsync();
-        
-        return result;
+        return await base.SaveChangesAsync(cancellationToken);
     }
 
     private static void SaveAdded(EntityEntry entityEntry)
@@ -71,29 +65,29 @@ internal class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
         var newEntity = entityEntry.Entity;
         var type = newEntity.GetType();
 
-        if (type.IsEntityId())
-        {
-            // TODO: incrementar o id de um jeito mais inteligente
-            ((dynamic)newEntity).Salvar(); 
-        }
+        Console.WriteLine(type.Name + " criado.");
     }
 
     private static void SaveModified(EntityEntry entityEntry)
     {
         entityEntry.Property("DataCriacao").IsModified = false;
     }
-    
-    private async Task PublishDomainEventsAsync()
+
+    public List<IDomainEvent> GetDomainEvents()
     {
         var domainEvents = ChangeTracker.Entries<IEntity>()
                                         .Select(entry => entry.Entity)
-                                        .SelectMany(entity => 
-                                        { 
+                                        .SelectMany(entity =>
+                                        {
                                             var domainEvents = entity.DomainEvents;
                                             entity.ClearDomainEvents();
-                                            return domainEvents; 
+                                            return domainEvents;
                                         }).ToList();
+        return domainEvents;
+    }
 
+    public async Task PublishDomainEventsAsync(List<IDomainEvent> domainEvents)
+    {
         await domainEventsDispatcher.DispatchAsync(domainEvents);
     }
     #endregion

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nacoes.Agendamentos.Domain.Abstracts;
 
-namespace Nacoes.Agendamentos.Infra.DomainEvents;
+namespace Nacoes.Agendamentos.Infra.Entities.DomainEvents;
 
 internal sealed class DomainEventsDispatcher(IServiceProvider serviceProvider) : IDomainEventsDispatcher
 {

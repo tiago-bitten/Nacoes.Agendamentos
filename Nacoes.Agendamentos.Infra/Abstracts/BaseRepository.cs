@@ -61,13 +61,14 @@ internal abstract class BaseRepository<T> : IBaseRepository<T> where T : EntityI
             query = query.AsNoTracking();
         }
 
-        if (includes != null)
+        if (includes is null)
         {
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
+            return await query.FirstOrDefaultAsync(e => e.Id == id);
         }
+        
+        query = includes.Aggregate(query, (current, include) => current.Include(include));
+
+        query = query.AsSplitQuery();
 
         return await query.FirstOrDefaultAsync(e => e.Id == id);
     }

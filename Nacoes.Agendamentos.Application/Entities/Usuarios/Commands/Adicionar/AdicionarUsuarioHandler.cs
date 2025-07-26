@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.PasswordVerifiers;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Mappings;
@@ -16,8 +17,9 @@ internal sealed class AdicionarUsuarioHandler(IUnitOfWork uow,
 {
     public async Task<Result<Guid>> Handle(AdicionarUsuarioCommand command, CancellationToken cancellationToken = default)
     {
-        var existeUsuarioComEmail = await usuarioRepository.RecuperarPorEmailAddressAsync(command.Email);
-        if (existeUsuarioComEmail is not null)
+        var existeUsuarioComEmail = await usuarioRepository.RecuperarPorEmailAddress(command.Email)
+                                                           .AnyAsync(cancellationToken);
+        if (existeUsuarioComEmail)
         {
             return UsuarioErrors.EmailEmUso;
         }

@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Convite - Sistema Nações</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #0d47a1;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .content h2 {
+            color: #333333;
+        }
+        .content p {
+            color: #555555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .button {
+            background-color: #0d47a1;
+            color: #ffffff;
+            padding: 15px 25px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            display: inline-block;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Sistema de Agendamentos - Igreja Nações</h1>
+    </div>
+    <div class="content">
+        <h2>Olá, {{NOME_CONVIDADO}} 👋</h2>
+        <p><strong>{{NOME_USUARIO}}</strong> convidou você para fazer parte do sistema de agendamentos da <strong>Igreja Nações</strong>.</p>
+        <p>Com esse sistema, você poderá participar da organização e gerenciamento de eventos, escalas e agendamentos da igreja de forma eficiente e centralizada.</p>
+        <div class="button-container">
+            <a href="{{LINK}}" class="button">Aceitar Convite</a>
+        </div>
+        <p>Se você não esperava esse convite, pode ignorar este e-mail.</p>
+    </div>
+    <div class="footer">
+        © 2025 Igreja Nações — Sistema de Agendamentos
+    </div>
+</div>
+</body>
+</html>

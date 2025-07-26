@@ -1,28 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Nacoes.Agendamentos.Domain.Abstracts;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
-using Nacoes.Agendamentos.Infra.Abstracts;
 using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Persistence;
 
-internal class UnitOfWork : IUnitOfWork
+internal class UnitOfWork(NacoesDbContext context) : IUnitOfWork
 {
-    #region Constructor
-    private readonly NacoesDbContext _context;
     private IDbContextTransaction? _transaction;
-
-    public UnitOfWork(NacoesDbContext context)
-    {
-        _context = context;
-    }
-    #endregion
 
     #region BeginAsync
     public async Task BeginAsync()
     {
-        _transaction = await _context.Database.BeginTransactionAsync();
+        _transaction = await context.Database.BeginTransactionAsync();
     }
     #endregion
 
@@ -35,8 +24,12 @@ internal class UnitOfWork : IUnitOfWork
         }
         try
         {
-            await _context.SaveChangesAsync(cancellationToken);
+            var domainEvents = context.GetDomainEvents();
+            
+            await context.SaveChangesAsync(cancellationToken);
             await _transaction.CommitAsync(cancellationToken);
+
+            await context.PublishDomainEventsAsync(domainEvents);
         }
         catch
         {
@@ -73,8 +66,12 @@ internal class UnitOfWork : IUnitOfWork
     #region Dispose
     public void Dispose()
     {
-        _context.Dispose();
+        context.Dispose();
         _transaction?.Dispose();
     }
+    #endregion
+    
+    #region HasActiveTransaction
+    public bool HasActiveTransaction => _transaction != null;
     #endregion
 }

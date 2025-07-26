@@ -10,9 +10,11 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 namespace Nacoes.Agendamentos.Infra.Authentication;
 
-internal sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings) : ITokenGenerator
+internal sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings,
+                                     IOptions<AmbienteSettings> ambienteSettings) : ITokenGenerator
 {
     private readonly JwtSettings _jwtSettings = authSettings.Value.Jwt;
+    private readonly AmbienteSettings _ambienteSettings = ambienteSettings.Value;
 
     private DateTimeOffset DurationAuth => DateTimeOffset.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes);
     private byte[] Secret => Encoding.UTF8.GetBytes(_jwtSettings.Secret);
@@ -21,7 +23,7 @@ internal sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettin
     public string GenerateAuth(Usuario usuario)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var claims = ClaimHelper.InvokeUsuario(usuario.Id, usuario.Email.Address);
+        var claims = ClaimHelper.InvokeUsuario(usuario.Id, usuario.Email.Address, _ambienteSettings.TipoEnum);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

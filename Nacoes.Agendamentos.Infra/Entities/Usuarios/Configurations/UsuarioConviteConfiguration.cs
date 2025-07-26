@@ -11,28 +11,38 @@ internal sealed class UsuarioConviteConfiguration : EntityIdConfiguration<Usuari
     {
         base.Configure(builder);
 
-        builder.Property(u => u.Nome);
+        builder.Property(u => u.Nome)
+               .IsRequired();
         
         builder.OwnsOne(u => u.Email, emailBuilder =>
         {
             emailBuilder.Property(e => e.Address)
-                        .HasColumnName("email");
+                        .HasColumnName("email")
+                        .IsRequired();
             
             emailBuilder.Ignore(e => e.ConfirmationCode);
             emailBuilder.Ignore(e => e.ConfirmationCodeExpiration);
             emailBuilder.Ignore(e => e.IsConfirmed);
         });
 
-        builder.Property(u => u.EnviadoPorId);
+        builder.Property(u => u.EnviadoPorId)
+               .IsRequired();
 
-        builder.Property(u => u.EnviadoParaId);
+        builder.Property(u => u.EnviadoParaId)
+               .IsRequired(false);
         
         builder.Property(u => u.Status)
-               .HasConversion<string>();
-
-        builder.Property(u => u.DataExpiracao);
+               .HasConversion<string>()
+               .IsRequired();
         
-        builder.Property(u => u.Token);
+        builder.Property(u => u.Motivo)
+               .IsRequired(false);
+
+        builder.Property(u => u.DataExpiracao)
+               .IsRequired();
+        
+        builder.Property(u => u.Token)
+               .IsRequired();
         
         builder.HasOne(u => u.EnviadoPor)
                .WithMany()

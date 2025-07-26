@@ -63,9 +63,11 @@ internal static class ValidationDecorator
 
     private static Error CreateValidationError(ValidationFailure[] validationFailures)
     {
+        var isSingleError = validationFailures.Length is 1;
+        var firstErrorMessage = isSingleError ? "É obrigatório informar" : "São obrigatórios";
         var validationMessages = validationFailures.Select(x => x.ErrorMessage)
                                                    .ToArray()
                                                    .ToSingleMessage();
-        return new Error("Validation.General", validationMessages, ErrorType.Validation);
+        return new Error("Validation.General", $"{firstErrorMessage}: {validationMessages}", ErrorType.Validation);
     }
 }

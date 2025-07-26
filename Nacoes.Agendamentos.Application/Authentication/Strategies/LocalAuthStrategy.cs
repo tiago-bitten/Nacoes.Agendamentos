@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
+﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Authentication.PasswordVerifiers;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -10,7 +11,10 @@ internal class LocalAuthStrategy(IUsuarioRepository usuarioRepository) : IAuthSt
 {
     public async Task<Result<Usuario>> AutenticarAsync(LoginCommand command)
     {
-        var usuario = await usuarioRepository.RecuperarPorEmailAddressAsync(command.Email!);
+        var usuario = await usuarioRepository.RecuperarPorEmailAddress(command.Email!)
+                                             .Where(x => x.AuthType == EAuthType.Local)
+                                             .AsNoTracking()
+                                             .SingleOrDefaultAsync();
         if (usuario is null)
         {
             return UsuarioErrors.NaoEncontrado;
