@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Nacoes.Agendamentos.Infra.Migrations
 {
     [DbContext(typeof(NacoesDbContext))]
-    partial class NacoesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250727212447_Uiiiddddd")]
+    partial class Uiiiddddd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,7 +31,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasDefaultValueSql("gen_random_uuid_v7()");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
@@ -59,7 +62,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasDefaultValueSql("gen_random_uuid_v7()");
 
                     b.Property<Guid>("AgendaId")
                         .HasColumnType("uuid")
@@ -124,7 +127,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasDefaultValueSql("gen_random_uuid_v7()");
 
                     b.Property<string>("Acao")
                         .IsRequired()
@@ -176,7 +179,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasDefaultValueSql("gen_random_uuid_v7()");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
@@ -218,7 +221,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasDefaultValueSql("gen_random_uuid_v7()");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
@@ -253,7 +256,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasDefaultValueSql("gen_random_uuid_v7()");
 
                     b.Property<string>("AuthType")
                         .IsRequired()
@@ -293,7 +296,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasDefaultValueSql("gen_random_uuid_v7()");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
@@ -356,7 +359,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasDefaultValueSql("gen_random_uuid_v7()");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
@@ -391,7 +394,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasDefaultValueSql("gen_random_uuid_v7()");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")

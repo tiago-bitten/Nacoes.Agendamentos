@@ -4,5 +4,5 @@ public interface IHistoricoRepository
 {
     Task AddAsync(Historico historico);
     // TODO: Aqui vai ser list mesmo ao invés de queryable
-    Task<List<Historico>> RecuperarPorEntidadeIdAsync(string domainId);
+    Task<List<Historico>> RecuperarPorEntidadeIdAsync(Guid domainId);
 }

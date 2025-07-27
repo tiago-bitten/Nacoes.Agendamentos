@@ -5,15 +5,14 @@ using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.DomainEvents;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
-using AtividadeId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Atividade>;
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 
 internal sealed class AdicionarAtividadeHandler(IUnitOfWork uow,
                                                 IMinisterioRepository ministerioRepository)
-    : ICommandHandler<AdicionarAtividadeCommand, AtividadeId>
+    : ICommandHandler<AdicionarAtividadeCommand, Guid>
 {
-    public async Task<Result<AtividadeId>> Handle(AdicionarAtividadeCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> Handle(AdicionarAtividadeCommand command, CancellationToken cancellation = default)
     {
         var ministerio = await ministerioRepository.GetByIdAsync(command.MinisterioId);
         if (ministerio is null)
@@ -40,6 +39,6 @@ internal sealed class AdicionarAtividadeHandler(IUnitOfWork uow,
         ministerio.Raise(new AtividadeAdicionadaDomainEvent(atividade.Id));
         await uow.CommitAsync(cancellation);
 
-        return Result<AtividadeId>.Success(atividade.Id);
+        return Result<Guid>.Success(atividade.Id);
     }
 }

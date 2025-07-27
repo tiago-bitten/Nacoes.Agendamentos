@@ -1,21 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
-using Nacoes.Agendamentos.Domain.ValueObjects;
 using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Abstracts;
 
-internal abstract class BaseRepository<T> : IBaseRepository<T> where T : EntityId<T>
+internal abstract class BaseRepository<T> : IBaseRepository<T> where T : EntityId
 {
     #region Ctor
     private readonly NacoesDbContext _dbContext;
     private readonly DbSet<T> _entities;
 
-    protected DbSet<TEntidade> Escolher<TEntidade>() where TEntidade : EntityId<TEntidade>
+    protected DbSet<TEntidade> Escolher<TEntidade>() where TEntidade : EntityId
         => _dbContext.Set<TEntidade>();
 
-    public BaseRepository(NacoesDbContext dbContext)
+    protected BaseRepository(NacoesDbContext dbContext)
     {
         _dbContext = dbContext;
         _entities = _dbContext.Set<T>();
@@ -52,7 +51,7 @@ internal abstract class BaseRepository<T> : IBaseRepository<T> where T : EntityI
     #endregion
 
     #region GetByIdAsync
-    public async Task<T?> GetByIdAsync(Id<T> id, bool asNoTracking = false, params string[]? includes)
+    public async Task<T?> GetByIdAsync(Guid id, bool asNoTracking = false, params string[]? includes)
     {
         IQueryable<T> query = _entities;
 
@@ -75,7 +74,7 @@ internal abstract class BaseRepository<T> : IBaseRepository<T> where T : EntityI
     #endregion
 
     #region GetByIdToProject
-    public IQueryable<T> GetByIdToProject(Id<T> id)
+    public IQueryable<T> GetByIdToProject(Guid id)
     {
         var query = _entities.AsNoTracking();
         return query.Where(e => e.Id == id);
@@ -84,11 +83,11 @@ internal abstract class BaseRepository<T> : IBaseRepository<T> where T : EntityI
     
     #region GetOnlyIdAsync
 
-    public Task<Id<T>?> GetOnlyIdAsync(Id<T> id)
+    public Task<Guid> GetOnlyIdAsync(Guid id)
     {
         return GetByIdToProject(id)
             .Select(x => x.Id)
-            .FirstOrDefaultAsync();
+            .SingleOrDefaultAsync();
     }
 
     #endregion

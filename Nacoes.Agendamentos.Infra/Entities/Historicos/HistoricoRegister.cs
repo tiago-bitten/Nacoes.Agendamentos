@@ -11,22 +11,22 @@ public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
                                       IUnitOfWork uow) 
     : IHistoricoRegister
 {
-    public Task AuditAsync(string entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
+    public Task AuditAsync(Guid entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
     {
         return RegistrarAsync(entidadeId, acao, tipoAcao, detalhes);
     }
 
-    public Task AuditAsync<T>(T entidade, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes) where T : EntityId<T>
+    public Task AuditAsync<T>(T entidade, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes) where T : EntityId
     {
         return RegistrarAsync(entidade.Id, acao, tipoAcao, detalhes);
     }
 
-    private async Task RegistrarAsync(string? entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
+    private async Task RegistrarAsync(Guid? entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
     {
         if (uow.HasActiveTransaction)
         {
             var dataHoje = DateTimeOffset.UtcNow;
-            var usuarioId = string.Empty;
+            var usuarioId = Guid.Empty;
 
             if (ambienteContext.IsUsuarioAuthenticated)
             {

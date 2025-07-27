@@ -17,7 +17,7 @@ internal sealed class HistoricoRepository(NacoesDbContext context) : IHistoricoR
     #endregion
 
     #region RecuperarPorEntidadeId
-    public Task<List<Historico>> RecuperarPorEntidadeIdAsync(string entidadeId)
+    public Task<List<Historico>> RecuperarPorEntidadeIdAsync(Guid entidadeId)
     {
         return Historicos.Where(h => h.EntidadeId == entidadeId).ToListAsync();
     }

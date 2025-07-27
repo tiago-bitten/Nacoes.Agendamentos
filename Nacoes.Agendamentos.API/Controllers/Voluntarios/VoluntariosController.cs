@@ -2,10 +2,12 @@
 using Nacoes.Agendamentos.API.Controllers.Abstracts;
 using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Application.Common.Pagination;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Desvincular;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Queries.Recuperar;
+using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
@@ -15,7 +17,7 @@ public sealed class VoluntariosController : NacoesAuthenticatedController
 {
     #region Adicionar
     [HttpPost]
-    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarVoluntarioCommand, Id<Voluntario>> handler,
+    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarVoluntarioCommand, Guid> handler,
                                                [FromBody] AdicionarVoluntarioCommand command)
     {
         var result = await handler.Handle(command);
@@ -27,7 +29,7 @@ public sealed class VoluntariosController : NacoesAuthenticatedController
     #region Recuperar
 
     [HttpGet]
-    public async Task<IActionResult> Recuperar([FromServices] IQueryHandler<RecuperarVoluntariosQuery, List<VoluntarioResponse>> handler, 
+    public async Task<IActionResult> Recuperar([FromServices] IQueryHandler<RecuperarVoluntariosQuery, PagedResponse<VoluntarioResponse>> handler, 
                                                [FromQuery] RecuperarVoluntariosQuery query)
     {
         var result = await handler.Handle(query);

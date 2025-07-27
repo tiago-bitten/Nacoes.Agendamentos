@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
-public sealed class Usuario : EntityId<Usuario>, IAggregateRoot
+public sealed class Usuario : EntityId, IAggregateRoot
 {
     private Usuario() { }
 

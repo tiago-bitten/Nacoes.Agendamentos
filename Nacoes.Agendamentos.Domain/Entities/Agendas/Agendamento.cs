@@ -1,18 +1,15 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
-using AgendaId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Agendas.Agenda>;
-using AtividadeId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Atividade>;
-using VoluntarioMinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Voluntarios.VoluntarioMinisterio>;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Agendas;
 
-public sealed class Agendamento : EntityId<Agendamento>
+public sealed class Agendamento : EntityId
 {
     #region Construtores
     private Agendamento() { }
 
-    public Agendamento(AgendaId agendaId, 
-                       VoluntarioMinisterioId voluntarioMinisterioId,
-                       AtividadeId atividadeId,
+    public Agendamento(Guid agendaId, 
+                       Guid voluntarioMinisterioId,
+                       Guid atividadeId,
                        EOrigemAgendamento origem)
     {
         AgendaId = agendaId;
@@ -23,9 +20,9 @@ public sealed class Agendamento : EntityId<Agendamento>
     }
     #endregion
 
-    public AgendaId AgendaId { get; private set; }
-    public VoluntarioMinisterioId VoluntarioMinisterioId { get; private set; }
-    public AtividadeId AtividadeId { get; private set; }
+    public Guid AgendaId { get; private set; }
+    public Guid VoluntarioMinisterioId { get; private set; }
+    public Guid AtividadeId { get; private set; }
     public EStatusAgendamento Status { get; private set; }
     public EOrigemAgendamento Origem { get; private set; }
 
@@ -44,8 +41,8 @@ public sealed class Agendamento : EntityId<Agendamento>
 
 public enum EStatusAgendamento
 {
-    Agendado = 1,
-    Cancelado = 2
+    Agendado = 0,
+    Cancelado = 1
 }
 
 public enum EOrigemAgendamento

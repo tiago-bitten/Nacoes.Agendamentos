@@ -4,15 +4,14 @@ using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
-using AgendaId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Agendas.Agenda>;
 
 namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Adicionar;
 
 internal sealed class AdicionarAgendaHandler(IUnitOfWork uow,
                                              IAgendaRepository agendaRepository)
-    : ICommandHandler<AdicionarAgendaCommand, AgendaId>
+    : ICommandHandler<AdicionarAgendaCommand, Guid>
 {
-    public async Task<Result<AgendaId>> Handle(AdicionarAgendaCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> Handle(AdicionarAgendaCommand command, CancellationToken cancellation = default)
     {
         var agendaResult = command.ToEntity();
         if (agendaResult.IsFailure)
@@ -28,6 +27,6 @@ internal sealed class AdicionarAgendaHandler(IUnitOfWork uow,
         agenda.Raise(new AgendaAdicionadaDomainEvent(agenda.Id));
         await uow.CommitAsync(cancellation);
 
-        return Result<AgendaId>.Success(agenda.Id);
+        return Result<Guid>.Success(agenda.Id);
     }
 }

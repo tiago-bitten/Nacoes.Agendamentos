@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Nacoes.Agendamentos.Application.Common.Pagination;
 using Nacoes.Agendamentos.Domain.Common;
 
 namespace Nacoes.Agendamentos.Application.Common.Responses;
@@ -18,6 +19,12 @@ public sealed record ApiResponse<T>
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Error? Erro { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Cursor { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? HasNext { get; set; }
 }
 
 public static class ApiResponse
@@ -28,6 +35,8 @@ public static class ApiResponse
         Dados = value, 
         Erro = null, 
         Total = null, 
+        Cursor = null,
+        HasNext = null,
         Mensagem = mensagem
     };
     
@@ -37,7 +46,30 @@ public static class ApiResponse
         Dados = null, 
         Erro = null, 
         Total = null, 
+        Cursor = null,
+        HasNext = null,
         Mensagem = mensagem
+    };
+    
+    public static ApiResponse<List<T>> Ok<T>(PagedResponse<T> paged, string mensagem) => new()
+    {
+        Sucesso = true,
+        Dados = paged.Items,
+        Total = paged.Total,
+        Cursor = paged.Cursor,
+        HasNext = paged.HasNext,
+        Mensagem = mensagem
+    };
+    
+    public static ApiResponse<List<T>> Erro<T>(Error error) => new()
+    {
+        Sucesso = false, 
+        Dados = null, 
+        Erro = error, 
+        Total = null, 
+        Cursor = null,
+        HasNext = null,
+        Mensagem = string.Empty
     };
     
     public static ApiResponse<object> Erro(Error error) => new()
@@ -46,6 +78,8 @@ public static class ApiResponse
         Dados = null, 
         Erro = error, 
         Total = null, 
+        Cursor = null,
+        HasNext = null,
         Mensagem = string.Empty
     };
 }
