@@ -5,6 +5,7 @@ using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Desvincular;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Queries.Recuperar;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
@@ -21,6 +22,19 @@ public sealed class VoluntariosController : NacoesAuthenticatedController
 
         return result.AsHttpResult(mensagem: "Voluntário adicionado com sucesso.");
     }
+    #endregion
+    
+    #region Recuperar
+
+    [HttpGet]
+    public async Task<IActionResult> Recuperar([FromServices] IQueryHandler<RecuperarVoluntariosQuery, List<VoluntarioResponse>> handler, 
+                                               [FromQuery] RecuperarVoluntariosQuery query)
+    {
+        var result = await handler.Handle(query);
+
+        return result.AsHttpResult(mensagem: "Voluntários recuperados com sucesso.");
+    }
+
     #endregion
 
     #region VincularMinisterio
