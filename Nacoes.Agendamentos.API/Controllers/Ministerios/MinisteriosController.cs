@@ -9,7 +9,8 @@ using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.API.Controllers.Ministerios;
-public class MinisteriosController : NacoesAuthenticatedController
+
+public sealed class MinisteriosController : NacoesAuthenticatedController
 {
     #region Adicionar
     [HttpPost]
@@ -28,6 +29,7 @@ public class MinisteriosController : NacoesAuthenticatedController
                                                         [FromBody] AdicionarAtividadeCommand command,
                                                         [FromRoute] Guid ministerioId)
     {
+        command.MinisterioId = ministerioId;
         var result = await handler.Handle(command);
 
         return result.AsHttpResult(mensagem: "Atividade adicionada com sucesso.");

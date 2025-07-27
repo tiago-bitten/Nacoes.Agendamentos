@@ -16,6 +16,7 @@ internal sealed class AdicionarAgendamentoHandler(IUnitOfWork uow,
 {
     public async Task<Result<AgendamentoId>> Handle(AdicionarAgendamentoCommand command, CancellationToken cancellation = default)
     {
+        // agendamento.Raise(new AgendamentoAdicionadoDomainEvent(agendamento.Id));
         throw new NotImplementedException();
     }
 }

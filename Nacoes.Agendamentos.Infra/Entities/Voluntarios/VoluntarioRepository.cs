@@ -15,7 +15,7 @@ internal sealed class VoluntarioRepository(NacoesDbContext dbContext) : BaseRepo
     #region RecuperarPorVoluntarioMinisterio
     public IQueryable<Voluntario> RecuperarPorVoluntarioMinisterio(VoluntarioMinisterioId voluntarioMinisterioId)
     {
-        return GetAll()
+        return GetAll(includes: "Ministerios.Ministerio")
             .Where(v => v.Ministerios.Any(m => m.Id == voluntarioMinisterioId))
             .AsSplitQuery();
     }

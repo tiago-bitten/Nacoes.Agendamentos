@@ -1,6 +1,15 @@
-﻿namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgendamento;
+﻿using Nacoes.Agendamentos.Domain.Abstracts;
+using Nacoes.Agendamentos.Domain.Entities.Agendas.DomainEvents;
+using Nacoes.Agendamentos.Domain.Entities.Historicos;
+using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
 
-internal sealed class AgendamentoAdicionadoDomainEventHandler
+namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.AdicionarAgendamento;
+
+internal sealed class AgendamentoAdicionadoDomainEventHandler(IHistoricoRegister historicoRegister)
+    : IDomainEventHandler<AgendamentoAdicionadoDomainEvent>
 {
-    
+    public Task Handle(AgendamentoAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    {
+        return historicoRegister.AuditAsync(domainEvent.AgendamentoId, acao: "Agendamento adicionado.", EHistoricoTipoAcao.Criar);
+    }
 }

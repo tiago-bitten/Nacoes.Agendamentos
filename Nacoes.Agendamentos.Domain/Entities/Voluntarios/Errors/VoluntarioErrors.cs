@@ -17,5 +17,5 @@ public static class VoluntarioErrors
         Error.Problem("Voluntario.AutenticacaoInvalida", "É necessário informar o CPF e a data de nascimento.");
     
     public static readonly Error VoluntarioLoginNaoEncontrado = 
-        Error.NotFound("Voluntario.LoginNaoEncontrado", "Não foi possivel localizar seu cadastro.");
+        Error.NotFound("Voluntario.LoginNaoEncontrado", "Não foi possível localizar seu cadastro.");
 }

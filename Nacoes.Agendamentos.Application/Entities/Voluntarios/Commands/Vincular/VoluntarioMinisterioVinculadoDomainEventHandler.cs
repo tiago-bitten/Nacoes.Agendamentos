@@ -9,6 +9,6 @@ internal sealed class VoluntarioMinisterioVinculadoDomainEventHandler(IHistorico
 {
     public Task Handle(VoluntarioMinisterioVinculadoDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        return historicoRegister.AuditAsync(domainEvent.VoluntarioId, acao: $"Voluntário vinculado ao ministerio {domainEvent.NomeMinisterio}.");
+        return historicoRegister.AuditAsync(domainEvent.VoluntarioId, acao: $"Voluntário vinculado ao ministério {domainEvent.NomeMinisterio}.");
     }
 }

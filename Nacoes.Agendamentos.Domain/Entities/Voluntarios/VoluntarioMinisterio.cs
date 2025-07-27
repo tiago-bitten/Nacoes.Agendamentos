@@ -1,5 +1,6 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Common;
+using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
 using MinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio>;
 
@@ -12,21 +13,38 @@ public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>
     internal VoluntarioMinisterio(MinisterioId ministerioId)
     {
         MinisterioId = ministerioId;
-        Status = EVoluntarioMinisterioStatus.Ativo;
+        Status = EVoluntarioMinisterioStatus.Vinculado;
     }
 
     public MinisterioId MinisterioId { get; private set; } = null!;
     public EVoluntarioMinisterioStatus Status { get; private set; }
+    
+    public Ministerio Ministerio { get; private set; } = null!;
+    public Voluntario Voluntario { get; private set; } = null!;
 
-    #region Ativar
-    public Result Ativar()
+    #region Vincular
+    public Result Vincular()
     {
-        if (Status is EVoluntarioMinisterioStatus.Ativo)
+        if (Status is EVoluntarioMinisterioStatus.Vinculado)
         {
-            return VoluntarioMinisterioErrors.VoluntarioJaEstaAtivo;
+            return VoluntarioMinisterioErrors.VoluntarioJaEstaVinculado;
         }
 
-        Status = EVoluntarioMinisterioStatus.Ativo;
+        Status = EVoluntarioMinisterioStatus.Vinculado;
+        
+        return Result.Success();
+    }
+    #endregion
+    
+    #region Desvincular
+    public Result Desvincular()
+    {
+        if (Status is EVoluntarioMinisterioStatus.Desvinculado)
+        {
+            return VoluntarioMinisterioErrors.VoluntarioJaEstaDesvinculado;
+        }
+
+        Status = EVoluntarioMinisterioStatus.Desvinculado;
         
         return Result.Success();
     }
@@ -49,6 +67,7 @@ public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>
 
 public enum EVoluntarioMinisterioStatus
 {
-    Ativo = 0,
-    Suspenso = 1,
+    Vinculado = 0,
+    Desvinculado = 1,
+    Suspenso = 2,
 }
