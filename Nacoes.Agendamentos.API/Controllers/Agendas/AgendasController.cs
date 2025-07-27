@@ -13,7 +13,7 @@ public class AgendasController : NacoesController
 {
     #region Adicionar
     [HttpPost]
-    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarAgendaCommand, Id<Agenda>> handler,
+    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarAgendaCommand, Guid> handler,
                                                [FromBody] AdicionarAgendaCommand command)
     {
         var result = await handler.Handle(command);

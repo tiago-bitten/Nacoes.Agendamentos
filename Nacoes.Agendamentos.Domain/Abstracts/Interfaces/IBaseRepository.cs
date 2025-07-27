@@ -2,14 +2,14 @@
 
 namespace Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 
-public interface IBaseRepository<T> where T : EntityId<T>
+public interface IBaseRepository<T> where T : EntityId
 {
     Task AddAsync(T entidade);
     Task UpdateAsync(T entidade);
     Task DeleteAsync(T entidade);
-    Task<T?> GetByIdAsync(Id<T> id, bool asNoTracking = false, params string[]? includes);
+    Task<T?> GetByIdAsync(Guid id, bool asNoTracking = false, params string[]? includes);
     IQueryable<T> GetAll(params string[]? includes);
-    IQueryable<T> GetByIdToProject(Id<T> id);
-    Task<Id<T>?> GetOnlyIdAsync(Id<T> id);
+    IQueryable<T> GetByIdToProject(Guid id);
+    Task<Guid> GetOnlyIdAsync(Guid id);
     Task<bool> FindAsync(ISpecification<T> spec);
 }

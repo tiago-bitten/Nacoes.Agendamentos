@@ -2,19 +2,17 @@
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.ValueObjects;
-using EnviadoPorId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario>;
-using EnviadoParaId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario>;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
-public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
+public sealed class UsuarioConvite : EntityId, IAggregateRoot
 {
     private const int ExpiracaoEmDias = 7;
     
     private UsuarioConvite() { }
     
     private UsuarioConvite(string nome, Email email, 
-                           EnviadoPorId enviadopor,
+                           Guid enviadopor,
                            EConviteStatus status,
                            DateTimeOffset dataExpiracao,
                            string token)
@@ -29,8 +27,8 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
     
     public string Nome { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
-    public EnviadoPorId EnviadoPorId { get; private set; } = null!;
-    public EnviadoParaId? EnviadoParaId { get; private set; }
+    public Guid EnviadoPorId { get; private set; }
+    public Guid? EnviadoParaId { get; private set; }
     public EConviteStatus Status { get; private set; }
     public string Motivo { get; private set; } = null!;
     public DateTimeOffset DataExpiracao { get; private set; }
@@ -42,7 +40,7 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
     public string Path => $"usuarios/convites/{Token}";
     
     #region Criar
-    public static Result<UsuarioConvite> Criar(string nome, Email email, EnviadoPorId enviadoPorId)
+    public static Result<UsuarioConvite> Criar(string nome, Email email, Guid enviadoPorId)
     {
         if (string.IsNullOrWhiteSpace(nome))
         {
@@ -58,7 +56,7 @@ public sealed class UsuarioConvite : EntityId<UsuarioConvite>, IAggregateRoot
     #endregion
     
     #region Aceitar
-    public Result Aceitar(EnviadoParaId enviadoParaId)
+    public Result Aceitar(Guid enviadoParaId)
     {
         if (Status is not EConviteStatus.Pendente)
         {

@@ -1,6 +1,4 @@
 ﻿using Microsoft.OpenApi.Models;
-using Nacoes.Agendamentos.API.Json;
-using Nacoes.Agendamentos.API.Middlewares;
 
 namespace Nacoes.Agendamentos.API;
 
@@ -14,7 +12,6 @@ public static class DependencyInjection
                 .AddJsonOptions(x =>
                 {
                     x.JsonSerializerOptions.PropertyNamingPolicy = null;
-                    x.JsonSerializerOptions.Converters.Add(new IdJsonConverterFactory());
                 });
         services.Configure<RouteOptions>(x => x.LowercaseUrls = true);
         services.AddCors(x => x.AddDefaultPolicy(option => 

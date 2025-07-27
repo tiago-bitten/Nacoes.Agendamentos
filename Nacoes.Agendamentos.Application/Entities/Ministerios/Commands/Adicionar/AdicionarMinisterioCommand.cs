@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adicionar;
 
-public sealed record AdicionarMinisterioCommand : ICommand<Id<Ministerio>>
+public sealed record AdicionarMinisterioCommand : ICommand<Guid>
 {
     public string Nome { get; set; }
     public string? Descricao { get; set; }

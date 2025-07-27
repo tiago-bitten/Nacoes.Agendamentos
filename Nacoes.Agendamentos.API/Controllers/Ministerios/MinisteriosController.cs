@@ -14,7 +14,7 @@ public sealed class MinisteriosController : NacoesAuthenticatedController
 {
     #region Adicionar
     [HttpPost]
-    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarMinisterioCommand, Id<Ministerio>> handler,
+    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarMinisterioCommand, Guid> handler,
                                                [FromBody] AdicionarMinisterioCommand command)
     {
         var result = await handler.Handle(command);
@@ -25,7 +25,7 @@ public sealed class MinisteriosController : NacoesAuthenticatedController
 
     #region AdicionarAtividade
     [HttpPost("{ministerioId:guid}/atividades")]
-    public async Task<IActionResult> AdicionarAtividade([FromServices] ICommandHandler<AdicionarAtividadeCommand, Id<Atividade>> handler,
+    public async Task<IActionResult> AdicionarAtividade([FromServices] ICommandHandler<AdicionarAtividadeCommand, Guid> handler,
                                                         [FromBody] AdicionarAtividadeCommand command,
                                                         [FromRoute] Guid ministerioId)
     {

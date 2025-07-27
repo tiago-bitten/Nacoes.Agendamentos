@@ -17,23 +17,23 @@ internal static class ClaimHelper
     #endregion
 
     #region Invoke
-    public static Claim[] InvokeUsuario(string id, string email, EEnvironment environment)
+    public static Claim[] InvokeUsuario(Guid id, string email, EEnvironment environment)
     {
         return GetContractClaims(id, email, isBot: false, isThirdPartyUser: false, environment);
     }
 
     public static Claim[] InvokeBot(EEnvironment environment)
     {
-       return GetContractClaims("1", "bot@nacoes.com", isBot: true, isThirdPartyUser: false, environment);
+       return GetContractClaims(Guid.NewGuid(), "bot@nacoes.com", isBot: true, isThirdPartyUser: false, environment);
     }
     
-    public static Claim[] InvokeThirdPartyUser(string id, string? email, EEnvironment environment)
+    public static Claim[] InvokeThirdPartyUser(Guid id, string? email, EEnvironment environment)
     {
         return GetContractClaims(id, email ?? "voluntario-sem-email@nacoes.com", isBot: false, isThirdPartyUser: true,
             environment);
     }
     
-    private static Claim[] GetContractClaims(string id,
+    private static Claim[] GetContractClaims(Guid id,
                                              string email,
                                              bool isBot,
                                              bool isThirdPartyUser,
@@ -41,7 +41,7 @@ internal static class ClaimHelper
     {
         return
         [
-            new Claim(UserId, id),
+            new Claim(UserId, id.ToString()),
             new Claim(UserEmailAddress, email),
             new Claim(IsBot, isBot.ToString()),
             new Claim(IsThirdPartyUser, isThirdPartyUser.ToString()),
@@ -58,9 +58,9 @@ internal static class ClaimHelper
     #endregion
 
     #region GetUserId
-    public static string GetUserId(IHttpContextAccessor context)
+    public static Guid GetUserId(IHttpContextAccessor context)
     {
-        return context.GetClaim(UserId).Value;
+        return Guid.Parse(context.GetClaim(UserId).Value);
     }
     #endregion
 

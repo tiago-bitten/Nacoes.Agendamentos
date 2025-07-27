@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Ministerios;
 
-public sealed class Ministerio : EntityId<Ministerio>, IAggregateRoot
+public sealed class Ministerio : EntityId, IAggregateRoot
 {
     private readonly List<Atividade> _atividades = [];
     

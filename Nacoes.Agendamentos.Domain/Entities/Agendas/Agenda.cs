@@ -5,7 +5,7 @@ using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Agendas;
 
-public sealed class Agenda : EntityId<Agenda>, IAggregateRoot
+public sealed class Agenda : EntityId, IAggregateRoot
 {
     private readonly List<Agendamento> _agendamentos = [];
 

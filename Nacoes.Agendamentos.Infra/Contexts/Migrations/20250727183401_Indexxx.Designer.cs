@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Nacoes.Agendamentos.Infra.Migrations
 {
     [DbContext(typeof(NacoesDbContext))]
-    partial class NacoesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250727183401_Indexxx")]
+    partial class Indexxx
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,14 +28,12 @@ namespace Nacoes.Agendamentos.Infra.Migrations
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Agendas.Agenda", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasColumnName("id");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
+                        .HasColumnName("criado_em");
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -46,20 +47,14 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasKey("Id")
                         .HasName("pk_agenda");
 
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_agenda_data_criacao_id");
-
                     b.ToTable("agenda", (string)null);
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Agendas.Agendamento", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasColumnName("id");
 
                     b.Property<Guid>("AgendaId")
                         .HasColumnType("uuid")
@@ -71,7 +66,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
+                        .HasColumnName("criado_em");
 
                     b.Property<bool>("Inativo")
                         .HasColumnType("boolean")
@@ -107,10 +102,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasIndex("agenda_id")
                         .HasDatabaseName("ix_agendamento_agenda_id");
 
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_agendamento_data_criacao_id");
-
                     b.ToTable("agendamento", null, t =>
                         {
                             t.Property("agenda_id")
@@ -121,10 +112,8 @@ namespace Nacoes.Agendamentos.Infra.Migrations
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Historicos.Historico", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasColumnName("id");
 
                     b.Property<string>("Acao")
                         .IsRequired()
@@ -137,7 +126,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
+                        .HasColumnName("criado_em");
 
                     b.Property<string>("Detalhes")
                         .HasColumnType("text")
@@ -163,24 +152,18 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasKey("Id")
                         .HasName("pk_historico");
 
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_historico_data_criacao_id");
-
                     b.ToTable("historico", (string)null);
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Ministerios.Atividade", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasColumnName("id");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
+                        .HasColumnName("criado_em");
 
                     b.Property<string>("Descricao")
                         .HasColumnType("text")
@@ -205,24 +188,18 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasIndex("ministerio_id")
                         .HasDatabaseName("ix_atividade_ministerio_id");
 
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_atividade_data_criacao_id");
-
                     b.ToTable("atividade", (string)null);
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasColumnName("id");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
+                        .HasColumnName("criado_em");
 
                     b.Property<string>("Descricao")
                         .HasColumnType("text")
@@ -240,20 +217,14 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasKey("Id")
                         .HasName("pk_ministerio");
 
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_ministerio_data_criacao_id");
-
                     b.ToTable("ministerio", (string)null);
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.Usuario", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasColumnName("id");
 
                     b.Property<string>("AuthType")
                         .IsRequired()
@@ -262,7 +233,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
+                        .HasColumnName("criado_em");
 
                     b.Property<bool>("Inativo")
                         .HasColumnType("boolean")
@@ -280,24 +251,18 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasKey("Id")
                         .HasName("pk_usuario");
 
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_usuario_data_criacao_id");
-
                     b.ToTable("usuario", (string)null);
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Usuarios.UsuarioConvite", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasColumnName("id");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
+                        .HasColumnName("criado_em");
 
                     b.Property<DateTimeOffset>("DataExpiracao")
                         .HasColumnType("timestamp with time zone")
@@ -343,24 +308,18 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasIndex("EnviadoPorId")
                         .HasDatabaseName("ix_usuario_convite_enviado_por_id");
 
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_usuarioconvite_data_criacao_id");
-
                     b.ToTable("usuario_convite", (string)null);
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Voluntarios.Voluntario", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasColumnName("id");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
+                        .HasColumnName("criado_em");
 
                     b.Property<bool>("Inativo")
                         .HasColumnType("boolean")
@@ -378,24 +337,18 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasKey("Id")
                         .HasName("pk_voluntario");
 
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_voluntario_data_criacao_id");
-
                     b.ToTable("voluntario", (string)null);
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Voluntarios.VoluntarioMinisterio", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v1()");
+                        .HasColumnName("id");
 
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
+                        .HasColumnName("criado_em");
 
                     b.Property<bool>("Inativo")
                         .HasColumnType("boolean")
@@ -430,10 +383,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.HasIndex("voluntario_id")
                         .HasDatabaseName("ix_voluntario_ministerio_voluntario_id1");
 
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_voluntarioministerio_data_criacao_id");
-
                     b.ToTable("voluntario_ministerio", null, t =>
                         {
                             t.Property("voluntario_id")
@@ -446,7 +395,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Horario", "Horario", b1 =>
                         {
                             b1.Property<Guid>("AgendaId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -506,7 +454,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Cor", "Cor", b1 =>
                         {
                             b1.Property<Guid>("MinisterioId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -538,7 +485,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Celular", "Celular", b1 =>
                         {
                             b1.Property<Guid>("UsuarioId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -564,7 +510,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("UsuarioId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -617,7 +562,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("UsuarioConviteId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -648,7 +592,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Celular", "Celular", b1 =>
                         {
                             b1.Property<Guid>("VoluntarioId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -674,7 +617,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("VoluntarioId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -707,7 +649,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.CPF", "Cpf", b1 =>
                         {
                             b1.Property<Guid>("VoluntarioId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -728,7 +669,6 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.DataNascimento", "DataNascimento", b1 =>
                         {
                             b1.Property<Guid>("VoluntarioId")
-                                .ValueGeneratedOnAdd()
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 

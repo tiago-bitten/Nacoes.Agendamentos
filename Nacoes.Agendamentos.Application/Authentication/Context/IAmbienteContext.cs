@@ -4,12 +4,12 @@ namespace Nacoes.Agendamentos.Application.Authentication.Context;
 
 public interface IAmbienteContext
 {
-    string UserId { get; }
+    Guid UserId { get; }
     bool IsUsuarioAuthenticated { get; }
     bool IsUsuario { get; }
     bool IsBot { get; }
     bool IsThirdPartyUser { get; }
     void StartBotSession();
-    void StartThirdPartyUserSession(string id, string? email);
+    void StartThirdPartyUserSession(Guid id, string? email);
     EEnvironment GetEnvironment();
 }

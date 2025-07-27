@@ -14,7 +14,7 @@ internal sealed class AmbienteContext(IHttpContextAccessor context,
 {
     private readonly AmbienteSettings _ambienteSettings = settings.Value;
     
-    public string UserId => ClaimHelper.GetUserId(context);
+    public Guid UserId => ClaimHelper.GetUserId(context);
     public bool IsUsuarioAuthenticated => ClaimHelper.GetIsAuthenticated(context);
     public bool IsUsuario => !IsBot && !IsThirdPartyUser;
     public bool IsBot => ClaimHelper.GetIsBot(context);
@@ -29,7 +29,7 @@ internal sealed class AmbienteContext(IHttpContextAccessor context,
         context.SetUser(principal);
     }
 
-    public void StartThirdPartyUserSession(string id, string? email)
+    public void StartThirdPartyUserSession(Guid id, string? email)
     {
         var claims = ClaimHelper.InvokeThirdPartyUser(id, email, _ambienteSettings.TipoEnum);
         var identity = new ClaimsIdentity(claims, "ThirdPartyUser");

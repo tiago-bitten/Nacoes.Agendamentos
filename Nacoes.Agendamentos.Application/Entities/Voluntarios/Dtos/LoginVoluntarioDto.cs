@@ -1,3 +1,3 @@
 ﻿namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Dtos;
 
-public sealed record LoginVoluntarioDto(string VoluntarioId, string? VoluntarioEmail);
+public sealed record LoginVoluntarioDto(Guid VoluntarioId, string? VoluntarioEmail);

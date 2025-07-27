@@ -1,16 +1,9 @@
 using Hangfire;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Nacoes.Agendamentos.API;
-using Nacoes.Agendamentos.API.Extensions;
-using Nacoes.Agendamentos.API.Json;
 using Nacoes.Agendamentos.API.Middlewares;
 using Nacoes.Agendamentos.Application;
-using Nacoes.Agendamentos.Application.Abstracts.Data;
-using Nacoes.Agendamentos.Application.Common.Settings;
 using Nacoes.Agendamentos.Infra;
-using Nacoes.Agendamentos.Infra.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 

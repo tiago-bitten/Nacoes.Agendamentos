@@ -4,11 +4,11 @@ namespace Nacoes.Agendamentos.Domain.Entities.Historicos;
 
 // TODO: Futuramente isso será em nosql, não em sql
 // A parte de geração de Id será diferente, por hora pode ficar assim
-public sealed class Historico : EntityId<Historico>
+public sealed class Historico : EntityId
 {
     private Historico() { }
     
-    private Historico(string? entidadeId, DateTimeOffset data, string? usuarioId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
+    private Historico(Guid? entidadeId, DateTimeOffset data, Guid? usuarioId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
     {
         EntidadeId = entidadeId;
         Data = data;
@@ -18,14 +18,14 @@ public sealed class Historico : EntityId<Historico>
         Detalhes = detalhes;
     }
     
-    public string? EntidadeId { get; private set; }
+    public Guid? EntidadeId { get; private set; }
     public DateTimeOffset Data { get; private set; }
-    public string? UsuarioId { get; private set; }
+    public Guid? UsuarioId { get; private set; }
     public string Acao { get; private set; } = string.Empty;
     public EHistoricoTipoAcao TipoAcao { get; private set; }
     public string? Detalhes { get; private set; }
     
-    public static Historico Criar(string? entidadeId, DateTimeOffset data, string? usuarioId, string acao, 
+    public static Historico Criar(Guid? entidadeId, DateTimeOffset data, Guid? usuarioId, string acao, 
         EHistoricoTipoAcao tipoAcao, string? detalhes) => new(entidadeId, data, usuarioId, acao, tipoAcao, detalhes);
 }
 

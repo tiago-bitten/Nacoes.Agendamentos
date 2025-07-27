@@ -3,11 +3,10 @@ using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
 using Nacoes.Agendamentos.Domain.ValueObjects;
-using MinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio>;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 
-public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
+public sealed class Voluntario : EntityId, IAggregateRoot
 {
     private readonly List<VoluntarioMinisterio> _ministerios = [];
 
@@ -76,7 +75,7 @@ public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
     #endregion
     
     #region VincularMinisterio
-    public Result VincularMinisterio(MinisterioId ministerioId)
+    public Result VincularMinisterio(Guid ministerioId)
     {
         var existeVinculo = _ministerios.SingleOrDefault(x => x.MinisterioId == ministerioId);
         if (existeVinculo is null)
@@ -90,7 +89,7 @@ public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
     #endregion
     
     #region DesvincularMinisterio
-    public Result DesvincularMinisterio(MinisterioId ministerioId)
+    public Result DesvincularMinisterio(Guid ministerioId)
     {
         var existeVinculo = _ministerios.SingleOrDefault(x => x.MinisterioId == ministerioId);
         if (existeVinculo is null)

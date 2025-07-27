@@ -2,7 +2,7 @@
 using Nacoes.Agendamentos.Domain.Common;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Ministerios;
-public sealed class Atividade : EntityId<Atividade>
+public sealed class Atividade : EntityId
 {
     private Atividade() { }
 

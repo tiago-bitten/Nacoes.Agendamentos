@@ -5,16 +5,17 @@ namespace Nacoes.Agendamentos.Domain.Abstracts;
 
 public interface IEntity
 {
+    Guid Id { get; }
     List<IDomainEvent> DomainEvents { get; }
     void ClearDomainEvents();
     void Raise(IDomainEvent domainEvent);
 }
 
-public abstract class EntityId<T> : IEntity
+public abstract class EntityId : IEntity
 {
     private readonly List<IDomainEvent> _domainEvents = [];
-    
-    public Id<T> Id { get; private set; } = Id<T>.Novo();
+
+    public Guid Id { get; private set; }
     public DateTimeOffset DataCriacao { get; private set; } = DateTimeOffset.UtcNow;
     public bool Inativo { get; private set; }
     

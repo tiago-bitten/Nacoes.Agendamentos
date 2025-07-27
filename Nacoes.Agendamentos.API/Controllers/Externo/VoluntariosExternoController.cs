@@ -16,7 +16,7 @@ public sealed class VoluntariosExternoController : NacoesController
 {
     #region Adicionar
     [HttpPost]
-    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarVoluntarioCommand, Id<Voluntario>> handler,
+    public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarVoluntarioCommand, Guid> handler,
                                                [FromBody] AdicionarVoluntarioCommand command)
     {
         var result = await handler.Handle(command);

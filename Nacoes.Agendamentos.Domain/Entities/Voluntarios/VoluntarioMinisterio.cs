@@ -2,21 +2,20 @@
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
-using MinisterioId = Nacoes.Agendamentos.Domain.ValueObjects.Id<Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio>;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 
-public sealed class VoluntarioMinisterio : EntityId<VoluntarioMinisterio>
+public sealed class VoluntarioMinisterio : EntityId
 {
     private VoluntarioMinisterio() { }
 
-    internal VoluntarioMinisterio(MinisterioId ministerioId)
+    internal VoluntarioMinisterio(Guid ministerioId)
     {
         MinisterioId = ministerioId;
         Status = EVoluntarioMinisterioStatus.Vinculado;
     }
 
-    public MinisterioId MinisterioId { get; private set; } = null!;
+    public Guid MinisterioId { get; private set; }
     public EVoluntarioMinisterioStatus Status { get; private set; }
     
     public Ministerio Ministerio { get; private set; } = null!;

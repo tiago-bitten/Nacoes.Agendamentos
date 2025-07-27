@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.Application.Common.Pagination;
 using Nacoes.Agendamentos.Application.Common.Responses;
 using Nacoes.Agendamentos.Domain.Common;
 
@@ -17,6 +18,19 @@ internal static class ApiResponseExtensions
             StatusCode = result.StatusCode
         };
     }
+    
+    public static ObjectResult AsHttpResult<T>(this Result<PagedResponse<T>> result, string mensagem)
+    {
+        var response = result.IsSuccess
+            ? ApiResponse.Ok(result.Value!, mensagem)
+            : ApiResponse.Erro<T>(result.Error);
+
+        return new ObjectResult(response)
+        {
+            StatusCode = result.StatusCode
+        };
+    }
+
 
     public static ObjectResult AsHttpResult(this Result result, string mensagem)
     {
