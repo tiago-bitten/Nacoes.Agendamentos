@@ -3,6 +3,7 @@ using Nacoes.Agendamentos.API.Controllers.Abstracts;
 using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
+using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Desvincular;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
@@ -18,25 +19,35 @@ public sealed class VoluntariosController : NacoesAuthenticatedController
     {
         var result = await handler.Handle(command);
 
-        return result.AsHttpResult(mensagem: "Voluntario adicionado com sucesso.");
+        return result.AsHttpResult(mensagem: "Voluntário adicionado com sucesso.");
     }
     #endregion
 
     #region VincularMinisterio
-    [HttpPost("{voluntarioId:guid}/ministerio/{ministerio:guid}")]
+    [HttpPost("{voluntarioId:guid}/ministerios")]
     public async Task<IActionResult> VincularMinisterio([FromServices] ICommandHandler<VincularVoluntarioMinisterioCommand> handler,
-                                                        [FromRoute] Guid voluntarioId,
-                                                        [FromRoute] Guid ministerioId)
+                                                        [FromBody] VincularVoluntarioMinisterioCommand command,
+                                                        [FromRoute] Guid voluntarioId)
     {
-        var command = new VincularVoluntarioMinisterioCommand
-        {
-            VoluntarioId = voluntarioId,
-            MinisterioId = ministerioId
-        };
-
+        command.VoluntarioId = voluntarioId;
         var result = await handler.Handle(command);
 
-        return Ok();
+        return result.AsHttpResult(mensagem: "Voluntário vinculado ao ministério com sucesso.");
+    }
+    #endregion
+    
+    #region DesvincularMinisterio
+    [HttpDelete("/ministerios/{voluntarioMinisterioId:guid}")]    
+    public async Task<IActionResult> DesvincularMinisterio([FromServices] ICommandHandler<DesvincularVoluntarioMinisterioCommand> handler,
+                                                           [FromRoute] Guid voluntarioMinisterioId)
+    {
+        var command = new DesvincularVoluntarioMinisterioCommand
+        {
+            VoluntarioMinisterioId = voluntarioMinisterioId
+        };
+        var result = await handler.Handle(command);
+
+        return result.AsHttpResult(mensagem: "Voluntário desvinculado ao ministério com sucesso.");
     }
     #endregion
 }

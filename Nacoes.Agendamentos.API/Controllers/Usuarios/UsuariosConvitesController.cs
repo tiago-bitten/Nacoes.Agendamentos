@@ -16,17 +16,18 @@ public sealed class UsuariosConvitesController : NacoesAuthenticatedController
                                                [FromBody] AdicionarUsuarioConviteCommand command)
     {
         var result = await handler.Handle(command);
+        
         return result.AsHttpResult(mensagem: "Convite enviado com sucesso.");
     }
     #endregion
     
     #region Aceitar
-    [HttpPost("aceitar")]
+    [HttpPut("aceitar")]
     public async Task<IActionResult> Aceitar([FromServices] ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse> handler,
                                              [FromBody] AceitarUsuarioConviteCommand command)
     {
         var result = await handler.Handle(command);
-
+        
         return result.AsHttpResult(mensagem: "Convite aceito com sucesso.");
     }
     #endregion

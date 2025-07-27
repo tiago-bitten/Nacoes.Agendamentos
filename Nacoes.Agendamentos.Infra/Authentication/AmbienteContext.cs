@@ -9,7 +9,8 @@ using Nacoes.Agendamentos.Infra.Extensions;
 namespace Nacoes.Agendamentos.Infra.Authentication;
 
 internal sealed class AmbienteContext(IHttpContextAccessor context,
-                                      IOptions<AmbienteSettings> settings) : IAmbienteContext
+                                      IOptions<AmbienteSettings> settings) 
+    : IAmbienteContext
 {
     private readonly AmbienteSettings _ambienteSettings = settings.Value;
     

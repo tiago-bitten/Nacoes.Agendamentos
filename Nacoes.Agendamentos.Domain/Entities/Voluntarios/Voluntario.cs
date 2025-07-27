@@ -85,7 +85,20 @@ public sealed class Voluntario : EntityId<Voluntario>, IAggregateRoot
             return Result.Success();
         }
 
-        return existeVinculo.Ativar();
+        return existeVinculo.Vincular();
+    }
+    #endregion
+    
+    #region DesvincularMinisterio
+    public Result DesvincularMinisterio(MinisterioId ministerioId)
+    {
+        var existeVinculo = _ministerios.SingleOrDefault(x => x.MinisterioId == ministerioId);
+        if (existeVinculo is null)
+        {
+            return VoluntarioMinisterioErrors.VoluntarioNaoEstaVinculadoAoMinisterio;
+        }
+
+        return existeVinculo.Desvincular();
     }
     #endregion
 }

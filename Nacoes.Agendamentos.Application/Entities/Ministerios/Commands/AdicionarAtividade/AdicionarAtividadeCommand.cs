@@ -8,6 +8,5 @@ public sealed record AdicionarAtividadeCommand : ICommand<Id<Atividade>>
 {
     public required string Nome { get; init; }
     public string? Descricao { get; init; }
-    
-    public Guid MinisterioId { get; init; }
+    public Guid MinisterioId { get; set; }
 }
