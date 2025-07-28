@@ -21,24 +21,40 @@ public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
         return RegistrarAsync(entidade.Id, acao, tipoAcao, detalhes);
     }
 
+    private async Task RegistrarHistoricoInternoAsync(Guid? entidadeId, string acao, EHistoricoTipoAcao tipoAcao, EHistoricoUsuarioAcao usuarioAcao, string? detalhes, Guid usuarioId)
+    {
+        var historico = Historico.Criar(entidadeId, DateTimeOffset.UtcNow, usuarioId, acao, tipoAcao, usuarioAcao, detalhes);
+        await historicoRepository.AddAsync(historico);
+    }
+
     private async Task RegistrarAsync(Guid? entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
     {
+        if (!ambienteContext.IsUsuarioAuthenticated)
+        {
+            throw new Exception("Nao foi possivel identificar o usuario.");
+        }
+        
+        var usuarioAcao = ambienteContext.IsUsuario ? EHistoricoUsuarioAcao.Usuario : ambienteContext.IsBot ? 
+            EHistoricoUsuarioAcao.Bot : EHistoricoUsuarioAcao.ThirdPartyUser;
+        
+        var usuarioId = ambienteContext.UserId;
+
         if (uow.HasActiveTransaction)
         {
-            var dataHoje = DateTimeOffset.UtcNow;
-            var usuarioId = Guid.Empty;
-
-            if (ambienteContext.IsUsuarioAuthenticated)
-            {
-                usuarioId = ambienteContext.UserId;
-            }
-
-            await historicoRepository.AddAsync(Historico.Criar(entidadeId, dataHoje, usuarioId, acao, tipoAcao, detalhes));
+            await RegistrarHistoricoInternoAsync(entidadeId, acao, tipoAcao, usuarioAcao, detalhes, usuarioId);
             return;
         }
 
         await uow.BeginAsync();
-        await RegistrarAsync(entidadeId, acao, tipoAcao, detalhes);
-        await uow.CommitAsync();
+        try
+        {
+            await RegistrarHistoricoInternoAsync(entidadeId, acao, tipoAcao, usuarioAcao, detalhes, usuarioId);
+            await uow.CommitAsync();
+        }
+        catch
+        {
+            await uow.RollbackAsync();
+            throw;
+        }
     }
 }

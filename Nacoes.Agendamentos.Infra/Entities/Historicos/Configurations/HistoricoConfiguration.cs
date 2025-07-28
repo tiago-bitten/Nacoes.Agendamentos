@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Infra.Abstracts;
 
@@ -17,6 +18,7 @@ internal sealed class HistoricoConfiguration : EntityIdConfiguration<Historico>
                .IsRequired();
         
         builder.Property(h => h.UsuarioId)
+               .HasColumnType("uuid")
                .IsRequired(false);
         
         builder.Property(h => h.Acao)
@@ -26,7 +28,13 @@ internal sealed class HistoricoConfiguration : EntityIdConfiguration<Historico>
                .IsRequired()
                .HasConversion<string>();
         
+        builder.Property(h => h.UsuarioAcao)
+               .IsRequired();
+        
         builder.Property(h => h.Detalhes)
                .IsRequired(false);
+
+        builder.Ignore(h => h.Inativo);
+        builder.Ignore(h => h.DataCriacao);
     }
 }
