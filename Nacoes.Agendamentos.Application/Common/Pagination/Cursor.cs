@@ -1,6 +1,10 @@
-﻿using System.Text.Json;
+﻿namespace Nacoes.Agendamentos.Application.Common.Pagination;
 
-namespace Nacoes.Agendamentos.Application.Common.Pagination;
+public interface ICursorResponse
+{
+    Guid Id { get; }
+    DateTimeOffset DataCriacao { get; }
+}
 
 public static class Cursor
 {

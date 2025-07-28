@@ -5,12 +5,6 @@ using Nacoes.Agendamentos.Infra.Contexts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Agendas;
 
-internal class AgendaRepository : BaseRepository<Agenda>, IAgendaRepository
+internal class AgendaRepository(NacoesDbContext dbContext) : BaseRepository<Agenda>(dbContext), IAgendaRepository
 {
-    #region Constructors
-    public AgendaRepository(NacoesDbContext dbContext)
-        : base(dbContext)
-    {
-    }
-    #endregion
 }
