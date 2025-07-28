@@ -1,8 +1,9 @@
 ﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Application.Common.Pagination;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Queries.Recuperar;
 
-public record VoluntarioResponse
+public record VoluntarioResponse : ICursorResponse
 {
     public required Guid Id { get; init; }
     public required DateTimeOffset DataCriacao { get; init; }

@@ -7,9 +7,6 @@ using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Desvincular;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Queries.Recuperar;
-using Nacoes.Agendamentos.Domain.Common;
-using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
-using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.API.Controllers.Voluntarios;
 

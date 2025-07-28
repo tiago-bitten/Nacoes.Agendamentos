@@ -21,7 +21,7 @@ internal sealed class RecuperarVoluntariosQueryHandler(IVoluntarioRepository vol
                                                         {
                                                             Nome = m.Ministerio.Nome
                                                         }).ToList()
-                                                    }).ToPagedResponseAsync(query.Limit, query.Cursor, x => x.DataCriacao, x => x.Id).ConfigureAwait(false);
+                                                    }).ToPagedResponseAsync(query.Limit, query.Cursor);
 
         return Result<PagedResponse<VoluntarioResponse>>.Success(voluntarios);
     }
