@@ -14,7 +14,6 @@ using Nacoes.Agendamentos.Application.Abstracts.Notifications;
 using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Application.Common.Settings;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
@@ -25,7 +24,6 @@ using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Infra.Authentication;
 using Nacoes.Agendamentos.Infra.BackgroundJobs;
 using Nacoes.Agendamentos.Infra.Contexts;
-using Nacoes.Agendamentos.Infra.CronJobs.Implementations;
 using Nacoes.Agendamentos.Infra.Entities.Agendas;
 using Nacoes.Agendamentos.Infra.Entities.DomainEvents;
 using Nacoes.Agendamentos.Infra.Entities.Historicos;
@@ -181,8 +179,6 @@ public static class DependencyInjection
         services.AddScoped<IAtividadeRepository, AtividadeRepository>();
         services.AddScoped<IUsuarioConviteRepository, UsuarioConviteRepository>();
         services.AddScoped<IHistoricoRepository, HistoricoRepository>();
-        
-        services.AddScoped<IVoluntarioApplicationRepository, VoluntarioRepository>();
         
         return services;
     }

@@ -6,4 +6,5 @@ public interface IVoluntarioRepository : IBaseRepository<Voluntario>
 {
     IQueryable<Voluntario> RecuperarPorVoluntarioMinisterio(Guid voluntarioMinisterioId);
     IQueryable<Voluntario> RecuperarPorEmailAddress(string emailAddress);
+    IQueryable<Voluntario> RecuperarParaLoginExterno(DateOnly dataNascimento, string cpf);
 }

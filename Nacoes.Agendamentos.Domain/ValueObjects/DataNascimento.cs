@@ -1,6 +1,6 @@
 ﻿namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
-public sealed record class DataNascimento : IEquatable<DataNascimento>
+public sealed record DataNascimento
 {
     public DateOnly Valor { get; }
     public int Idade => CalcularIdade(Valor);
