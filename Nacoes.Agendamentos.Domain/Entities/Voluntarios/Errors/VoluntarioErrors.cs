@@ -18,4 +18,7 @@ public static class VoluntarioErrors
     
     public static readonly Error VoluntarioLoginNaoEncontrado = 
         Error.NotFound("Voluntario.LoginNaoEncontrado", "Não foi possível localizar seu cadastro.");
+    
+    public static readonly Error DeveCriarConta = 
+        Error.Problem("Voluntario.DeveCriarConta", "Para prosseguir, é necessário criar uma conta.");
 }

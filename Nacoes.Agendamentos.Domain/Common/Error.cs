@@ -9,7 +9,7 @@ public record Error(string Codigo, string Descricao, ErrorType Tipo)
     {
         ErrorType.Failure => 500,
         ErrorType.Validation => 400,
-        ErrorType.Problem => 500,
+        ErrorType.Problem => 400,
         ErrorType.NotFound => 404,
         ErrorType.Conflict => 409,
         _ => 418 // teapot

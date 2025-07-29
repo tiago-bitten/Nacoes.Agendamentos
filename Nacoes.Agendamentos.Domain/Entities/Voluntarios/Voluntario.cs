@@ -33,6 +33,7 @@ public sealed class Voluntario : EntityId, IAggregateRoot
 
     public IReadOnlyCollection<VoluntarioMinisterio> Ministerios => _ministerios.AsReadOnly();
 
+    public string EmailAddress => Email?.Address ?? string.Empty;
     public int Idade => DataNascimento?.Idade ?? 0;
     public bool MenorDeIdade => DataNascimento?.MenorDeIdade ?? false;
 

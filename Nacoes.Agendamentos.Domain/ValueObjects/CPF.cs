@@ -2,7 +2,8 @@
 
 namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
-public sealed record class CPF : IEquatable<CPF>
+// ReSharper disable once InconsistentNaming
+public sealed record CPF
 {
     public string Numero { get; }
 
@@ -37,8 +38,10 @@ public sealed record class CPF : IEquatable<CPF>
         var tempCpf = cpf[..9];
         var soma = 0;
 
-        for (int i = 0; i < 9; i++)
+        for (var i = 0; i < 9; i++)
+        {
             soma += (tempCpf[i] - '0') * multiplicador1[i];
+        }
 
         var resto = soma % 11;
         var digito1 = resto < 2 ? 0 : 11 - resto;
@@ -46,8 +49,10 @@ public sealed record class CPF : IEquatable<CPF>
         tempCpf += digito1;
         soma = 0;
 
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
+        {
             soma += (tempCpf[i] - '0') * multiplicador2[i];
+        }
 
         resto = soma % 11;
         var digito2 = resto < 2 ? 0 : 11 - resto;

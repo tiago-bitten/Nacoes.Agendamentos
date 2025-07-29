@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Application.Authentication.Commands.LoginExterno;
 using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Common.Responses;
-using Nacoes.Agendamentos.Application.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
 
 namespace Nacoes.Agendamentos.Application.Common.Filters;
@@ -26,12 +28,16 @@ public sealed class VoluntarioAuthorizationAttribute : Attribute, IAsyncActionFi
         }
 
         var dataNascimento = DateOnly.Parse(dataNascimentoStr!);
+        
+        var loginHandler = httpContext.RequestServices.GetRequiredService<ICommandHandler<LoginExternoCommand>>();
 
-        var ambienteContext = httpContext.RequestServices.GetRequiredService<IAmbienteContext>();
-        var voluntarioAppRepository = httpContext.RequestServices.GetRequiredService<IVoluntarioApplicationRepository>();
-
-        var loginDto = await voluntarioAppRepository.RecuperarLoginAsync(cpf!, dataNascimento);
-        if (loginDto is null)
+        var loginResult = await loginHandler.Handle(new LoginExternoCommand
+        {
+            Cpf = cpf!,
+            DataNascimento = dataNascimento
+        });
+        
+        if (loginResult.IsFailure)
         {
             httpContext.Response.StatusCode = 401;
             httpContext.Response.ContentType = "application/json";
@@ -39,9 +45,9 @@ public sealed class VoluntarioAuthorizationAttribute : Attribute, IAsyncActionFi
             await httpContext.Response.WriteAsJsonAsync(ApiResponse.Erro(error));
             return;
         }
-
-        ambienteContext.StartThirdPartyUserSession(loginDto.VoluntarioId, loginDto.VoluntarioEmail);
-
+        
+        // The handler will set the VoluntarioId in the AmbienteContext
+        
         await next();
     }
 }
