@@ -13,6 +13,7 @@ namespace Nacoes.Agendamentos.Application;
 
 public static class DependencyInjection
 {
+    #region AddApplication
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddHandlers();
@@ -23,6 +24,7 @@ public static class DependencyInjection
         
         return services;
     }
+    #endregion
     
     #region AddHandlers
     private static IServiceCollection AddHandlers(this IServiceCollection services)
@@ -74,17 +76,6 @@ public static class DependencyInjection
     #region AddDecorators
     private static IServiceCollection AddDecorators(this IServiceCollection services)
     {
-        services.Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
-                .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), publicOnly: false)
-                .AsImplementedInterfaces()
-                .WithScopedLifetime()
-                .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), publicOnly: false)
-                .AsImplementedInterfaces()
-                .WithScopedLifetime()
-                .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), publicOnly: false)
-                .AsImplementedInterfaces()
-                .WithScopedLifetime());
-
         services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationDecorator.CommandHandler<,>));
         services.Decorate(typeof(ICommandHandler<>), typeof(ValidationDecorator.CommandBaseHandler<>));
         

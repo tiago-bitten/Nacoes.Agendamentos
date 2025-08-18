@@ -25,14 +25,14 @@ public sealed class UsuarioConvite : EntityId, IAggregateRoot
         Token = token;
     }
     
-    public string Nome { get; private set; } = null!;
+    public string Nome { get; private set; } = string.Empty;
     public Email Email { get; private set; } = null!;
     public Guid EnviadoPorId { get; private set; }
     public Guid? EnviadoParaId { get; private set; }
     public EConviteStatus Status { get; private set; }
-    public string Motivo { get; private set; } = null!;
+    public string Motivo { get; private set; } = string.Empty;
     public DateTimeOffset DataExpiracao { get; private set; }
-    public string Token { get; private set; } = null!;
+    public string Token { get; private set; } = string.Empty;
 
     public Usuario EnviadoPor { get; private set; } = null!;
     public Usuario? EnviadoPara { get; private set; }
@@ -51,7 +51,7 @@ public sealed class UsuarioConvite : EntityId, IAggregateRoot
         var token = Guid.NewGuid().ToString("N");
         var usuarioConvite = new UsuarioConvite(nome, email, enviadoPorId, EConviteStatus.Pendente, dataExpiracao, token);
         
-        return Result<UsuarioConvite>.Success(usuarioConvite);
+        return usuarioConvite;
     }
     #endregion
     
