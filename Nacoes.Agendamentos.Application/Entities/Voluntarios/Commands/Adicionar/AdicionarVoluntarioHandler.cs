@@ -43,6 +43,6 @@ internal sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
         
         voluntario.Raise(new VoluntarioAdicionadoDomainEvent(voluntario.Id));
         
-        return Result<Guid>.Success(voluntario.Id);
+        return voluntario.Id;
     }
 }

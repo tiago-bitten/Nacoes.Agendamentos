@@ -41,6 +41,7 @@ public class Result<T> : Result
     private new static Result<T> Failure(Error error) => new(false, default!, error);
 
     public static implicit operator Result<T>(Error error) => Failure(error);
+    public static implicit operator Result<T>(T value) => Success(value);
     
     public static Result<T> ValidationFailure(Error error) => new(false, default, error);
 }

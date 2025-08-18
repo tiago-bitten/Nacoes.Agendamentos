@@ -13,4 +13,9 @@ internal sealed class UsuarioConviteRepository(NacoesDbContext dbContext)
         => GetAll().Where(x => x.Status == EConviteStatus.Pendente);
 
     #endregion
+    
+    #region RecuperarPorToken
+    public IQueryable<UsuarioConvite> RecuperarPorToken(string token)
+        => GetAll().Where(x => x.Token == token);
+    #endregion
 }

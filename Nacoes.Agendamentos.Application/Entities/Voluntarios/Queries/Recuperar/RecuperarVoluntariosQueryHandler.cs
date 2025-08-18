@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Common.Pagination;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
