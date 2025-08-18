@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -10,10 +11,11 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarConvite;
 
-internal sealed class AdicionarUsuarioConviteHandler(IUnitOfWork uow,
-                                                     IUsuarioConviteRepository usuarioConviteRepository,
-                                                     IAmbienteContext ambienteContext,
-                                                     ILinkFactory linkFactory)               
+internal sealed class AdicionarUsuarioConviteHandler(
+    INacoesDbContext context, 
+    IUsuarioConviteRepository usuarioConviteRepository, 
+    IAmbienteContext ambienteContext, 
+    ILinkFactory linkFactory)               
     : ICommandHandler<AdicionarUsuarioConviteCommand, UsuarioConviteResponse>
 {
     public async Task<Result<UsuarioConviteResponse>> Handle(AdicionarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
@@ -35,9 +37,6 @@ internal sealed class AdicionarUsuarioConviteHandler(IUnitOfWork uow,
         
         var usuarioConvite = usuarioConviteResult.Value;
         
-        await uow.BeginAsync();
-        await usuarioConviteRepository.AddAsync(usuarioConvite);
-        
         var link = linkFactory.Create(usuarioConvite.Path);
         var response = new UsuarioConviteResponse
         {
@@ -46,7 +45,7 @@ internal sealed class AdicionarUsuarioConviteHandler(IUnitOfWork uow,
         
         usuarioConvite.Raise(new UsuarioConviteAdicionadoDomainEvent(usuarioConvite.Id, link));
         
-        await uow.CommitAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         
         return Result<UsuarioConviteResponse>.Success(response);
     }

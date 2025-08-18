@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Mappings;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -10,9 +11,10 @@ using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 
-internal sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
-                                                 IVoluntarioRepository voluntarioRepository,
-                                                 IHistoricoRegister historicoRegister)
+internal sealed class AdicionarVoluntarioHandler(
+    INacoesDbContext context, 
+    IVoluntarioRepository voluntarioRepository, 
+    IHistoricoRegister historicoRegister)
     : ICommandHandler<AdicionarVoluntarioCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
@@ -34,9 +36,8 @@ internal sealed class AdicionarVoluntarioHandler(IUnitOfWork uow,
         }
         
         var voluntario = voluntarioResult.Value;
-        await uow.BeginAsync();
         await voluntarioRepository.AddAsync(voluntario);
-        await uow.CommitAsync(cancellation);
+        await context.SaveChangesAsync(cancellation);
 
         // TODO: move para domain event
         await historicoRegister.AuditAsync(voluntario, acao: "Voluntário adicionado.", EHistoricoTipoAcao.Criar);

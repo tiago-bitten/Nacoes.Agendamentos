@@ -1,7 +1,6 @@
 ﻿using Hangfire;
 using Nacoes.Agendamentos.Application.Abstracts.BackgroundJobs;
 using Nacoes.Agendamentos.Application.Abstracts.CronJobs;
-using Nacoes.Agendamentos.Application.Abstracts.Notifications;
 using Nacoes.Agendamentos.Application.Reports.Queries.InfoDiariaUsoApp;
 
 namespace Nacoes.Agendamentos.Infra.CronJobs.Implementations;

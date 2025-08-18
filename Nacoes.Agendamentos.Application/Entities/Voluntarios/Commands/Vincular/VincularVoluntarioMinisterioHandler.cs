@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
@@ -10,9 +11,10 @@ using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
 
-internal sealed class VincularVoluntarioMinisterioHandler(IUnitOfWork uow,
-                                                          IVoluntarioRepository voluntarioRepository,
-                                                          IMinisterioRepository ministerioRepository)
+internal sealed class VincularVoluntarioMinisterioHandler(
+    INacoesDbContext context, 
+    IVoluntarioRepository voluntarioRepository, 
+    IMinisterioRepository ministerioRepository)
     : ICommandHandler<VincularVoluntarioMinisterioCommand>
 {
     public async Task<Result> Handle(VincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default)
@@ -35,7 +37,6 @@ internal sealed class VincularVoluntarioMinisterioHandler(IUnitOfWork uow,
             return MinisterioErrors.NaoEncontrado;
         }
         
-        await uow.BeginAsync();
         var vinculoResult = voluntario.VincularMinisterio(ministerio.Id);
         if (vinculoResult.IsFailure)
         {
@@ -43,7 +44,7 @@ internal sealed class VincularVoluntarioMinisterioHandler(IUnitOfWork uow,
         }
         
         voluntario.Raise(new VoluntarioMinisterioVinculadoDomainEvent(voluntario.Id, ministerio.Nome));
-        await uow.CommitAsync(cancellation);
+        await context.SaveChangesAsync(cancellation);
       
         return Result.Success();
     }

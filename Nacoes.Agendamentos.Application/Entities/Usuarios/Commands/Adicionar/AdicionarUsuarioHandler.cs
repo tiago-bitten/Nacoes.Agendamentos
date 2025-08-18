@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.PasswordVerifiers;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Mappings;
@@ -12,8 +13,9 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
 
-internal sealed class AdicionarUsuarioHandler(IUnitOfWork uow,
-                                              IUsuarioRepository usuarioRepository)
+internal sealed class AdicionarUsuarioHandler(
+    INacoesDbContext context, 
+    IUsuarioRepository usuarioRepository)
     : ICommandHandler<AdicionarUsuarioCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(AdicionarUsuarioCommand command, CancellationToken cancellationToken = default)
@@ -39,12 +41,11 @@ internal sealed class AdicionarUsuarioHandler(IUnitOfWork uow,
             return senhaResult.Error;
         }
 
-        await uow.BeginAsync();
         await usuarioRepository.AddAsync(usuario);
         
         usuario.Raise(new UsuarioAdicionadoDomainEvent(usuario.Id));
-        await uow.CommitAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
-        return Result<Guid>.Success(usuario.Id);
+        return usuario.Id;
     }
 }

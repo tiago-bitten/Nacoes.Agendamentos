@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+﻿using Nacoes.Agendamentos.Application.Abstracts.Data;
+using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Agendas.Mappings;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
@@ -7,7 +8,7 @@ using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Adicionar;
 
-internal sealed class AdicionarAgendaHandler(IUnitOfWork uow,
+internal sealed class AdicionarAgendaHandler(INacoesDbContext context,
                                              IAgendaRepository agendaRepository)
     : ICommandHandler<AdicionarAgendaCommand, Guid>
 {
@@ -21,12 +22,12 @@ internal sealed class AdicionarAgendaHandler(IUnitOfWork uow,
         
         var agenda = agendaResult.Value;
 
-        await uow.BeginAsync();
         await agendaRepository.AddAsync(agenda);
         
         agenda.Raise(new AgendaAdicionadaDomainEvent(agenda.Id));
-        await uow.CommitAsync(cancellation);
 
-        return Result<Guid>.Success(agenda.Id);
+        await context.SaveChangesAsync(cancellation);
+
+        return agenda.Id;
     }
 }
