@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
@@ -11,10 +12,11 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 
-internal sealed class AceitarUsuarioConviteHandler(IUnitOfWork uow,
-                                                   IUsuarioConviteRepository usuarioConviteRepository,
-                                                   ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler,
-                                                   ICommandHandler<LoginCommand, LoginResponse> loginHandler)
+internal sealed class AceitarUsuarioConviteHandler(
+    INacoesDbContext context, 
+    IUsuarioConviteRepository usuarioConviteRepository, 
+    ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler, 
+    ICommandHandler<LoginCommand, LoginResponse> loginHandler)
     : ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse>
 {
     public async Task<Result<AceitarUsuarioConviteResponse>> Handle(AceitarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
@@ -32,7 +34,6 @@ internal sealed class AceitarUsuarioConviteHandler(IUnitOfWork uow,
             return usuarioResult.Error;
         }
 
-        await uow.BeginAsync();
         var usuario = usuarioResult.Value;
         
         var aceitarUsuarioConviteResult = usuarioConvite.Aceitar(usuario);
@@ -44,7 +45,7 @@ internal sealed class AceitarUsuarioConviteHandler(IUnitOfWork uow,
         await usuarioConviteRepository.UpdateAsync(usuarioConvite);
         
         usuarioConvite.Raise(new UsuarioConviteAceitoDomainEvent(usuarioConvite.Id));
-        await uow.CommitAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         
         var loginResult = await loginHandler.Handle(command.ToLoginCommand(usuarioConvite.Email), cancellationToken);
         if (loginResult.IsFailure)

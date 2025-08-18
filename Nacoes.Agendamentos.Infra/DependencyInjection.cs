@@ -32,7 +32,6 @@ using Nacoes.Agendamentos.Infra.Entities.Usuarios;
 using Nacoes.Agendamentos.Infra.Entities.Voluntarios;
 using Nacoes.Agendamentos.Infra.Notifications;
 using Nacoes.Agendamentos.Infra.Notifications.Emails;
-using Nacoes.Agendamentos.Infra.Persistence;
 
 namespace Nacoes.Agendamentos.Infra;
 
@@ -169,7 +168,6 @@ public static class DependencyInjection
     
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IAgendaRepository, AgendaRepository>();
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<IMinisterioRepository, MinisterioRepository>();

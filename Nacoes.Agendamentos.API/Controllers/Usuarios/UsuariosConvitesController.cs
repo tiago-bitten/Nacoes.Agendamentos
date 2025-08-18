@@ -54,10 +54,7 @@ public sealed class UsuariosConvitesController : NacoesAuthenticatedController
     public async Task<IActionResult> RecuperarPorToken(IQueryHandler<RecuperarUsuarioConvitePorTokenQuery, RecuperarUsuarioConvitePorTokenResponse> handler,
                                                        string token)
     {
-        var query = new RecuperarUsuarioConvitePorTokenQuery
-        {
-            Token = token
-        };
+        var query = new RecuperarUsuarioConvitePorTokenQuery(token);
         
         var result = await handler.Handle(query);
         

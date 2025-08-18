@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
@@ -9,7 +10,7 @@ using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Desvincular;
 
-internal sealed class DesvincularVoluntarioMinisterioHandler(IUnitOfWork uow,
+internal sealed class DesvincularVoluntarioMinisterioHandler(INacoesDbContext context,
                                                              IVoluntarioRepository voluntarioRepository)
     : ICommandHandler<DesvincularVoluntarioMinisterioCommand>
 {
@@ -28,7 +29,6 @@ internal sealed class DesvincularVoluntarioMinisterioHandler(IUnitOfWork uow,
             return MinisterioErrors.NaoEncontrado;
         }
         
-        await uow.BeginAsync();
         var vinculoResult = voluntario.DesvincularMinisterio(ministerio.Id);
         if (vinculoResult.IsFailure)
         {
@@ -36,7 +36,7 @@ internal sealed class DesvincularVoluntarioMinisterioHandler(IUnitOfWork uow,
         }
         
         voluntario.Raise(new VoluntarioMinisterioDesvinculadoDomainEvent(voluntario.Id, ministerio.Nome));
-        await uow.CommitAsync(cancellation);
+        await context.SaveChangesAsync(cancellation);
       
         return Result.Success();
     }

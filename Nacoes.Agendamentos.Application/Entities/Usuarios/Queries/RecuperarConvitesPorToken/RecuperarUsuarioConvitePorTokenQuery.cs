@@ -3,7 +3,5 @@ using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarConvit
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Queries.RecuperarConvitesPorToken;
 
-public sealed record RecuperarUsuarioConvitePorTokenQuery : IQuery<RecuperarUsuarioConvitePorTokenResponse>
-{
-    public required string Token { get; init; }
-}
+public sealed record RecuperarUsuarioConvitePorTokenQuery(string Token)
+    : IQuery<RecuperarUsuarioConvitePorTokenResponse>;

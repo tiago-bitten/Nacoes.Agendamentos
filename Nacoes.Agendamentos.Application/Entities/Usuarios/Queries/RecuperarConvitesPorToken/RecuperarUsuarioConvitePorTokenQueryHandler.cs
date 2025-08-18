@@ -31,6 +31,6 @@ internal sealed class RecuperarUsuarioConvitePorTokenQueryHandler(IUsuarioConvit
             return UsuarioConviteErrors.ConviteNaoEncontrado;
         }
 
-        return Result<RecuperarUsuarioConvitePorTokenResponse>.Success(usuarioConviteResponse);
+        return usuarioConviteResponse;
     }
 }

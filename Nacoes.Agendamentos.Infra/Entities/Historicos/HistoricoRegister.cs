@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.Application.Authentication.Context;
+﻿using Nacoes.Agendamentos.Application.Abstracts.Data;
+using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
@@ -8,7 +9,7 @@ namespace Nacoes.Agendamentos.Infra.Entities.Historicos;
 
 public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
                                       IAmbienteContext ambienteContext,
-                                      IUnitOfWork uow) 
+                                      INacoesDbContext context) 
     : IHistoricoRegister
 {
     public Task AuditAsync(Guid entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
@@ -39,22 +40,7 @@ public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
         
         var usuarioId = ambienteContext.UserId;
 
-        if (uow.HasActiveTransaction)
-        {
-            await RegistrarHistoricoInternoAsync(entidadeId, acao, tipoAcao, usuarioAcao, detalhes, usuarioId);
-            return;
-        }
-
-        await uow.BeginAsync();
-        try
-        {
-            await RegistrarHistoricoInternoAsync(entidadeId, acao, tipoAcao, usuarioAcao, detalhes, usuarioId);
-            await uow.CommitAsync();
-        }
-        catch
-        {
-            await uow.RollbackAsync();
-            throw;
-        }
+        await RegistrarHistoricoInternoAsync(entidadeId, acao, tipoAcao, usuarioAcao, detalhes, usuarioId);
+        await context.SaveChangesAsync();
     }
 }
