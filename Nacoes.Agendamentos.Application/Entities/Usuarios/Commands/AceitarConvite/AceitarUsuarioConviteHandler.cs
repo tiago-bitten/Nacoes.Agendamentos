@@ -1,27 +1,24 @@
-﻿using FluentValidation;
+﻿using Microsoft.EntityFrameworkCore;
 using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
-using Nacoes.Agendamentos.Application.Extensions;
-using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.DomainEvents;
-using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 
 internal sealed class AceitarUsuarioConviteHandler(
     INacoesDbContext context, 
-    IUsuarioConviteRepository usuarioConviteRepository, 
     ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler, 
     ICommandHandler<LoginCommand, LoginResponse> loginHandler)
     : ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse>
 {
     public async Task<Result<AceitarUsuarioConviteResponse>> Handle(AceitarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
-        var usuarioConvite = await usuarioConviteRepository.GetByIdAsync(command.UsuarioConviteId);
+        var usuarioConvite = await context.Convites
+            .SingleOrDefaultAsync(x => x.Id == command.UsuarioConviteId, cancellationToken);
         if (usuarioConvite is null)
         {
             return UsuarioConviteErrors.ConviteNaoEncontrado;
@@ -42,8 +39,6 @@ internal sealed class AceitarUsuarioConviteHandler(
             return aceitarUsuarioConviteResult.Error;
         }
         
-        await usuarioConviteRepository.UpdateAsync(usuarioConvite);
-        
         usuarioConvite.Raise(new UsuarioConviteAceitoDomainEvent(usuarioConvite.Id));
         await context.SaveChangesAsync(cancellationToken);
         
@@ -53,12 +48,10 @@ internal sealed class AceitarUsuarioConviteHandler(
             return loginResult.Error;
         }
         
-        var response = new AceitarUsuarioConviteResponse
-        {
-            AuthToken = loginResult.Value.AuthToken,
-            RefreshToken = loginResult.Value.RefreshToken
-        };
-        
-        return Result<AceitarUsuarioConviteResponse>.Success(response);
+        var login = loginResult.Value;
+
+        var response = new AceitarUsuarioConviteResponse(login.AuthToken, login.RefreshToken);
+
+        return response;
     }
 }

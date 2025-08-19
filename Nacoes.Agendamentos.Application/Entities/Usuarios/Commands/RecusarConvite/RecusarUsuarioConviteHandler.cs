@@ -1,20 +1,18 @@
-﻿using Nacoes.Agendamentos.Application.Abstracts.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
-using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
-using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.RecusarConvite;
 
-internal sealed class RecusarUsuarioConviteHandler(
-    INacoesDbContext context, 
-    IUsuarioConviteRepository usuarioConviteRepository) 
+internal sealed class RecusarUsuarioConviteHandler(INacoesDbContext context) 
     : ICommandHandler<RecusarUsuarioConviteCommand>
 {
     public async Task<Result> Handle(RecusarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
-        var usuarioConvite = await usuarioConviteRepository.GetByIdAsync(command.UsuarioConviteId);
+        var usuarioConvite = await context.Convites
+            .SingleOrDefaultAsync(x => x.Id == command.UsuarioConviteId, cancellationToken);
         if (usuarioConvite is null)
         {
             return UsuarioConviteErrors.ConviteNaoEncontrado;
@@ -25,8 +23,6 @@ internal sealed class RecusarUsuarioConviteHandler(
         {
             return recusarConviteResult.Error;
         }
-        
-        await usuarioConviteRepository.UpdateAsync(usuarioConvite);
         await context.SaveChangesAsync(cancellationToken);
         
         return Result.Success();
