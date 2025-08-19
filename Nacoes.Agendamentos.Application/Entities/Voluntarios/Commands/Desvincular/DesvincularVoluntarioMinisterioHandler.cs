@@ -10,8 +10,9 @@ using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Desvincular;
 
-internal sealed class DesvincularVoluntarioMinisterioHandler(INacoesDbContext context,
-                                                             IVoluntarioRepository voluntarioRepository)
+internal sealed class DesvincularVoluntarioMinisterioHandler(
+    INacoesDbContext context, 
+    IVoluntarioRepository voluntarioRepository)
     : ICommandHandler<DesvincularVoluntarioMinisterioCommand>
 {
     public async Task<Result> Handle(DesvincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default)

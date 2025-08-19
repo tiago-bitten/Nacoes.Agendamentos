@@ -12,8 +12,9 @@ using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Infra.Contexts;
 
-internal class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
-                             IDomainEventsDispatcher domainEventsDispatcher) 
+internal class NacoesDbContext(
+    DbContextOptions<NacoesDbContext> options, 
+    IDomainEventsDispatcher domainEventsDispatcher) 
     : DbContext(options), INacoesDbContext
 {
     public DbSet<Usuario> Usuarios { get; set; }
@@ -41,8 +42,9 @@ internal class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
     #region SaveChanges
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var entityEntries = ChangeTracker.Entries()
-                                         .Where(x => x.State is EntityState.Added or EntityState.Modified);
+        var entityEntries = ChangeTracker
+            .Entries()
+            .Where(x => x.State is EntityState.Added or EntityState.Modified);
 
         foreach (var entity in entityEntries)
         {
@@ -57,7 +59,11 @@ internal class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
                     break;
             }
         }
-        return await base.SaveChangesAsync(cancellationToken);
+        var result = await base.SaveChangesAsync(cancellationToken);
+        
+        await PublishDomainEventsAsync(cancellationToken);
+        
+        return result;
     }
 
     private static void SaveAdded(EntityEntry entityEntry)
@@ -73,22 +79,19 @@ internal class NacoesDbContext(DbContextOptions<NacoesDbContext> options,
         entityEntry.Property("DataCriacao").IsModified = false;
     }
 
-    public List<IDomainEvent> GetDomainEvents()
+    public Task PublishDomainEventsAsync(CancellationToken cancellationToken = default)
     {
-        var domainEvents = ChangeTracker.Entries<IEntity>()
-                                        .Select(entry => entry.Entity)
-                                        .SelectMany(entity =>
-                                        {
-                                            var domainEvents = entity.DomainEvents;
-                                            entity.ClearDomainEvents();
-                                            return domainEvents;
-                                        }).ToList();
-        return domainEvents;
-    }
-
-    public async Task PublishDomainEventsAsync(List<IDomainEvent> domainEvents)
-    {
-        await domainEventsDispatcher.DispatchAsync(domainEvents);
+        var domainEvents = ChangeTracker
+            .Entries<IEntity>()
+            .Select(entry => entry.Entity)
+            .SelectMany(entity => 
+            { 
+                var domainEvents = entity.DomainEvents; 
+                entity.ClearDomainEvents(); 
+                return domainEvents;
+            }).ToList();
+                
+        return domainEventsDispatcher.DispatchAsync(domainEvents, cancellationToken);
     }
     #endregion
 }

@@ -33,11 +33,12 @@ internal static class ClaimHelper
             environment);
     }
     
-    private static Claim[] GetContractClaims(Guid id,
-                                             string email,
-                                             bool isBot,
-                                             bool isThirdPartyUser,
-                                             EEnvironment environment)
+    private static Claim[] GetContractClaims(
+        Guid id, 
+        string email, 
+        bool isBot, 
+        bool isThirdPartyUser, 
+        EEnvironment environment)
     {
         return
         [

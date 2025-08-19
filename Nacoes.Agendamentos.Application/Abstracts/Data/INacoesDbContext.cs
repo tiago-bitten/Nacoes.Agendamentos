@@ -21,6 +21,5 @@ public interface INacoesDbContext
     DbSet<Atividade> Atividades { get; set; }
     
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-    List<IDomainEvent> GetDomainEvents();
-    Task PublishDomainEventsAsync(List<IDomainEvent> domainEvents);
+    Task PublishDomainEventsAsync(CancellationToken cancellationToken = default);
 }

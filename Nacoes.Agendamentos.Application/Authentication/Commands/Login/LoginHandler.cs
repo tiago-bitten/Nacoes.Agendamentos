@@ -26,12 +26,8 @@ public sealed class LoginHandler(IAuthStrategyFactory authStrategyFactory,
         var authToken = tokenGenerator.GenerateAuth(usuario);
         var refreshToken = tokenGenerator.GenerateRefresh();
 
-        var loginResponse = new LoginResponse
-        {
-            AuthToken = authToken,
-            RefreshToken = refreshToken
-        };
+        var loginResponse = new LoginResponse(authToken, refreshToken);
 
-        return Result<LoginResponse>.Success(loginResponse);
+        return loginResponse;
     }
 }

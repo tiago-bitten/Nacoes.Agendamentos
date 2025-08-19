@@ -1,5 +1,3 @@
-﻿using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
+﻿namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 
-namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
-
-public record AceitarUsuarioConviteResponse : LoginResponse;
+public record AceitarUsuarioConviteResponse(string AuthToken, string RefreshToken);

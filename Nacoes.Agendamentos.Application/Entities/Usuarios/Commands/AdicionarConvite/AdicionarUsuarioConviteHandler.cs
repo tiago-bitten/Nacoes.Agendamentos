@@ -2,12 +2,14 @@
 using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Context;
+using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Common.Factories;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.DomainEvents;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
+using Nacoes.Agendamentos.Domain.Entities.Usuarios.Specs;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarConvite;
 
@@ -20,10 +22,12 @@ internal sealed class AdicionarUsuarioConviteHandler(
 {
     public async Task<Result<UsuarioConviteResponse>> Handle(AdicionarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
-        var statusAguardandoAceite = await usuarioConviteRepository.RecuperarPendentes()
-                                                                   .Where(x => x.Email.Address == command.Email)
-                                                                   .Select(x => x.Status)
-                                                                   .SingleOrDefaultAsync(cancellationToken);
+        var statusAguardandoAceite = await context.Convites
+            .WhereSpec(new ConvitesPendentesSpec())
+            .Where(x => x.Email.Address == command.Email)
+            .Select(x => x.Status)
+            .FirstOrDefaultAsync(cancellationToken);
+            
         if (statusAguardandoAceite is EConviteStatus.Pendente)
         {
             return UsuarioConviteErrors.ConvitePendente;

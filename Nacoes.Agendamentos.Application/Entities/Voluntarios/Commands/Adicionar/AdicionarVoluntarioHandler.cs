@@ -2,18 +2,19 @@
 using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Mappings;
+using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.DomainEvents;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
+using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Specs;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 
 internal sealed class AdicionarVoluntarioHandler(
     INacoesDbContext context, 
-    IVoluntarioRepository voluntarioRepository, 
     IHistoricoRegister historicoRegister)
     : ICommandHandler<AdicionarVoluntarioCommand, Guid>
 {
@@ -21,8 +22,9 @@ internal sealed class AdicionarVoluntarioHandler(
     {
         if (!string.IsNullOrEmpty(command.Email))
         {
-            var existeVountarioComEmail = await voluntarioRepository.RecuperarPorEmailAddress(command.Email)
-                                                                    .AnyAsync(cancellation);
+            var existeVountarioComEmail = await context.Voluntarios
+                .WhereSpec(new VoluntarioComEmailAddressSpec(command.Email))
+                .AnyAsync(cancellation);
             if (existeVountarioComEmail)
             {
                 // TODO: Add WarningContext, voluntario pode ter email duplicado, pois pode ser dependente
@@ -36,7 +38,7 @@ internal sealed class AdicionarVoluntarioHandler(
         }
         
         var voluntario = voluntarioResult.Value;
-        await voluntarioRepository.AddAsync(voluntario);
+        await context.Voluntarios.AddAsync(voluntario, cancellation);
         await context.SaveChangesAsync(cancellation);
 
         // TODO: move para domain event
