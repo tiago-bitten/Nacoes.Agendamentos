@@ -19,6 +19,7 @@ public interface INacoesDbContext
     DbSet<Historico> Historicos { get; set; }
     DbSet<Ministerio> Ministerios { get; set; }
     DbSet<Atividade> Atividades { get; set; }
+    DbSet<UsuarioConviteMinisterio> ConvitesMinisterios { get; set; }
     
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task PublishDomainEventsAsync(CancellationToken cancellationToken = default);

@@ -12,31 +12,35 @@ using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
 
 internal sealed class VincularVoluntarioMinisterioHandler(
-    INacoesDbContext context, 
-    IVoluntarioRepository voluntarioRepository, 
-    IMinisterioRepository ministerioRepository)
+    INacoesDbContext context)
     : ICommandHandler<VincularVoluntarioMinisterioCommand>
 {
     public async Task<Result> Handle(VincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default)
     {
-        var voluntario = await voluntarioRepository.GetByIdAsync(command.VoluntarioId, includes: "Ministerios");
-        if (voluntario is null)
+        var voluntarioMinisterioParaVincular = await context.Voluntarios
+            .Include(v => v.Ministerios)
+            .Where(v => v.Id == command.VoluntarioId)
+            .Select(v => new
+            {
+                Voluntario = v,
+                Ministerio = context.Ministerios
+                    .SingleOrDefault(m => m.Id == command.MinisterioId)
+            })
+            .SingleOrDefaultAsync(cancellation);
+
+        if (voluntarioMinisterioParaVincular is null)
         {
             return VoluntarioErrors.NaoEncontrado;
         }
+        
+        var voluntario = voluntarioMinisterioParaVincular.Voluntario;
+        var ministerio = voluntarioMinisterioParaVincular.Ministerio;
 
-        var ministerio = await ministerioRepository.GetByIdToProject(command.MinisterioId)
-                                                    .Select(x => new
-                                                    {
-                                                        x.Id,
-                                                        x.Nome
-                                                    })
-                                                    .FirstOrDefaultAsync(cancellation);
         if (ministerio is null)
         {
             return MinisterioErrors.NaoEncontrado;
         }
-        
+
         var vinculoResult = voluntario.VincularMinisterio(ministerio.Id);
         if (vinculoResult.IsFailure)
         {

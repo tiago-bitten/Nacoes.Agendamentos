@@ -24,4 +24,10 @@ public static class UsuarioErrors
     
     public static readonly Error SenhaInvalida = 
         Error.Problem("Usuarios.SenhaInvalida", "Senha inválida.");
+    
+    public static readonly Error MinisteriosObrigatorio = 
+        Error.Problem("Usuarios.MinisteriosObrigatorio", "O usuário deve estar vinculado a pelo menos um ministerio.");
+    
+    public static readonly Error MinisterioNaoVinculadoAoUsuario = 
+        Error.Problem("Usuarios.MinisterioNaoVinculadoAoUsuario", "O ministerio informado não está vinculado ao usuario.");
 }

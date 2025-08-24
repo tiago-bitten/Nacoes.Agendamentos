@@ -7,6 +7,8 @@ namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 public sealed class Usuario : EntityId, IAggregateRoot
 {
+    private readonly List<UsuarioMinisterio> _ministerios = new();
+    
     private Usuario() { }
 
     private Usuario(string nome, Email email, EAuthType authType, Celular? celular = null, string? senha = null)
@@ -24,8 +26,15 @@ public sealed class Usuario : EntityId, IAggregateRoot
     public Celular? Celular { get; private set; }
     public EAuthType AuthType { get; private set; }
     
-    #region Criar
-    public static Result<Usuario> Criar(string nome, Email email, EAuthType authType, Celular? celular = null, string? senha = null)
+    public IReadOnlyList<UsuarioMinisterio> Ministerios => _ministerios.AsReadOnly();
+    
+    public static Result<Usuario> Criar(
+        string nome,
+        Email email,
+        EAuthType authType,
+        List<Guid> ministeriosIds,
+        Celular? celular = null,
+        string? senha = null)
     {
         if (string.IsNullOrWhiteSpace(nome))
         {
@@ -36,13 +45,51 @@ public sealed class Usuario : EntityId, IAggregateRoot
         {
             return UsuarioErrors.SenhaNaoNecessaria;
         }
+
+        if (ministeriosIds.Count == 0)
+        {
+            return UsuarioErrors.MinisteriosObrigatorio;
+        }
         
         var usuario = new Usuario(nome, email, authType, celular, senha);
-        return Result<Usuario>.Success(usuario);
+        
+        foreach (var ministerioId in ministeriosIds)
+        {
+            var usuarioMinisterioVinculoResult = usuario.VincularMinisterio(ministerioId);
+            if (usuarioMinisterioVinculoResult.IsFailure)
+            {
+                return usuarioMinisterioVinculoResult.Error;
+            }
+        }
+
+        return usuario;
     }
-    #endregion
     
-    #region DefinirSenha
+    public Result VincularMinisterio(Guid ministerioId)
+    {
+        var usuarioMinisterioResult = UsuarioMinisterio.Criar(Id, ministerioId);
+        if (usuarioMinisterioResult.IsFailure)
+        {
+            return usuarioMinisterioResult.Error;
+        }
+        
+        var usuarioMinisterio = usuarioMinisterioResult.Value;
+        _ministerios.Add(usuarioMinisterio);
+        
+        return Result.Success();
+    }
+    
+    public Result DesvincularMinisterio(Guid ministerioId)
+    {
+        var usuarioMinisterio = _ministerios.SingleOrDefault(x => x.MinisterioId == ministerioId);
+        if (usuarioMinisterio is null)
+        {
+            return UsuarioErrors.MinisterioNaoVinculadoAoUsuario;
+        }
+        
+        return usuarioMinisterio.Desvincular();
+    }
+    
     // TODO: senha deve ser um value object
     public Result DefinirSenha(string senha)
     {
@@ -55,7 +102,6 @@ public sealed class Usuario : EntityId, IAggregateRoot
         
         return Result.Success();
     }
-    #endregion
 }
 
 

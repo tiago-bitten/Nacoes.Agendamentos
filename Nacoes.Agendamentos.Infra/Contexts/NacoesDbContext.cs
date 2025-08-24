@@ -26,8 +26,8 @@ internal class NacoesDbContext(
     public DbSet<Ministerio> Ministerios { get; set; }
     public DbSet<Atividade> Atividades { get; set; }
     public DbSet<Historico> Historicos { get; set; }
+    public DbSet<UsuarioConviteMinisterio> ConvitesMinisterios { get; set; }
     
-
     #region OnModelCreating
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

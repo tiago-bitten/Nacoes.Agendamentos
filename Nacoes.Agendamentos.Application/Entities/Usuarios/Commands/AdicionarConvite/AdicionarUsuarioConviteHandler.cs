@@ -3,19 +3,16 @@ using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Extensions;
-using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Common.Factories;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.DomainEvents;
-using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Specs;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarConvite;
 
 internal sealed class AdicionarUsuarioConviteHandler(
     INacoesDbContext context, 
-    IUsuarioConviteRepository usuarioConviteRepository, 
     IAmbienteContext ambienteContext, 
     ILinkFactory linkFactory)               
     : ICommandHandler<AdicionarUsuarioConviteCommand, UsuarioConviteResponse>
@@ -24,7 +21,7 @@ internal sealed class AdicionarUsuarioConviteHandler(
     {
         var statusAguardandoAceite = await context.Convites
             .WhereSpec(new ConvitesPendentesSpec())
-            .Where(x => x.Email.Address == command.Email)
+            .Where(x => x.Email.Address == command.EmailAddress)
             .Select(x => x.Status)
             .FirstOrDefaultAsync(cancellationToken);
             
@@ -33,7 +30,11 @@ internal sealed class AdicionarUsuarioConviteHandler(
             return UsuarioConviteErrors.ConvitePendente;
         }
 
-        var usuarioConviteResult = UsuarioConvite.Criar(command.Nome, command.Email, ambienteContext.UserId);
+        var usuarioConviteResult = UsuarioConvite.Criar(
+            command.Nome,
+            command.EmailAddress,
+            ambienteContext.UserId,
+            command.MinisteriosIds);
         if (usuarioConviteResult.IsFailure)
         {
             return usuarioConviteResult.Error;
@@ -42,15 +43,12 @@ internal sealed class AdicionarUsuarioConviteHandler(
         var usuarioConvite = usuarioConviteResult.Value;
         
         var link = linkFactory.Create(usuarioConvite.Path);
-        var response = new UsuarioConviteResponse
-        {
-            Link = link
-        };
+        var response = new UsuarioConviteResponse(link);
         
         usuarioConvite.Raise(new UsuarioConviteAdicionadoDomainEvent(usuarioConvite.Id, link));
         
         await context.SaveChangesAsync(cancellationToken);
-        
-        return Result<UsuarioConviteResponse>.Success(response);
+
+        return response;
     }
 }
