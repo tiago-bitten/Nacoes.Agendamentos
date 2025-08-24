@@ -10,8 +10,9 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 namespace Nacoes.Agendamentos.Infra.Authentication;
 
-internal sealed class TokenGenerator(IOptions<AuthenticationSettings> authSettings,
-                                     IOptions<AmbienteSettings> ambienteSettings) : ITokenGenerator
+internal sealed class TokenGenerator(
+    IOptions<AuthenticationSettings> authSettings, 
+    IOptions<AmbienteSettings> ambienteSettings) : ITokenGenerator
 {
     private readonly JwtSettings _jwtSettings = authSettings.Value.Jwt;
     private readonly AmbienteSettings _ambienteSettings = ambienteSettings.Value;

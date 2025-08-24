@@ -8,6 +8,7 @@ public sealed record AdicionarUsuarioCommand : ICommand<Guid>
     public required string Nome { get; init; }
     public required string Email { get; init; }
     public required EAuthType AuthType { get; init; }
+    public List<Guid> MinisteriosIds { get; init; } = [];
     public string? Senha { get; init; }
     public CelularItem? Celular { get; init; }
     

@@ -2,8 +2,7 @@
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarConvite;
 
-public sealed record AdicionarUsuarioConviteCommand : ICommand<UsuarioConviteResponse>
-{
-    public required string Nome { get; init; }
-    public required string Email { get; init; }
-}
+public sealed record AdicionarUsuarioConviteCommand(
+    string Nome,
+    string EmailAddress,
+    List<Guid> MinisteriosIds) : ICommand<UsuarioConviteResponse>;

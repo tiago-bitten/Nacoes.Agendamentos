@@ -8,9 +8,11 @@ namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Mappings;
 public static class UsuarioMapper
 {
     public static Result<Usuario> ToDomain(this AdicionarUsuarioCommand command) 
-        => Usuario.Criar(command.Nome,
-                         command.Email,
-                         command.AuthType,
-                         command.Celular is null ? null : new Celular(command.Celular.Ddd, command.Celular.Numero),
-                         command.Senha);
+        => Usuario.Criar(
+            command.Nome, 
+            command.Email, 
+            command.AuthType, 
+            command.MinisteriosIds, 
+            command.Celular is null ? null : new Celular(command.Celular.Ddd, command.Celular.Numero), 
+            command.Senha);
 }

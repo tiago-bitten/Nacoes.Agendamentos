@@ -8,14 +8,16 @@ namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
 public sealed class UsuarioConvite : EntityId, IAggregateRoot
 {
     private const int ExpiracaoEmDias = 7;
+    private readonly List<UsuarioConviteMinisterio> _ministerios = [];
     
     private UsuarioConvite() { }
     
-    private UsuarioConvite(string nome, Email email, 
-                           Guid enviadopor,
-                           EConviteStatus status,
-                           DateTimeOffset dataExpiracao,
-                           string token)
+    private UsuarioConvite(
+        string nome, Email email, 
+        Guid enviadopor,
+        EConviteStatus status, 
+        DateTimeOffset dataExpiracao, 
+        string token)
     {
         Nome = nome;
         Email = email;
@@ -36,26 +38,41 @@ public sealed class UsuarioConvite : EntityId, IAggregateRoot
 
     public Usuario EnviadoPor { get; private set; } = null!;
     public Usuario? EnviadoPara { get; private set; }
+    public IReadOnlyList<UsuarioConviteMinisterio> Ministerios => _ministerios.AsReadOnly();
     
     public string Path => $"usuarios/convites/{Token}";
     
-    #region Criar
-    public static Result<UsuarioConvite> Criar(string nome, Email email, Guid enviadoPorId)
+    public static Result<UsuarioConvite> Criar(string nome, Email email, Guid enviadoPorId, List<Guid> ministeriosIds)
     {
         if (string.IsNullOrWhiteSpace(nome))
         {
             return UsuarioErrors.NomeObrigatorio;
         }
         
+        if (ministeriosIds.Count == 0)
+        {
+            return UsuarioErrors.MinisteriosObrigatorio;
+        }
+        
         var dataExpiracao = DateTimeOffset.UtcNow.AddDays(ExpiracaoEmDias);
         var token = Guid.NewGuid().ToString("N");
         var usuarioConvite = new UsuarioConvite(nome, email, enviadoPorId, EConviteStatus.Pendente, dataExpiracao, token);
+
+        foreach (var ministerioId in ministeriosIds)
+        {
+            var usuarioConviteMinisterioResult = UsuarioConviteMinisterio.Criar(usuarioConvite.Id, ministerioId);
+            if (usuarioConviteMinisterioResult.IsFailure)
+            {
+                return usuarioConviteMinisterioResult.Error;
+            }
+            
+            var usuarioConviteMinisterio = usuarioConviteMinisterioResult.Value;
+            usuarioConvite._ministerios.Add(usuarioConviteMinisterio);
+        }
         
         return usuarioConvite;
     }
-    #endregion
     
-    #region Aceitar
     public Result Aceitar(Guid enviadoParaId)
     {
         if (Status is not EConviteStatus.Pendente)
@@ -68,9 +85,7 @@ public sealed class UsuarioConvite : EntityId, IAggregateRoot
 
         return Result.Success();
     }
-    #endregion
     
-    #region Recusar
     public Result Recusar()
     {
         if (Status is not EConviteStatus.Pendente)
@@ -82,9 +97,7 @@ public sealed class UsuarioConvite : EntityId, IAggregateRoot
 
         return Result.Success();
     }
-    #endregion
     
-    #region Expirar
     public Result Expirar()
     {
         if (Status is not EConviteStatus.Pendente)
@@ -102,9 +115,7 @@ public sealed class UsuarioConvite : EntityId, IAggregateRoot
 
         return Result.Success();
     }
-    #endregion
     
-    #region Cancelar
     public Result Cancelar(string motivo)
     {
         if (Status is not EConviteStatus.Pendente)
@@ -122,9 +133,7 @@ public sealed class UsuarioConvite : EntityId, IAggregateRoot
 
         return Result.Success();
     }
-    #endregion
     
-    #region Erro
     public Result Erro(string? motivo)
     {
         Status = EConviteStatus.Erro;
@@ -132,7 +141,6 @@ public sealed class UsuarioConvite : EntityId, IAggregateRoot
 
         return Result.Success();
     }
-    #endregion
 }
 
 public enum EConviteStatus

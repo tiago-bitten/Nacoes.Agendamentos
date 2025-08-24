@@ -13,6 +13,7 @@ using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Notifications;
 using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
+using Nacoes.Agendamentos.Application.Common.DateTime;
 using Nacoes.Agendamentos.Application.Common.Settings;
 using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
@@ -23,6 +24,7 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Infra.Authentication;
 using Nacoes.Agendamentos.Infra.BackgroundJobs;
+using Nacoes.Agendamentos.Infra.Common.DateTime;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Nacoes.Agendamentos.Infra.Entities.Agendas;
 using Nacoes.Agendamentos.Infra.Entities.DomainEvents;
@@ -95,6 +97,8 @@ public static class DependencyInjection
         services.AddScoped<IHistoricoRegister, HistoricoRegister>();
         
         services.AddScoped<ITemplateRenderer, TemplateRenderer>();
+
+        services.AddScoped<ITimeZoneManager, TimeZoneManager>();
         
         var infraAssembly = typeof(DependencyInjection).Assembly;
         services.Scan(scan => scan.FromAssemblies(infraAssembly)

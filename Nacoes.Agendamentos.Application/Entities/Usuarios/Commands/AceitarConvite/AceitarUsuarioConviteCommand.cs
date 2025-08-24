@@ -23,8 +23,10 @@ public sealed record AceitarUsuarioConviteCommand : ICommand<AceitarUsuarioConvi
 public static class AceitarUsuarioConviteCommandExtensions
 {
     public static AdicionarUsuarioCommand ToAdicionarUsuarioCommand(
-        this AceitarUsuarioConviteCommand command, string nome, string email)
-        => new()
+        this AceitarUsuarioConviteCommand command,
+        string nome,
+        string email,
+        List<Guid> ministeriosIds) => new()
         {
             Nome = nome,
             Email = email,
@@ -36,7 +38,8 @@ public static class AceitarUsuarioConviteCommandExtensions
                     Ddd = command.Celular.Ddd,
                     Numero = command.Celular.Numero
                 },
-            Senha = command.Senha
+            Senha = command.Senha,
+            MinisteriosIds = ministeriosIds
         };
 
     public static LoginCommand ToLoginCommand(this AceitarUsuarioConviteCommand command, string email)
