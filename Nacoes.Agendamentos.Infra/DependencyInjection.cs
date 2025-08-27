@@ -159,7 +159,30 @@ public static class DependencyInjection
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = authSettings.Jwt.Issuer,
                     ValidAudience = authSettings.Jwt.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSettings.Jwt.Secret))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authSettings.Jwt.Secret)),
+                    ClockSkew = TimeSpan.Zero
+                };
+                
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = ctx =>
+                    {
+                        Console.WriteLine("=== JWT Authentication Failed ===");
+                        Console.WriteLine(ctx.Exception.ToString());
+                        return Task.CompletedTask;
+                    },
+                    OnChallenge = ctx =>
+                    {
+                        Console.WriteLine("=== JWT Challenge ===");
+                        Console.WriteLine(ctx.Error);
+                        Console.WriteLine(ctx.ErrorDescription);
+                        return Task.CompletedTask;
+                    },
+                    OnForbidden = ctx =>
+                    {
+                        Console.WriteLine("=== JWT Forbidden ===");
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

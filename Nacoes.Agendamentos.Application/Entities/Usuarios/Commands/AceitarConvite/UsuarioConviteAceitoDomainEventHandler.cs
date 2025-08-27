@@ -30,8 +30,8 @@ internal sealed class UsuarioConviteAceitoDomainEventHandler(IHistoricoRegister 
         
         await historicoRegister.AuditAsync(domainEvent.UsuarioConviteId, acao: "Convite aceito.");
         
-        var (title, html) = GetTemplate(usuarioConvite.Nome);
-        await EmailSender.SendAsync(usuarioConvite.EmailEnviadoPor, title, html);
+        // var (title, html) = GetTemplate(usuarioConvite.Nome);
+        // await EmailSender.SendAsync(usuarioConvite.EmailEnviadoPor, title, html);
     }
 
     private (string Title, string Html) GetTemplate(string nome)

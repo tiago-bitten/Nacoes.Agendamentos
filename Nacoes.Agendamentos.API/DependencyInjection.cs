@@ -13,26 +13,38 @@ public static class DependencyInjection
                 {
                     x.JsonSerializerOptions.PropertyNamingPolicy = null;
                 });
+
         services.Configure<RouteOptions>(x => x.LowercaseUrls = true);
-        services.AddCors(x => x.AddDefaultPolicy(option => 
+
+        services.AddCors(x => x.AddDefaultPolicy(option =>
             option.AllowAnyMethod()
                   .AllowAnyHeader()
                   .SetIsOriginAllowed(_ => true)
                   .AllowCredentials()
         ));
+
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nacoes.Agendamentos API", Version = "v1" });
-            c.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer"
+                Title = "Nacoes.Agendamentos API",
+                Version = "v1"
             });
 
+            c.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
+
+            // 🔑 Definição do esquema de segurança
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey, // <-- IMPORTANTE: tem que ser ApiKey aqui
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                Description = "Insira o token JWT desta forma: Bearer {seu token}"
+            });
+
+            // 🔒 Requisito global de segurança
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -42,16 +54,16 @@ public static class DependencyInjection
                         {
                             Type = ReferenceType.SecurityScheme,
                             Id = "Bearer"
-                        }
+                        },
+                        Scheme = "oauth2",
+                        Name = "Bearer",
+                        In = ParameterLocation.Header
                     },
-                    []
+                    new List<string>()
                 }
             });
         });
 
-        // TODO: Remover GlobalExceptionHandlerMiddleware e substituir por IExceptionHandler
-        // services.AddExceptionHandler<GlobalExceptionHandler>();
-        
         return services;
     }
 }

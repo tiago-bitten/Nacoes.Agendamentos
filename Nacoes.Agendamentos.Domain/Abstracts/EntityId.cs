@@ -15,7 +15,7 @@ public abstract class EntityId : IEntity
 {
     private readonly List<IDomainEvent> _domainEvents = [];
 
-    public Guid Id { get; private set; }
+    public Guid Id { get; private set; } = Guid.NewGuid();
     public DateTimeOffset DataCriacao { get; private set; } = DateTimeOffset.UtcNow;
     public bool Inativo { get; private set; }
     
@@ -29,6 +29,17 @@ public abstract class EntityId : IEntity
         }
         
         Inativo = true;
+        return Result.Success();
+    }
+
+    public Result Restaurar()
+    {
+        if (!Inativo)
+        {
+            // TODO: return EntityIdErrors.JaEstaAtivo;
+        }
+        
+        Inativo = false;
         return Result.Success();
     }
     

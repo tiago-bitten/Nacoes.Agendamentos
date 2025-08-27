@@ -26,13 +26,15 @@ internal sealed class AceitarUsuarioConviteHandler(
         {
             return UsuarioConviteErrors.ConviteNaoEncontrado;
         }
+        
+        var ministeriosIds = usuarioConvite.Ministerios
+            .Select(x => x.MinisterioId)
+            .ToList();
 
         var usuarioResult = await adicionarUsuarioHandler.Handle(command.ToAdicionarUsuarioCommand(
             usuarioConvite.Nome,
             usuarioConvite.Email,
-            usuarioConvite.Ministerios
-                .Select(x => x.MinisterioId)
-                .ToList()), cancellationToken);
+            ministeriosIds), cancellationToken);
         
         if (usuarioResult.IsFailure)
         {

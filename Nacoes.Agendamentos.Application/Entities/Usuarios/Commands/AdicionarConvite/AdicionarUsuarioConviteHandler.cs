@@ -22,10 +22,11 @@ internal sealed class AdicionarUsuarioConviteHandler(
         var statusAguardandoAceite = await context.Convites
             .WhereSpec(new ConvitesPendentesSpec())
             .Where(x => x.Email.Address == command.EmailAddress)
-            .Select(x => x.Status)
             .FirstOrDefaultAsync(cancellationToken);
+        
+        
             
-        if (statusAguardandoAceite is EConviteStatus.Pendente)
+        if (statusAguardandoAceite?.Status is EConviteStatus.Pendente)
         {
             return UsuarioConviteErrors.ConvitePendente;
         }
@@ -47,6 +48,7 @@ internal sealed class AdicionarUsuarioConviteHandler(
         
         usuarioConvite.Raise(new UsuarioConviteAdicionadoDomainEvent(usuarioConvite.Id, link));
         
+        await context.Convites.AddAsync(usuarioConvite, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
         return response;

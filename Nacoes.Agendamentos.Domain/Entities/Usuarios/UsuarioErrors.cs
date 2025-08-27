@@ -30,4 +30,7 @@ public static class UsuarioErrors
     
     public static readonly Error MinisterioNaoVinculadoAoUsuario = 
         Error.Problem("Usuarios.MinisterioNaoVinculadoAoUsuario", "O ministerio informado não está vinculado ao usuario.");
+    
+    public static readonly Error MinisterioJaVinculadoAoUsuario = 
+        Error.Problem("Usuarios.MinisterioJaVinculadoAoUsuario", "O ministerio informado já está vinculado ao usuario.");
 }
