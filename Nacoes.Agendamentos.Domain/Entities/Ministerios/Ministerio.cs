@@ -11,7 +11,7 @@ public sealed class Ministerio : EntityId, IAggregateRoot
     
     internal Ministerio() { }
 
-    public Ministerio(string nome, string descricao, Cor? cor = null)
+    public Ministerio(string nome, string? descricao, Cor? cor = null)
     {
         if (string.IsNullOrWhiteSpace(nome))
         {

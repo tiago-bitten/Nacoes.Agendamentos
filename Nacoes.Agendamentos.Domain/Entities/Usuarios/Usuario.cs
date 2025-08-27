@@ -7,7 +7,7 @@ namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 public sealed class Usuario : EntityId, IAggregateRoot
 {
-    private readonly List<UsuarioMinisterio> _ministerios = new();
+    private readonly List<UsuarioMinisterio> _ministerios = [];
     
     private Usuario() { }
 
@@ -67,16 +67,14 @@ public sealed class Usuario : EntityId, IAggregateRoot
     
     public Result VincularMinisterio(Guid ministerioId)
     {
-        var usuarioMinisterioResult = UsuarioMinisterio.Criar(Id, ministerioId);
-        if (usuarioMinisterioResult.IsFailure)
+        var existeVinculo = _ministerios.SingleOrDefault(x => x.MinisterioId == ministerioId);
+        if (existeVinculo is null)
         {
-            return usuarioMinisterioResult.Error;
+            _ministerios.Add(new UsuarioMinisterio(ministerioId));
+            return Result.Success();
         }
-        
-        var usuarioMinisterio = usuarioMinisterioResult.Value;
-        _ministerios.Add(usuarioMinisterio);
-        
-        return Result.Success();
+
+        return existeVinculo.Restaurar();
     }
     
     public Result DesvincularMinisterio(Guid ministerioId)
@@ -87,7 +85,7 @@ public sealed class Usuario : EntityId, IAggregateRoot
             return UsuarioErrors.MinisterioNaoVinculadoAoUsuario;
         }
         
-        return usuarioMinisterio.Desvincular();
+        return usuarioMinisterio.Inativar();
     }
     
     // TODO: senha deve ser um value object

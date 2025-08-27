@@ -11,8 +11,5 @@ internal class VoluntarioMinisterioConfiguration : EntityIdConfiguration<Volunta
         base.Configure(builder);
 
         builder.Property(v => v.MinisterioId);
-
-        builder.Property(v => v.Status)
-               .HasConversion<string>();
     }
 }

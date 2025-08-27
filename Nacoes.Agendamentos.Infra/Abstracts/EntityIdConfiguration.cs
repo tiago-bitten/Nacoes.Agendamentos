@@ -12,15 +12,16 @@ internal abstract class EntityIdConfiguration<T> : IEntityTypeConfiguration<T> w
         builder.HasKey(e => e.Id);
 
         builder.Property(e => e.Id)
-               .HasColumnName("id")
-               .HasDefaultValueSql("uuid_generate_v1()")
-               .ValueGeneratedOnAdd();
+            .HasColumnName("id")
+            .ValueGeneratedNever();
 
         builder.Property(e => e.DataCriacao)
-               .HasColumnName("data_criacao");
+            .HasColumnName("data_criacao")
+            .IsRequired();
 
         builder.Property(e => e.Inativo)
-               .HasColumnName("inativo");
+            .HasColumnName("inativo")
+            .IsRequired();
         
         builder.HasIndex(e => new { e.DataCriacao, e.Id })
             .HasDatabaseName($"ix_{typeof(T).Name.ToLower()}_data_criacao_id")

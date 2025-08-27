@@ -85,7 +85,7 @@ public sealed class Voluntario : EntityId, IAggregateRoot
             return Result.Success();
         }
 
-        return existeVinculo.Vincular();
+        return existeVinculo.Restaurar();
     }
     #endregion
     
@@ -98,7 +98,7 @@ public sealed class Voluntario : EntityId, IAggregateRoot
             return VoluntarioMinisterioErrors.VoluntarioNaoEstaVinculadoAoMinisterio;
         }
 
-        return existeVinculo.Desvincular();
+        return existeVinculo.Inativar();
     }
     #endregion
 }
