@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Nacoes.Agendamentos.API.Controllers.Abstracts;
 
-//[Authorize]
+[Authorize]
 public abstract class NacoesAuthenticatedController : NacoesController
 {
     [Obsolete("Utilizar result.AsHttpResult()")]

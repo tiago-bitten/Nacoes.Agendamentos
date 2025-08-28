@@ -28,18 +28,13 @@ internal class NacoesDbContext(
     public DbSet<Historico> Historicos { get; set; }
     public DbSet<UsuarioConviteMinisterio> ConvitesMinisterios { get; set; }
     
-    #region OnModelCreating
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(NacoesDbContext).Assembly);
-
         modelBuilder.ApplyValueObjectConverters();
-
         base.OnModelCreating(modelBuilder);
     }
-    #endregion
 
-    #region SaveChanges
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entityEntries = ChangeTracker
@@ -93,5 +88,4 @@ internal class NacoesDbContext(
                 
         return domainEventsDispatcher.DispatchAsync(domainEvents, cancellationToken);
     }
-    #endregion
 }
