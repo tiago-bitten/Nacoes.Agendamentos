@@ -24,16 +24,6 @@ public sealed class UsuariosConvitesController : NacoesAuthenticatedController
         
         return result.AsHttpResult(mensagem: "Convite enviado com sucesso.");
     }
-    
-    
-    [HttpPost("ovo")]
-    public IActionResult Post()
-    {
-        var auth = HttpContext.Request.Headers.Authorization.ToString();
-        Console.WriteLine($"Header Authorization recebido: {auth}");
-        return Ok(auth);
-    }
-
     #endregion
     
     #region Aceitar

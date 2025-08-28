@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Nacoes.Agendamentos.Domain.Abstracts;
+using Microsoft.EntityFrameworkCore.Storage;
 using Nacoes.Agendamentos.Domain.Entities.Agendas;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
