@@ -14,8 +14,6 @@ namespace Nacoes.Agendamentos.API.Controllers.Usuarios;
 [Route("api/usuarios-convites")]
 public sealed class UsuariosConvitesController : NacoesAuthenticatedController
 {
-    #region Adicionar
-    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarUsuarioConviteCommand, UsuarioConviteResponse> handler,
                                                [FromBody] AdicionarUsuarioConviteCommand command)
@@ -24,9 +22,7 @@ public sealed class UsuariosConvitesController : NacoesAuthenticatedController
         
         return result.AsHttpResult(mensagem: "Convite enviado com sucesso.");
     }
-    #endregion
     
-    #region Aceitar
     [AllowAnonymous]
     [HttpPut("aceitar")]
     public async Task<IActionResult> Aceitar(
@@ -40,9 +36,7 @@ public sealed class UsuariosConvitesController : NacoesAuthenticatedController
         
         return result.AsHttpResult(mensagem: "Convite aceito com sucesso.");
     }
-    #endregion
     
-    #region Recusar
     [AllowAnonymous]
     [HttpPut("recusar")]
     public async Task<IActionResult> Recusar(ICommandHandler<RecusarUsuarioConviteCommand> handler,
@@ -52,13 +46,12 @@ public sealed class UsuariosConvitesController : NacoesAuthenticatedController
         
         return result.AsHttpResult(mensagem: "Convite recusado com sucesso.");
     }
-    #endregion
     
-    #region RecuperarPorToken
     [AllowAnonymous]
     [HttpGet("token/{token}")]    
-    public async Task<IActionResult> RecuperarPorToken(IQueryHandler<RecuperarUsuarioConvitePorTokenQuery, RecuperarUsuarioConvitePorTokenResponse> handler,
-                                                       string token)
+    public async Task<IActionResult> RecuperarPorToken(
+        IQueryHandler<RecuperarUsuarioConvitePorTokenQuery, RecuperarUsuarioConvitePorTokenResponse> handler, 
+        string token)
     {
         var query = new RecuperarUsuarioConvitePorTokenQuery(token);
         
@@ -66,5 +59,4 @@ public sealed class UsuariosConvitesController : NacoesAuthenticatedController
         
         return result.AsHttpResult(mensagem: "Convite recuperado com sucesso.");
     }
-    #endregion
 }

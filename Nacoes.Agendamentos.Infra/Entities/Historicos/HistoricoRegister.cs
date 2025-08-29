@@ -12,23 +12,23 @@ public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
                                       INacoesDbContext context) 
     : IHistoricoRegister
 {
-    public Task AuditAsync(Guid entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
+    public Task AuditAsync(Guid entidadeId, string acao, string? detalhes)
     {
-        return RegistrarAsync(entidadeId, acao, tipoAcao, detalhes);
+        return RegistrarAsync(entidadeId, acao, detalhes);
     }
 
-    public Task AuditAsync<T>(T entidade, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes) where T : EntityId
+    public Task AuditAsync<T>(T entidade, string acao, string? detalhes) where T : EntityId
     {
-        return RegistrarAsync(entidade.Id, acao, tipoAcao, detalhes);
+        return RegistrarAsync(entidade.Id, acao, detalhes);
     }
 
-    private async Task RegistrarHistoricoInternoAsync(Guid? entidadeId, string acao, EHistoricoTipoAcao tipoAcao, EHistoricoUsuarioAcao usuarioAcao, string? detalhes, Guid usuarioId)
+    private async Task RegistrarHistoricoInternoAsync(Guid? entidadeId, string acao, EHistoricoUsuarioAcao usuarioAcao, string? detalhes, Guid usuarioId)
     {
-        var historico = Historico.Criar(entidadeId, DateTimeOffset.UtcNow, usuarioId, acao, tipoAcao, usuarioAcao, detalhes);
+        var historico = Historico.Criar(entidadeId, DateTimeOffset.UtcNow, usuarioId, acao, usuarioAcao, detalhes);
         await historicoRepository.AddAsync(historico);
     }
 
-    private async Task RegistrarAsync(Guid? entidadeId, string acao, EHistoricoTipoAcao tipoAcao, string? detalhes)
+    private async Task RegistrarAsync(Guid? entidadeId, string acao, string? detalhes)
     {
         if (!ambienteContext.IsUsuarioAuthenticated)
         {
@@ -40,7 +40,7 @@ public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
         
         var usuarioId = ambienteContext.UserId;
 
-        await RegistrarHistoricoInternoAsync(entidadeId, acao, tipoAcao, usuarioAcao, detalhes, usuarioId);
+        await RegistrarHistoricoInternoAsync(entidadeId, acao, usuarioAcao, detalhes, usuarioId);
         await context.SaveChangesAsync();
     }
 }

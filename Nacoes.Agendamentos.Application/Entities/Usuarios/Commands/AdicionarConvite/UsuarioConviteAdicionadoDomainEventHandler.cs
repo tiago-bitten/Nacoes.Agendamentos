@@ -18,7 +18,7 @@ internal sealed class UsuarioConviteAdicionadoDomainEventHandler(IUsuarioConvite
     
     public async Task Handle(UsuarioConviteAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        await historicoRegister.AuditAsync(domainEvent.UsuarioConviteId, acao: "Convite gerado.", EHistoricoTipoAcao.Criar);
+        await historicoRegister.AuditAsync(domainEvent.UsuarioConviteId, acao: "Convite gerado.");
         var usuarioConvite = await usuarioConviteRepository.GetByIdAsync(domainEvent.UsuarioConviteId, asNoTracking: true, includes: "EnviadoPor");
         try
         {

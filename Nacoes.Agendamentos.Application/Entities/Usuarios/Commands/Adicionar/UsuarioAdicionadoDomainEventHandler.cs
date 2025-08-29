@@ -10,6 +10,6 @@ internal sealed class UsuarioAdicionadoDomainEventHandler(IHistoricoRegister his
 {
     public Task Handle(UsuarioAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        return historicoRegister.AuditAsync(domainEvent.UsuarioId, acao: "Usuário adicionado.", EHistoricoTipoAcao.Criar);
+        return historicoRegister.AuditAsync(domainEvent.UsuarioId, acao: "Usuário adicionado.");
     }
 }

@@ -12,7 +12,6 @@ public sealed class Historico : EntityId
                       DateTimeOffset data,
                       Guid? usuarioId,
                       string acao,
-                      EHistoricoTipoAcao tipoAcao,
                       EHistoricoUsuarioAcao usuarioAcao,
                       string? detalhes)
     {
@@ -20,7 +19,6 @@ public sealed class Historico : EntityId
         Data = data;
         UsuarioId = usuarioId;
         Acao = acao;
-        TipoAcao = tipoAcao;
         UsuarioAcao = usuarioAcao;
         Detalhes = detalhes;
     }
@@ -29,26 +27,35 @@ public sealed class Historico : EntityId
     public DateTimeOffset Data { get; private set; }
     public Guid? UsuarioId { get; private set; }
     public string Acao { get; private set; } = string.Empty;
-    public EHistoricoTipoAcao TipoAcao { get; private set; }
     public EHistoricoUsuarioAcao UsuarioAcao { get; private set; }
     public string? Detalhes { get; private set; }
-    
-    public static Historico Criar(Guid? entidadeId, DateTimeOffset data, Guid? usuarioId, string acao, 
-        EHistoricoTipoAcao tipoAcao, EHistoricoUsuarioAcao usuarioAcao, string? detalhes) => new(entidadeId, data, usuarioId, acao,tipoAcao, usuarioAcao, detalhes);
-}
 
-public enum EHistoricoTipoAcao
-{
-    Criar = 0,
-    Atualizar = 1,
-    Remover = 2,
-    Login = 3,
-    Outro = 4
+    public static Historico Criar(
+        Guid? entidadeId,
+        DateTimeOffset data,
+        Guid? usuarioId,
+        string acao,
+        EHistoricoUsuarioAcao usuarioAcao,
+        string? detalhes)
+    {
+        if (string.IsNullOrEmpty(acao))
+        {
+            throw new ArgumentNullException(nameof(acao));
+        }
+        
+        if (usuarioAcao == EHistoricoUsuarioAcao.NotDefined)
+        {
+            throw new ArgumentNullException(nameof(usuarioAcao));
+        }
+        
+        return new Historico(entidadeId, data, usuarioId, acao, usuarioAcao, detalhes);
+    }
 }
 
 public enum EHistoricoUsuarioAcao
 {
-    Usuario = 0,
-    ThirdPartyUser = 1,
-    Bot = 2
+    NotDefined = 0,
+    Usuario = 1,
+    ThirdPartyUser = 2,
+    Bot = 3
 }
