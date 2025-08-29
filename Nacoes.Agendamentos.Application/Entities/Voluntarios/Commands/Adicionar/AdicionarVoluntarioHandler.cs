@@ -42,7 +42,7 @@ internal sealed class AdicionarVoluntarioHandler(
         await context.SaveChangesAsync(cancellation);
 
         // TODO: move para domain event
-        await historicoRegister.AuditAsync(voluntario, acao: "Voluntário adicionado.", EHistoricoTipoAcao.Criar);
+        await historicoRegister.AuditAsync(voluntario, acao: "Voluntário adicionado.");
         
         voluntario.Raise(new VoluntarioAdicionadoDomainEvent(voluntario.Id));
         

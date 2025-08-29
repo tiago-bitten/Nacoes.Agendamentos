@@ -10,6 +10,6 @@ internal sealed class VoluntarioAdicionadoDomainEventHandler(IHistoricoRegister 
 {
     public Task Handle(VoluntarioAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        return historicoRegister.AuditAsync(domainEvent.VoluntarioId, acao: "Voluntário adicionado.", EHistoricoTipoAcao.Criar);
+        return historicoRegister.AuditAsync(domainEvent.VoluntarioId, acao: "Voluntário adicionado.");
     }
 }

@@ -10,6 +10,6 @@ internal sealed class MinisterioAdicionadoDomainEventHandler(IHistoricoRegister 
 {
     public Task Handle(MinisterioAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        return historicoRegister.AuditAsync(domainEvent.MinisterioId, acao: "Ministerio adicionado.", EHistoricoTipoAcao.Criar);
+        return historicoRegister.AuditAsync(domainEvent.MinisterioId, acao: "Ministerio adicionado.");
     }
 }

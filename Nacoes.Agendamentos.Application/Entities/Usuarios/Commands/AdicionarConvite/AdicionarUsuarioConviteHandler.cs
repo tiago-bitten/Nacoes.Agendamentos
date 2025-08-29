@@ -19,14 +19,12 @@ internal sealed class AdicionarUsuarioConviteHandler(
 {
     public async Task<Result<UsuarioConviteResponse>> Handle(AdicionarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
-        var statusAguardandoAceite = await context.Convites
+        var existeConvitePendente = await context.Convites
             .WhereSpec(new ConvitesPendentesSpec())
             .Where(x => x.Email.Address == command.EmailAddress)
-            .FirstOrDefaultAsync(cancellationToken);
-        
-        
+            .AnyAsync(cancellationToken);
             
-        if (statusAguardandoAceite?.Status is EConviteStatus.Pendente)
+        if (existeConvitePendente)
         {
             return UsuarioConviteErrors.ConvitePendente;
         }

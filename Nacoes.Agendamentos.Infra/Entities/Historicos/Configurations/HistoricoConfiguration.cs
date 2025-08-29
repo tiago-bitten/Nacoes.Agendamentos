@@ -24,10 +24,6 @@ internal sealed class HistoricoConfiguration : EntityIdConfiguration<Historico>
         builder.Property(h => h.Acao)
                .IsRequired();
         
-        builder.Property(h => h.TipoAcao)
-               .IsRequired()
-               .HasConversion<string>();
-        
         builder.Property(h => h.UsuarioAcao)
                .IsRequired();
         

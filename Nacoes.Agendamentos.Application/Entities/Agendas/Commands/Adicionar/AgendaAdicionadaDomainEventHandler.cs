@@ -10,6 +10,6 @@ internal sealed class AgendaAdicionadaDomainEventHandler(IHistoricoRegister hist
 {
     public Task Handle(AgendaAdicionadaDomainEvent domainEvent, CancellationToken cancellationToken)
     {
-        return historicoRegister.AuditAsync(domainEvent.AgendaId, acao: "Agenda adicionada.", EHistoricoTipoAcao.Criar);
+        return historicoRegister.AuditAsync(domainEvent.AgendaId, acao: "Agenda adicionada.");
     }
 }
