@@ -17,10 +17,10 @@ internal sealed class AdicionarUsuarioConviteHandler(
     ILinkFactory linkFactory)               
     : ICommandHandler<AdicionarUsuarioConviteCommand, UsuarioConviteResponse>
 {
-    public async Task<Result<UsuarioConviteResponse>> Handle(AdicionarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<UsuarioConviteResponse>> HandleAsync(AdicionarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
         var existeConvitePendente = await context.Convites
-            .WhereSpec(new ConvitesPendentesSpec())
+            .ApplySpec(new ConvitesPendentesSpec())
             .Where(x => x.Email.Address == command.EmailAddress)
             .AnyAsync(cancellationToken);
             

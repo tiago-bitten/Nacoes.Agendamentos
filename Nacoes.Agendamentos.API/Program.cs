@@ -1,6 +1,8 @@
+using System.Reflection;
 using Hangfire;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Nacoes.Agendamentos.API;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Middlewares;
 using Nacoes.Agendamentos.Application;
 using Nacoes.Agendamentos.Infra;
@@ -9,10 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services
-       .AddApplication()
-       .AddPresentation()
-       .AddInfra(builder.Configuration);
+    .AddApplication()
+    .AddInfra(builder.Configuration)
+    .AddApi();
 
+builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
@@ -23,17 +26,11 @@ app.UseHealthChecks("/health", new HealthCheckOptions
     Predicate = _ => true,
 });
 
-// Configure the HTTP request pipeline.
+app.MapEndpoints();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nacoes.Agendamentos API v1");
-        c.RoutePrefix = string.Empty;
-
-        c.DisplayRequestDuration();
-    });
+    app.UseSwaggerWithUi();
 }
 
 app.UseHangfireDashboard();
@@ -49,3 +46,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 await app.RunAsync();
+
+namespace Seeds.API
+{
+    public partial class Program;
+}

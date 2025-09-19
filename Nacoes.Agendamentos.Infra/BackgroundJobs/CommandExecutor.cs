@@ -15,7 +15,7 @@ public class CommandExecutor(IServiceProvider serviceProvider) : ICommandExecuto
             throw new InvalidOperationException($"No handler found for command {typeof(TCommand).Name}.");
         }
 
-        await handler.Handle(command, CancellationToken.None);
+        await handler.HandleAsync(command, CancellationToken.None);
     }
 
     public async Task<Result<TResponse>> ExecuteCommandAsync<TCommand, TResponse>(TCommand command) where TCommand : ICommand<TResponse>
@@ -27,6 +27,6 @@ public class CommandExecutor(IServiceProvider serviceProvider) : ICommandExecuto
             throw new InvalidOperationException($"No handler found for command {typeof(TCommand).Name} with response {typeof(TResponse).Name}.");
         }
 
-        return await handler.Handle(command, CancellationToken.None);
+        return await handler.HandleAsync(command, CancellationToken.None);
     }
 }

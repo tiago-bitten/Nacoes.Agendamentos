@@ -15,7 +15,7 @@ internal sealed class AceitarUsuarioConviteHandler(
     ICommandHandler<LoginCommand, LoginResponse> loginHandler)
     : ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse>
 {
-    public async Task<Result<AceitarUsuarioConviteResponse>> Handle(
+    public async Task<Result<AceitarUsuarioConviteResponse>> HandleAsync(
         AceitarUsuarioConviteCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -31,7 +31,7 @@ internal sealed class AceitarUsuarioConviteHandler(
             .Select(x => x.MinisterioId)
             .ToList();
 
-        var usuarioResult = await adicionarUsuarioHandler.Handle(command.ToAdicionarUsuarioCommand(
+        var usuarioResult = await adicionarUsuarioHandler.HandleAsync(command.ToAdicionarUsuarioCommand(
             usuarioConvite.Nome,
             usuarioConvite.Email,
             ministeriosIds), cancellationToken);
@@ -52,7 +52,7 @@ internal sealed class AceitarUsuarioConviteHandler(
         usuarioConvite.Raise(new UsuarioConviteAceitoDomainEvent(usuarioConvite.Id));
         await context.SaveChangesAsync(cancellationToken);
         
-        var loginResult = await loginHandler.Handle(command.ToLoginCommand(usuarioConvite.Email), cancellationToken);
+        var loginResult = await loginHandler.HandleAsync(command.ToLoginCommand(usuarioConvite.Email), cancellationToken);
         if (loginResult.IsFailure)
         {
             return loginResult.Error;

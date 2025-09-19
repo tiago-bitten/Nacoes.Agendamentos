@@ -11,7 +11,7 @@ internal sealed class AdicionarMinisterioHandler(
     INacoesDbContext context)
     : ICommandHandler<AdicionarMinisterioCommand, Guid>
 {
-    public async Task<Result<Guid>> Handle(AdicionarMinisterioCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid>> HandleAsync(AdicionarMinisterioCommand command, CancellationToken cancellationToken = default)
     {
         var ministerio = command.GetEntidade();
         

@@ -13,10 +13,12 @@ internal sealed class DesvincularVoluntarioMinisterioHandler(
     INacoesDbContext context)
     : ICommandHandler<DesvincularVoluntarioMinisterioCommand>
 {
-    public async Task<Result> Handle(DesvincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default)
+    public async Task<Result> HandleAsync(
+        DesvincularVoluntarioMinisterioCommand command,
+        CancellationToken cancellation = default)
     {
         var voluntarioMinisterio = await context.Voluntarios
-            .WhereSpec(new VoluntarioPorVinculoMinisterioSpec(command.VoluntarioMinisterioId))
+            .ApplySpec(new VoluntarioPorVinculoMinisterioSpec(command.VoluntarioMinisterioId))
             .Select(x => new
             {
                 Voluntario = x,

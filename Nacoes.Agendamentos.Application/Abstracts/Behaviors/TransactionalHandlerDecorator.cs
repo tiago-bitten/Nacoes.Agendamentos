@@ -10,11 +10,11 @@ internal static class TransactionDecorator
         ICommandHandler<TCommand, TResponse> innerHandler
     ) : ICommandHandler<TCommand, TResponse> where TCommand : ICommand<TResponse>
     {
-        public async Task<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken)
+        public async Task<Result<TResponse>> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-            var result = await innerHandler.Handle(command, cancellationToken);
+            var result = await innerHandler.HandleAsync(command, cancellationToken);
 
             if (result.IsSuccess)
             {
@@ -29,11 +29,11 @@ internal static class TransactionDecorator
         ICommandHandler<TCommand> innerHandler
     ) : ICommandHandler<TCommand> where TCommand : ICommand
     {
-        public async Task<Result> Handle(TCommand command, CancellationToken cancellationToken)
+        public async Task<Result> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-            var result = await innerHandler.Handle(command, cancellationToken);
+            var result = await innerHandler.HandleAsync(command, cancellationToken);
 
             if (result.IsSuccess)
             {

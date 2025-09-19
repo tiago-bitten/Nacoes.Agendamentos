@@ -9,7 +9,7 @@ namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.RecusarConv
 internal sealed class RecusarUsuarioConviteHandler(INacoesDbContext context) 
     : ICommandHandler<RecusarUsuarioConviteCommand>
 {
-    public async Task<Result> Handle(RecusarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(RecusarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
     {
         var usuarioConvite = await context.Convites
             .SingleOrDefaultAsync(x => x.Id == command.UsuarioConviteId, cancellationToken);

@@ -1,6 +1,6 @@
 ﻿namespace Nacoes.Agendamentos.Application.Authentication.PasswordVerifiers;
 
-public static class PasswordHelper
+internal static class PasswordHelper
 {
     public static bool Verify(string password, string hashedPassword)
         => BCrypt.Net.BCrypt.Verify(password, hashedPassword);

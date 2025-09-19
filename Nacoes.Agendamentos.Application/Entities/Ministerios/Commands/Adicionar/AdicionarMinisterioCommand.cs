@@ -1,18 +1,6 @@
 ﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios;
-using Nacoes.Agendamentos.Domain.ValueObjects;
+using Nacoes.Agendamentos.Application.Common.Dtos;
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adicionar;
 
-public sealed record AdicionarMinisterioCommand : ICommand<Guid>
-{
-    public string Nome { get; set; }
-    public string? Descricao { get; set; }
-    public CorItem? Cor { get; set; }
-
-    public record CorItem
-    {
-        public string Valor { get; set; }
-        public ETipoCor Tipo { get; set; }
-    }
-}
+public sealed record AdicionarMinisterioCommand(string Nome, string? Descricao, CorDto? Cor) : ICommand<Guid>;

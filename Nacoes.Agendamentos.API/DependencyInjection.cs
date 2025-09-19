@@ -1,51 +1,56 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Asp.Versioning;
+using Microsoft.OpenApi.Models;
 
 namespace Nacoes.Agendamentos.API;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddPresentation(this IServiceCollection services)
+    public static IServiceCollection AddApi(this IServiceCollection services)
     {
+        services.AddApiVersioning();
+        services.AddSwaggerGen();
+        services.AddProblemDetails();
         services.AddEndpointsApiExplorer();
-        services.AddHealthChecks();
-        services.AddControllers()
-                .AddJsonOptions(x =>
-                {
-                    x.JsonSerializerOptions.PropertyNamingPolicy = null;
-                });
-
-        services.Configure<RouteOptions>(x => x.LowercaseUrls = true);
-
-        services.AddCors(x => x.AddDefaultPolicy(option =>
-            option.AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .SetIsOriginAllowed(_ => true)
-                  .AllowCredentials()
-        ));
-
-        services.AddSwaggerGen(c =>
+        services.AddSwaggerGenWithAuth();
+        
+        return services;
+    }
+    
+    private static IServiceCollection AddApiVersioning(this IServiceCollection services)
+    {
+        services.AddApiVersioning(options =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "Nacoes.Agendamentos API",
-                Version = "v1"
-            });
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.ReportApiVersions = true;
+        }).AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
+        
+        return services;
+    }
+    
+    private static IServiceCollection AddSwaggerGenWithAuth(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(o =>
+        {
+            o.CustomSchemaIds(id => id.FullName!.Replace('+', '-'));
 
-            c.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
-
-            // 🔑 Definição do esquema de segurança
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            var securityScheme = new OpenApiSecurityScheme
             {
-                Name = "Authorization",
+                Name = "JWT Authentication",
+                Description = "Enter your JWT token in this field",
                 In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey, // <-- IMPORTANTE: tem que ser ApiKey aqui
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-                Description = "Insira o token JWT desta forma: Bearer {seu token}"
-            });
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            };
 
-            // 🔒 Requisito global de segurança
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            o.AddSecurityDefinition("Bearer", securityScheme);
+
+            var securityRequirement = new OpenApiSecurityRequirement
             {
                 {
                     new OpenApiSecurityScheme
@@ -54,14 +59,13 @@ public static class DependencyInjection
                         {
                             Type = ReferenceType.SecurityScheme,
                             Id = "Bearer"
-                        },
-                        Scheme = "oauth2",
-                        Name = "Bearer",
-                        In = ParameterLocation.Header
+                        }
                     },
-                    new List<string>()
+                    []
                 }
-            });
+            };
+
+            o.AddSecurityRequirement(securityRequirement);
         });
 
         return services;

@@ -2,7 +2,4 @@
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Desvincular;
 
-public sealed record DesvincularVoluntarioMinisterioCommand : ICommand
-{
-    public Guid VoluntarioMinisterioId { get; init; }
-}
+public sealed record DesvincularVoluntarioMinisterioCommand(Guid VoluntarioMinisterioId) : ICommand;

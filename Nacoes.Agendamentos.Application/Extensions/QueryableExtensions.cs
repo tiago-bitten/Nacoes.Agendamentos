@@ -12,6 +12,6 @@ public static class QueryableExtensions
         Expression<Func<T, bool>> predicate)
         => condition ? query.Where(predicate) : query;
     
-    public static IQueryable<T> WhereSpec<T>(this IQueryable<T> query, ISpecification<T> spec)
+    public static IQueryable<T> ApplySpec<T>(this IQueryable<T> query, ISpecification<T> spec)
         => query.Where(spec.ToExpression());
 }

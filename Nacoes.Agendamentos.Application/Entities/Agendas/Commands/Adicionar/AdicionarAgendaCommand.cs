@@ -1,17 +1,6 @@
 ﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
-using Nacoes.Agendamentos.Domain.Entities.Agendas;
-using Nacoes.Agendamentos.Domain.ValueObjects;
+using Nacoes.Agendamentos.Application.Common.Dtos;
 
 namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Adicionar;
 
-public sealed record AdicionarAgendaCommand : ICommand<Guid>
-{
-    public string Descricao { get; init; } = string.Empty;
-    public HorarioItem Horario { get; init; } = new();
-
-    public sealed record HorarioItem
-    {
-        public DateTime DataInicial { get; init; }
-        public DateTime DataFinal { get; init; }
-    }
-}
+public sealed record AdicionarAgendaCommand(string Descricao, HorarioDto Horario) : ICommand<Guid>;

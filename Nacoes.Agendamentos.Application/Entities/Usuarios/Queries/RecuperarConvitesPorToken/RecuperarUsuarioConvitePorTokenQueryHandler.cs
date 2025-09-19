@@ -16,7 +16,7 @@ internal sealed class RecuperarUsuarioConvitePorTokenQueryHandler(INacoesDbConte
         CancellationToken cancellationToken = default)
     {
         var usuarioConviteResponse = await context.Convites
-            .WhereSpec(new ConvitesPorTokenSpec(query.Token))
+            .ApplySpec(new ConvitesPorTokenSpec(query.Token))
             .Select(x => new RecuperarUsuarioConvitePorTokenResponse
             {
                 Id = x.Id,

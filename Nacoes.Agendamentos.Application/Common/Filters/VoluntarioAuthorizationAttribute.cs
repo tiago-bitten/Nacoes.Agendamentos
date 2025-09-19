@@ -31,11 +31,7 @@ public sealed class VoluntarioAuthorizationAttribute : Attribute, IAsyncActionFi
         
         var loginHandler = httpContext.RequestServices.GetRequiredService<ICommandHandler<LoginExternoCommand>>();
 
-        var loginResult = await loginHandler.Handle(new LoginExternoCommand
-        {
-            Cpf = cpf!,
-            DataNascimento = dataNascimento
-        });
+        var loginResult = await loginHandler.HandleAsync(new LoginExternoCommand(cpf!, dataNascimento));
         
         if (loginResult.IsFailure)
         {
@@ -45,8 +41,6 @@ public sealed class VoluntarioAuthorizationAttribute : Attribute, IAsyncActionFi
             await httpContext.Response.WriteAsJsonAsync(ApiResponse.Erro(error));
             return;
         }
-        
-        // The handler will set the VoluntarioId in the AmbienteContext
         
         await next();
     }

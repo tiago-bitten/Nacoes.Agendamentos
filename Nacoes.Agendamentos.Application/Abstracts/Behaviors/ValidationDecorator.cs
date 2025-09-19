@@ -11,13 +11,13 @@ internal static class ValidationDecorator
                                                               IEnumerable<IValidator<TCommand>> validators)
         : ICommandHandler<TCommand, TResponse> where TCommand : ICommand<TResponse>
     {
-        public async Task<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken)
+        public async Task<Result<TResponse>> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             var validationFailures = await ValidateAsync(command, validators);
     
             if (validationFailures.Length is 0)
             {
-                return await innerHandler.Handle(command, cancellationToken);
+                return await innerHandler.HandleAsync(command, cancellationToken);
             }
     
             return CreateValidationError(validationFailures);
@@ -28,13 +28,13 @@ internal static class ValidationDecorator
                                                        IEnumerable<IValidator<TCommand>> validators) 
         : ICommandHandler<TCommand> where TCommand : ICommand
     {
-        public async Task<Result> Handle(TCommand command, CancellationToken cancellationToken)
+        public async Task<Result> HandleAsync(TCommand command, CancellationToken cancellationToken)
         {
             var validationFailures = await ValidateAsync(command, validators);
 
             if (validationFailures.Length is 0)
             {
-                return await innerHandler.Handle(command, cancellationToken);
+                return await innerHandler.HandleAsync(command, cancellationToken);
             }
 
             return CreateValidationError(validationFailures);
@@ -55,9 +55,10 @@ internal static class ValidationDecorator
         var validationRusultsTasks = enumerable.Select(validator => validator.ValidateAsync(context));
         var validationResults = await Task.WhenAll(validationRusultsTasks);
 
-        var validationFailures = validationResults.Where(validationResult => !validationResult.IsValid)
-                                                  .SelectMany(validationResult => validationResult.Errors)
-                                                  .ToArray();
+        var validationFailures = validationResults
+            .Where(validationResult => !validationResult.IsValid)
+            .SelectMany(validationResult => validationResult.Errors)
+            .ToArray();
         return validationFailures;
     }
 

@@ -14,7 +14,7 @@ internal sealed class AdicionarAtividadeHandler(
     IMinisterioRepository ministerioRepository)
     : ICommandHandler<AdicionarAtividadeCommand, Guid>
 {
-    public async Task<Result<Guid>> Handle(AdicionarAtividadeCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> HandleAsync(AdicionarAtividadeCommand command, CancellationToken cancellation = default)
     {
         var ministerio = await ministerioRepository.GetByIdAsync(command.MinisterioId);
         if (ministerio is null)

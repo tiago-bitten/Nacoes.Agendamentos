@@ -4,6 +4,7 @@ using Nacoes.Agendamentos.API.Controllers.Abstracts;
 using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Context;
+using Nacoes.Agendamentos.Application.Common.Dtos;
 using Nacoes.Agendamentos.Application.Common.Responses;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adicionar;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
@@ -35,17 +36,11 @@ public class InternoController : NacoesController
                 Erro = Error.Failure("Interno.MontarAmbiente", "O ambiente já está montado. Use e-mail nacoes@nacoes.com e senha 123456 para acessar."),
             });
         }
-        
-        var ministerioResult = await adicionarMinisterioHandler.Handle(new AdicionarMinisterioCommand
-        {
-            Nome = "Nacoes",
-            Descricao = "Ministerio de Nacoes",
-            Cor = new AdicionarMinisterioCommand.CorItem
-            {
-                Tipo = ETipoCor.Hex,
-                Valor = "4d4d4d"
-            },
-        });
+
+        var ministerioResult = await adicionarMinisterioHandler.HandleAsync(new AdicionarMinisterioCommand(
+            "Nacoes",
+            "Mininsterio de Nacoes",
+            new CorDto("4d4d4d", ETipoCor.Hex)));
         
         if (ministerioResult.IsFailure)
         {
@@ -58,7 +53,7 @@ public class InternoController : NacoesController
         
         var ministerioId = ministerioResult.Value;
         
-        var usuarioResult = await adicionarUsuarioHandler.Handle(new AdicionarUsuarioCommand
+        var usuarioResult = await adicionarUsuarioHandler.HandleAsync(new AdicionarUsuarioCommand
         {
             Nome = "Nacoes",
             Email = "nacoes@nacoes.com",
