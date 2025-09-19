@@ -3,10 +3,8 @@ using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Commands.Login;
 
-public record LoginCommand : ICommand<LoginResponse>
-{
-    public string? Email { get; init; }
-    public string? Senha { get; init; }
-    public string? TokenExterno { get; init; }
-    public required EAuthType AuthType { get; init; }
-}
+public record LoginCommand(
+    string? Email,
+    string? Senha,
+    string? TokenExterno,
+    EAuthType AuthType) : ICommand<LoginResponse>;

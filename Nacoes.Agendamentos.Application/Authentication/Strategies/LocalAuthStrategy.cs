@@ -15,7 +15,7 @@ internal class LocalAuthStrategy(INacoesDbContext context) : IAuthStrategy
     public async Task<Result<Usuario>> AutenticarAsync(LoginCommand command)
     {
         var usuario = await context.Usuarios
-            .WhereSpec(new UsuarioComEmailAddressSpec(command.Email!))
+            .ApplySpec(new UsuarioComEmailAddressSpec(command.Email!))
             .Where(x => x.AuthType == EAuthType.Local)
             .AsNoTracking()
             .SingleOrDefaultAsync();

@@ -17,13 +17,11 @@ public sealed class Agenda : EntityId, IAggregateRoot
         Horario = horario;
     }
 
-    public string Descricao { get; private set; } = null!;
+    public string Descricao { get; private set; } = string.Empty;
     public Horario Horario { get; private set; } = null!;
 
     public IReadOnlyCollection<Agendamento> Agendamentos => _agendamentos.AsReadOnly();
     
-    #region Criar
-
     public static Result<Agenda> Criar(string descricao, Horario horario)
     {
         if (string.IsNullOrWhiteSpace(descricao))
@@ -32,8 +30,6 @@ public sealed class Agenda : EntityId, IAggregateRoot
         }
 
         var agenda = new Agenda(descricao, horario);
-        return Result<Agenda>.Success(agenda);
+        return agenda;
     }
-
-    #endregion
 }

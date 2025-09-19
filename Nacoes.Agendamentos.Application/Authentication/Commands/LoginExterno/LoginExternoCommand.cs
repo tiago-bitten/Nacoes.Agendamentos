@@ -2,8 +2,4 @@
 
 namespace Nacoes.Agendamentos.Application.Authentication.Commands.LoginExterno;
 
-public sealed record LoginExternoCommand : ICommand
-{
-    public required string Cpf { get; init; }
-    public required DateOnly DataNascimento { get; init; }
-}
+public sealed record LoginExternoCommand(string Cpf, DateOnly DataNascimento) : ICommand;

@@ -15,7 +15,7 @@ internal sealed class VincularVoluntarioMinisterioHandler(
     INacoesDbContext context)
     : ICommandHandler<VincularVoluntarioMinisterioCommand>
 {
-    public async Task<Result> Handle(VincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default)
+    public async Task<Result> HandleAsync(VincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default)
     {
         var voluntarioMinisterioParaVincular = await context.Voluntarios
             .Include(v => v.Ministerios)

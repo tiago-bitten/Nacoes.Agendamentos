@@ -4,10 +4,13 @@ namespace Nacoes.Agendamentos.Application.Common.Pagination;
 
 public static class PageExtensions
 {
-    public static async Task<PagedResponse<T>> ToPagedResponseAsync<T>(this IQueryable<T> query, int limit, string? cursor) 
+    public static async Task<PagedResponse<T>> ToPagedResponseAsync<T>(
+        this IQueryable<T> query,
+        int limit, string? cursor,
+        CancellationToken cancellationToken = default) 
         where T : ICursorResponse
     {
-        var total = await query.CountAsync();
+        var total = await query.CountAsync(cancellationToken);
 
         query = query.OrderByDescending(item => item.DataCriacao).ThenByDescending(item => item.Id);
 
@@ -26,7 +29,7 @@ public static class PageExtensions
                                         (item.DataCriacao == cursorDate && item.Id < cursorId)); 
         }
 
-        var items = await query.Take(limit + 1).ToListAsync();
+        var items = await query.Take(limit + 1).ToListAsync(cancellationToken);
         var hasNext = items.Count > limit;
         var nextCursor = string.Empty;
         

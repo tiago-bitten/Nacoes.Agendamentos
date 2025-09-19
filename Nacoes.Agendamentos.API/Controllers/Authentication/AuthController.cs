@@ -16,7 +16,7 @@ public class AuthController : NacoesController
     public async Task<IActionResult> Login([FromServices] ICommandHandler<LoginCommand, LoginResponse> handler,
                                            [FromBody] LoginCommand command)
     {
-        var result = await handler.Handle(command);
+        var result = await handler.HandleAsync(command);
 
         return result.AsHttpResult(mensagem: "Login realizado com sucesso.");
     }
@@ -27,7 +27,7 @@ public class AuthController : NacoesController
     public async Task<IActionResult> Login([FromServices] ICommandHandler<LoginExternoCommand> handler,
                                            [FromBody] LoginExternoCommand command)
     {
-        var result = await handler.Handle(command);
+        var result = await handler.HandleAsync(command);
 
         return result.AsHttpResult(mensagem: "Login realizado com sucesso.");
     }

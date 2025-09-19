@@ -19,7 +19,7 @@ public sealed class VoluntariosExternoController : NacoesController
     public async Task<IActionResult> Adicionar([FromServices] ICommandHandler<AdicionarVoluntarioCommand, Guid> handler,
                                                [FromBody] AdicionarVoluntarioCommand command)
     {
-        var result = await handler.Handle(command);
+        var result = await handler.HandleAsync(command);
 
         return result.AsHttpResult(mensagem: "Cadastro realizado com sucesso.");
     }

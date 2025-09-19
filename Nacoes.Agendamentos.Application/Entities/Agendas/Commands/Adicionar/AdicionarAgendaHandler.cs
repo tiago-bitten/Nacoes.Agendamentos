@@ -8,11 +8,10 @@ using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Agendas.Commands.Adicionar;
 
-internal sealed class AdicionarAgendaHandler(INacoesDbContext context,
-                                             IAgendaRepository agendaRepository)
+internal sealed class AdicionarAgendaHandler(INacoesDbContext context)
     : ICommandHandler<AdicionarAgendaCommand, Guid>
 {
-    public async Task<Result<Guid>> Handle(AdicionarAgendaCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> HandleAsync(AdicionarAgendaCommand command, CancellationToken cancellation = default)
     {
         var agendaResult = command.ToEntity();
         if (agendaResult.IsFailure)
@@ -22,7 +21,7 @@ internal sealed class AdicionarAgendaHandler(INacoesDbContext context,
         
         var agenda = agendaResult.Value;
 
-        await agendaRepository.AddAsync(agenda);
+        await context.Agendas.AddAsync(agenda, cancellation);
         
         agenda.Raise(new AgendaAdicionadaDomainEvent(agenda.Id));
 

@@ -1,24 +1,17 @@
 ﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
+using Nacoes.Agendamentos.Application.Common.Dtos;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.Adicionar;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 
-public sealed record AceitarUsuarioConviteCommand : ICommand<AceitarUsuarioConviteResponse>
-{
-    public Guid UsuarioConviteId { get; init; }
-    public string? TokenExterno { get; init; }
-    public string? Senha { get; init; }
-    public EAuthType AuthType { get; init; }
-    public CelularItem? Celular { get; init; }
-    
-    public record CelularItem
-    {
-        public string Ddd { get; init; } = string.Empty;
-        public string Numero { get; init; } = string.Empty;
-    }
-}
+public sealed record AceitarUsuarioConviteCommand(
+    Guid UsuarioConviteId,
+    string? TokenExterno,
+    string? Senha,
+    EAuthType AuthType,
+    CelularItemDto? Celular) : ICommand<AceitarUsuarioConviteResponse>;
 
 public static class AceitarUsuarioConviteCommandExtensions
 {
@@ -43,11 +36,5 @@ public static class AceitarUsuarioConviteCommandExtensions
         };
 
     public static LoginCommand ToLoginCommand(this AceitarUsuarioConviteCommand command, string email)
-        => new()
-        {
-            Email = email,
-            Senha = command.Senha,
-            AuthType = command.AuthType,
-            TokenExterno = command.TokenExterno
-        };
+        => new(email, command.Senha, command.TokenExterno, command.AuthType);
 }

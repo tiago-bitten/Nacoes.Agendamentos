@@ -69,11 +69,12 @@ internal class NacoesDbContext(
         Console.WriteLine(type.Name + " criado.");
     }
 
+    private const string DataCriacaoPropertyName = "DataCriacao";
     private static void SaveModified(EntityEntry entityEntry)
     {
-        entityEntry.Property("DataCriacao").IsModified = false;
+        entityEntry.Property(DataCriacaoPropertyName).IsModified = false;
     }
-
+    
     public Task PublishDomainEventsAsync(CancellationToken cancellationToken = default)
     {
         var domainEvents = ChangeTracker

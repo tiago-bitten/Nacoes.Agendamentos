@@ -1,21 +1,14 @@
 ﻿using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Application.Common.Dtos;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Adicionar;
 
-public sealed record AdicionarVoluntarioCommand : ICommand<Guid>
-{
-    public required string Nome { get; init; }
-    public string? Email { get; init; }
-    public CelularItem? Celular { get; init; }
-    public string? Cpf { get; init; }
-    public DateOnly? DataNascimento { get; init; }
-    public EOrigemCadastroVoluntario OrigemCadastro { get; init; }
-
-    public record CelularItem
-    {
-        public required string Ddd { get; init; }
-        public required string Numero { get; init; }
-    }
-}
+public sealed record AdicionarVoluntarioCommand(
+    string Nome,
+    string? Email,
+    CelularItemDto? Celular,
+    string? Cpf,
+    DateOnly? DataNascimento,
+    EOrigemCadastroVoluntario OrigemCadastro) : ICommand<Guid>;

@@ -14,7 +14,7 @@ internal sealed class AdicionarAgendamentoHandler(
     IAtividadeRepository atividadeRepository)
     : ICommandHandler<AdicionarAgendamentoCommand, Guid>
 {
-    public async Task<Result<Guid>> Handle(AdicionarAgendamentoCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> HandleAsync(AdicionarAgendamentoCommand command, CancellationToken cancellation = default)
     {
         // agendamento.Raise(new AgendamentoAdicionadoDomainEvent(agendamento.Id));
         throw new NotImplementedException();

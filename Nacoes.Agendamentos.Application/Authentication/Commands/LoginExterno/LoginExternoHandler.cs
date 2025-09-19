@@ -11,7 +11,7 @@ public sealed class LoginExternoHandler(IVoluntarioRepository voluntarioReposito
                                         IAmbienteContext ambienteContext)
     : ICommandHandler<LoginExternoCommand>
 {
-    public async Task<Result> Handle(LoginExternoCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(LoginExternoCommand command, CancellationToken cancellationToken = default)
     {
         var voluntario = await voluntarioRepository.RecuperarParaLoginExterno(command.DataNascimento, command.Cpf)
                                                    .Select(x => new

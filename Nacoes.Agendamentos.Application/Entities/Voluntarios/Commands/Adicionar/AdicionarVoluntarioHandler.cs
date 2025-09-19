@@ -18,12 +18,12 @@ internal sealed class AdicionarVoluntarioHandler(
     IHistoricoRegister historicoRegister)
     : ICommandHandler<AdicionarVoluntarioCommand, Guid>
 {
-    public async Task<Result<Guid>> Handle(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> HandleAsync(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
     {
         if (!string.IsNullOrEmpty(command.Email))
         {
             var existeVountarioComEmail = await context.Voluntarios
-                .WhereSpec(new VoluntarioComEmailAddressSpec(command.Email))
+                .ApplySpec(new VoluntarioComEmailAddressSpec(command.Email))
                 .AnyAsync(cancellation);
             if (existeVountarioComEmail)
             {
