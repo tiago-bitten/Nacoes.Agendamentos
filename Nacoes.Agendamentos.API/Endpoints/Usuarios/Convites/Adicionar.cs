@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Infra;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarConvite;
@@ -12,8 +13,8 @@ internal sealed class Adicionar : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("api/v1/usuarios/convites", async (
-            Request request,
-            ICommandHandler<AdicionarUsuarioConviteCommand, UsuarioConviteResponse> handler,
+            [FromBody] Request request,
+            [FromServices] ICommandHandler<AdicionarUsuarioConviteCommand, UsuarioConviteResponse> handler,
             CancellationToken cancellationToken) =>
         {
             var command = new AdicionarUsuarioConviteCommand(request.Nome, request.EmailAddress, request.MinisteriosIds);

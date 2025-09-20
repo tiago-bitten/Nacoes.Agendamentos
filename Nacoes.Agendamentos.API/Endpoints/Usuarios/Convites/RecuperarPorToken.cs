@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Infra;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Queries.RecuperarConvitesPorToken;
@@ -10,8 +11,8 @@ internal sealed class RecuperarPorToken : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("api/v1/usuarios-convites/token/{token}", async (
-            string token,
-            IQueryHandler<RecuperarUsuarioConvitePorTokenQuery, RecuperarUsuarioConvitePorTokenResponse> handler,
+            [FromRoute] string token,
+            [FromServices] IQueryHandler<RecuperarUsuarioConvitePorTokenQuery, RecuperarUsuarioConvitePorTokenResponse> handler,
             CancellationToken cancellationToken) =>
         {
             var query = new RecuperarUsuarioConvitePorTokenQuery(token);

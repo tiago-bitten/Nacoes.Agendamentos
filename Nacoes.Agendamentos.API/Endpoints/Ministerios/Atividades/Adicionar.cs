@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Infra;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
@@ -11,10 +12,10 @@ internal sealed class Adicionar : IEndpoint
     
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/v1/ministerios/{ministerio:guid}/atividades", async (
-            Guid ministerioId,
-            Request request,
-            ICommandHandler<AdicionarAtividadeCommand, Guid> handler,
+        app.MapPost("api/v1/ministerios/{ministerioId:guid}/atividades", async (
+            [FromRoute] Guid ministerioId,
+            [FromBody] Request request,
+            [FromServices] ICommandHandler<AdicionarAtividadeCommand, Guid> handler,
             CancellationToken cancellationToken) =>
         {
             var command = new AdicionarAtividadeCommand(request.Nome, request.Descricao, ministerioId);

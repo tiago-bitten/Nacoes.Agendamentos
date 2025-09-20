@@ -1,6 +1,9 @@
-﻿using Nacoes.Agendamentos.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Infra;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
+using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Common.Dtos;
 using Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AceitarConvite;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -14,11 +17,14 @@ internal sealed class Aceitar : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("api/v1/usuarios-convites/{id:guid}/aceitar", async (
-            Guid id,
-            Request request,
-            ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse> handler,
+            [FromRoute] Guid id,
+            [FromBody] Request request,
+            [FromServices] ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse> handler,
+            [FromServices] IAmbienteContext ambienteContext,
             CancellationToken cancellationToken) =>
         {
+            ambienteContext.StartBotSession();
+            
             var command = new AceitarUsuarioConviteCommand(
                 id,
                 request.TokenExterno,
