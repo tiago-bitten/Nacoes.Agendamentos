@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Infra;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Commands.LoginExterno;
@@ -12,8 +13,8 @@ internal sealed class LoginExterno : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("auth/v1/login-externo", async (
-            Request request,
-            ICommandHandler<LoginExternoCommand> handler,
+            [FromBody] Request request,
+            [FromServices] ICommandHandler<LoginExternoCommand> handler,
             CancellationToken cancellationToken) =>
         {
             var command = new LoginExternoCommand(request.Cpf, request.DataNascimento);

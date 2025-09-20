@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Infra;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Authentication.Commands.Login;
@@ -16,9 +17,9 @@ internal sealed class Login : IEndpoint
     
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("auth/v1/login", async (
-            Request request,
-            ICommandHandler<LoginCommand, LoginResponse> handler,
+        app.MapPost("api/v1/auth/login", async (
+            [FromBody] Request request,
+            [FromServices] ICommandHandler<LoginCommand, LoginResponse> handler,
             CancellationToken cancellationToken) =>
         {
             var command = new LoginCommand(request.Email, request.Senha, request.TokenExterno, request.AuthType);

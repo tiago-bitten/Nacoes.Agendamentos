@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Infra;
 using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
@@ -15,8 +16,7 @@ internal sealed class Recuperar : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("api/v1/voluntarios", async (
-            Request request,
-            INacoesDbContext context,
+            [FromServices] INacoesDbContext context,
             CancellationToken cancellationToken) =>
         {
             Result<PagedResponse<VoluntarioResponse>> result;
@@ -33,7 +33,7 @@ internal sealed class Recuperar : IEndpoint
                         {
                             Nome = m.Ministerio.Nome
                         }).ToList()
-                    }).ToPagedResponseAsync(request.Limit, request.Cursor, cancellationToken);
+                    }).ToPagedResponseAsync(1, string.Empty, cancellationToken);
 
                 result = Result<PagedResponse<VoluntarioResponse>>.Success(voluntarios);
             }

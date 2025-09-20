@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Infra;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Desvincular;
@@ -10,8 +11,8 @@ internal sealed class Desvincular : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapDelete("api/v1/ministerios/{voluntarioMinisterioId:guid}", async (
-            Guid voluntarioMinisterioId,
-            ICommandHandler<DesvincularVoluntarioMinisterioCommand> handler,
+            [FromRoute] Guid voluntarioMinisterioId,
+            [FromServices] ICommandHandler<DesvincularVoluntarioMinisterioCommand> handler,
             CancellationToken cancellation) =>
         {
             var command = new DesvincularVoluntarioMinisterioCommand(voluntarioMinisterioId);

@@ -1,4 +1,5 @@
-﻿using Nacoes.Agendamentos.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Nacoes.Agendamentos.API.Extensions;
 using Nacoes.Agendamentos.API.Infra;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Entities.Voluntarios.Commands.Vincular;
@@ -12,9 +13,9 @@ internal sealed class Vincular : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("api/v1/voluntarios/{voluntarioId:guid}/ministerios", async (
-            Guid voluntarioId,
-            Request request,
-            ICommandHandler<VincularVoluntarioMinisterioCommand> handler,
+            [FromRoute] Guid voluntarioId,
+            [FromBody] Request request,
+            [FromServices] ICommandHandler<VincularVoluntarioMinisterioCommand> handler,
             CancellationToken cancellationToken) =>
         {
             var command = new VincularVoluntarioMinisterioCommand(voluntarioId, request.MinisterioId);

@@ -15,16 +15,24 @@ builder.Services
     .AddInfra(builder.Configuration)
     .AddApi();
 
+builder.Services.AddCors(x => x.AddDefaultPolicy(option =>
+    option.AllowAnyMethod()
+        .AllowAnyHeader()
+        .SetIsOriginAllowed(_ => true)
+        .AllowCredentials()
+));
+
+
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-app.UseHealthChecks("/health", new HealthCheckOptions
-{
-    Predicate = _ => true,
-});
+// app.UseHealthChecks("/health", new HealthCheckOptions
+// {
+//     Predicate = _ => true,
+// });
 
 app.MapEndpoints();
 
@@ -41,7 +49,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
-app.UseAuthorization();
+// app.UseAuthorization();
 
 app.MapControllers();
 
