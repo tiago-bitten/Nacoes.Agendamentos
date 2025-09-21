@@ -12,8 +12,11 @@ public sealed class Atividade : EntityId
         Descricao = descricao;
     }
 
-    public string Nome { get; private set; } = null!;
+    public string Nome { get; private set; } = string.Empty;
     public string? Descricao { get; private set; }
+    public Guid MinisterioId { get; private set; }
+    
+    public Ministerio Ministerio { get; private set; } = null!;
 
     internal static Result<Atividade> Criar(string nome, string? descricao = null)
     {
@@ -22,7 +25,6 @@ public sealed class Atividade : EntityId
             return AtividadeErrors.NomeObrigatorio;
         }
         
-        var atividade = new Atividade(nome, descricao);
-        return Result<Atividade>.Success(atividade);
+        return new Atividade(nome, descricao);
     }
 }

@@ -37,7 +37,7 @@ public class Result<T> : Result
         ? _value!
         : throw new InvalidOperationException("Não é possível obter o valor de um Result falho.");
 
-    public static Result<T> Success(T value) => new(true, value, Error.None);
+    public static Result<T> Success(T? value) => new(true, value, Error.None);
     public new static Result<T> Failure(Error error) => new(false, default!, error);
 
     public static implicit operator Result<T>(Error error) => Failure(error);
