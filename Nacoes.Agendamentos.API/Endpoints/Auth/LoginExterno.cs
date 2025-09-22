@@ -12,7 +12,7 @@ internal sealed class LoginExterno : IEndpoint
     
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("auth/v1/login-externo", async (
+        app.MapPost("api/v1/auth/login-externo", async (
             [FromBody] Request request,
             [FromServices] ICommandHandler<LoginExternoCommand> handler,
             CancellationToken cancellationToken) =>
