@@ -11,16 +11,11 @@ public sealed class Ministerio : EntityId, IAggregateRoot
     
     internal Ministerio() { }
 
-    public Ministerio(string nome, string? descricao, Cor? cor = null)
+    private Ministerio(string nome, string? descricao, Cor cor)
     {
-        if (string.IsNullOrWhiteSpace(nome))
-        {
-            throw new ArgumentNullException(nameof(nome), "O nome do ministerio é obrigatorio.");
-        }
-
         Nome = nome;
         Descricao = descricao;
-        Cor = cor ?? Cor.Default;
+        Cor = cor;
     }
 
     public string Nome { get; private set; } = null!;
@@ -35,6 +30,16 @@ public sealed class Ministerio : EntityId, IAggregateRoot
     
     public void AtualizarCor(Cor cor) => Cor = cor;
 
+    public static Result<Ministerio> Criar(string nome, string? descricao, Cor cor)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+        {
+            return MinisterioErrors.NomeObrigatorio;
+        }
+        
+        return new Ministerio(nome, descricao, cor);
+    }
+    
     public Result<Atividade> AdicionarAtividade(string nome, string? descricao)
     {
         var atividadeResult = Atividade.Criar(nome, descricao);

@@ -24,9 +24,5 @@ internal class MinisterioConfiguration : EntityIdConfiguration<Ministerio>
                       .HasColumnName("cor_tipo")
                       .HasConversion<string>();    
         });
-
-        builder.HasMany(m => m.Atividades)
-               .WithOne()
-               .HasForeignKey("ministerio_id");
     }
 }

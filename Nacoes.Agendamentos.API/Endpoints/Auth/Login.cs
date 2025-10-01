@@ -26,6 +26,6 @@ internal sealed class Login : IEndpoint
             var result = await handler.HandleAsync(command, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        });
+        }).WithTags(Tags.Auth);
     }
 }

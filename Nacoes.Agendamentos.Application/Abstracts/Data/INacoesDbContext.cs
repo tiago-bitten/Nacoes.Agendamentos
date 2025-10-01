@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Nacoes.Agendamentos.Domain.Entities.Agendas;
+using Nacoes.Agendamentos.Domain.Entities.Eventos;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -12,7 +12,7 @@ public interface INacoesDbContext
 {
     DbSet<Usuario> Usuarios { get; set; }
     DbSet<UsuarioConvite> Convites { get; set; }
-    DbSet<Agenda> Agendas { get; set; }
+    DbSet<Evento> Eventos { get; set; }
     DbSet<Agendamento> Agendamentos { get; set; }
     DbSet<Voluntario> Voluntarios { get; set; }
     DbSet<VoluntarioMinisterio> VoluntariosMinisterios { get; set; }

@@ -2,9 +2,9 @@
 
 public enum ETipoCor
 {
-    Hex,
-    Rgb,
-    Hsl
+    Hex = 0,
+    Rgb = 1,
+    Hsl = 2
 }
 
 public sealed record class Cor
@@ -23,9 +23,46 @@ public sealed record class Cor
         Tipo = tipo;
     }
 
-    // the default color is pastel blue #1F77B4
     public static Cor Default => new("#1F77B4", ETipoCor.Hex);
 
+    public string ToCssString()
+    {
+        return Tipo switch
+        {
+            ETipoCor.Hex => NormalizarHex(Valor),
+            ETipoCor.Rgb => NormalizarRgb(Valor),
+            ETipoCor.Hsl => NormalizarHsl(Valor),
+            _ => Valor
+        };
+    }
+
+    private static string NormalizarHex(string hex)
+    {
+        if (!hex.StartsWith($"#")) hex = "#" + hex;
+        if (hex.Length != 7) throw new ArgumentException("Formato Hex inválido.");
+        return hex.ToUpperInvariant();
+    }
+
+    private static string NormalizarRgb(string rgb)
+    {
+        var valores = rgb.Replace("rgb(", "").Replace(")", "").Split(',');
+        if (valores.Length != 3) throw new ArgumentException("Formato RGB inválido.");
+        int r = int.Parse(valores[0].Trim());
+        int g = int.Parse(valores[1].Trim());
+        int b = int.Parse(valores[2].Trim());
+        return $"rgb({r}, {g}, {b})";
+    }
+
+    private static string NormalizarHsl(string hsl)
+    {
+        var valores = hsl.Replace("hsl(", "").Replace(")", "").Replace("%", "").Split(',');
+        if (valores.Length != 3) throw new ArgumentException("Formato HSL inválido.");
+        int h = int.Parse(valores[0].Trim());
+        int s = int.Parse(valores[1].Trim());
+        int l = int.Parse(valores[2].Trim());
+        return $"hsl({h}, {s}%, {l}%)";
+    }
+    
     public Cor ConverterPara(ETipoCor novoTipo)
     {
         if (novoTipo == Tipo)
@@ -190,6 +227,6 @@ public sealed record class Cor
         return p;
     }
 
-    public override string ToString() => $"{Tipo}: {Valor}";
+    public override string ToString() => ToCssString();
     public override int GetHashCode() => HashCode.Combine(Valor, Tipo);
 }

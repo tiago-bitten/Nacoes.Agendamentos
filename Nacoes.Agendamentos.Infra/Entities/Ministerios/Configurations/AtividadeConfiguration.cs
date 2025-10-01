@@ -13,5 +13,9 @@ internal class AtividadeConfiguration : EntityIdConfiguration<Atividade>
         builder.Property(a => a.Nome);
 
         builder.Property(a => a.Descricao);
+        
+        builder.HasOne(a => a.Ministerio)
+            .WithMany(m => m.Atividades)
+            .HasForeignKey(a => a.MinisterioId);
     }
 }
