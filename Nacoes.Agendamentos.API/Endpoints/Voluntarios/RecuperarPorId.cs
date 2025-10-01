@@ -68,6 +68,6 @@ internal sealed class RecuperarPorId : IEndpoint
             }
             
             return result.Match(Results.Ok, CustomResults.Problem);
-        });
+        }).WithTags(Tags.Voluntarios);
     }
 }

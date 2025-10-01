@@ -20,6 +20,6 @@ internal sealed class Recusar : IEndpoint
             var result = await handler.HandleAsync(command, cancellationToken);
 
             return result.Match(Results.NoContent, CustomResults.Problem);
-        });
+        }).WithTags(Tags.Convites);
     }
 }

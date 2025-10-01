@@ -20,6 +20,6 @@ internal sealed class RecuperarPorToken : IEndpoint
             var result = await handler.Handle(query, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        });
+        }).WithTags(Tags.Convites);
     }
 }

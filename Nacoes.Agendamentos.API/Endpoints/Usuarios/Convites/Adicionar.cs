@@ -22,6 +22,6 @@ internal sealed class Adicionar : IEndpoint
             var result = await handler.HandleAsync(command, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        });
+        }).WithTags(Tags.Convites);
     }
 }

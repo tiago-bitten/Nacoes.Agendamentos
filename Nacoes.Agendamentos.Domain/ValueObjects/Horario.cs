@@ -1,6 +1,6 @@
 ﻿namespace Nacoes.Agendamentos.Domain.ValueObjects;
 
-public sealed record class Horario : IEquatable<Horario>
+public sealed record Horario
 {
     public DateTime DataInicial { get; }
     public DateTime? DataFinal { get; }
@@ -15,7 +15,7 @@ public sealed record class Horario : IEquatable<Horario>
             throw new ArgumentException("Data inicial não pode estar no passado.", nameof(dataInicial));
         }
 
-        if (dataFinal.HasValue && dataFinal <= dataInicial)
+        if (dataFinal <= dataInicial)
         {
             throw new ArgumentException("Data final deve ser posterior à data inicial.", nameof(dataFinal));
         }
@@ -24,8 +24,8 @@ public sealed record class Horario : IEquatable<Horario>
         DataFinal = dataFinal;
     }
 
-    public bool Equals(Horario other) =>
-        DataInicial.Equals(other.DataInicial) && Nullable.Equals(DataFinal, other.DataFinal);
+    public bool Equals(Horario? other) =>
+        other != null && DataInicial.Equals(other.DataInicial) && Nullable.Equals(DataFinal, other.DataFinal);
 
     public override int GetHashCode() =>
         HashCode.Combine(DataInicial, DataFinal);

@@ -16,8 +16,6 @@ using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Application.Common.DateTime;
 using Nacoes.Agendamentos.Application.Common.Settings;
 using Nacoes.Agendamentos.Domain.Abstracts;
-using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.Agendas.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
@@ -26,7 +24,6 @@ using Nacoes.Agendamentos.Infra.Authentication;
 using Nacoes.Agendamentos.Infra.BackgroundJobs;
 using Nacoes.Agendamentos.Infra.Common.DateTime;
 using Nacoes.Agendamentos.Infra.Contexts;
-using Nacoes.Agendamentos.Infra.Entities.Agendas;
 using Nacoes.Agendamentos.Infra.Entities.DomainEvents;
 using Nacoes.Agendamentos.Infra.Entities.Historicos;
 using Nacoes.Agendamentos.Infra.Entities.Ministerios;
@@ -195,14 +192,8 @@ public static class DependencyInjection
     
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IAgendaRepository, AgendaRepository>();
-        services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-        services.AddScoped<IMinisterioRepository, MinisterioRepository>();
         services.AddScoped<IVoluntarioRepository, VoluntarioRepository>();
-        services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
         services.AddScoped<IVoluntarioMinisterioRepository, VoluntarioMinisterioRepository>();
-        services.AddScoped<IAtividadeRepository, AtividadeRepository>();
-        services.AddScoped<IUsuarioConviteRepository, UsuarioConviteRepository>();
         services.AddScoped<IHistoricoRepository, HistoricoRepository>();
         
         return services;

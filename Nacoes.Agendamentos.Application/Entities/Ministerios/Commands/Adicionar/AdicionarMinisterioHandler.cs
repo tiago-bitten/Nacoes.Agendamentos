@@ -1,9 +1,8 @@
 ﻿using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
-using Nacoes.Agendamentos.Application.Entities.Ministerios.Mappings;
-using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
+using Nacoes.Agendamentos.Domain.Entities.Ministerios;
+using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.Adicionar;
 
@@ -13,7 +12,17 @@ internal sealed class AdicionarMinisterioHandler(
 {
     public async Task<Result<Guid>> HandleAsync(AdicionarMinisterioCommand command, CancellationToken cancellationToken = default)
     {
-        var ministerio = command.GetEntidade();
+        var ministerioResult = Ministerio.Criar(
+            command.Nome,
+            command.Descricao,
+            new Cor(command.Cor.Valor, command.Cor.Tipo));
+        
+        if (ministerioResult.IsFailure)
+        {
+            return ministerioResult.Error;
+        }
+        
+        var ministerio = ministerioResult.Value;
         
         await context.Ministerios.AddAsync(ministerio, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);

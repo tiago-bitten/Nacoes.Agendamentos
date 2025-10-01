@@ -20,6 +20,6 @@ internal sealed class Desvincular : IEndpoint
             var result = await handler.HandleAsync(command, cancellation);
 
             return result.Match(Results.NoContent, CustomResults.Problem);
-        });
+        }).WithTags(Tags.Voluntarios);
     }
 }

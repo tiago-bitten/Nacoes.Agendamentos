@@ -50,6 +50,6 @@ internal sealed class Lookup : IEndpoint
             }
             
             return result.Match(Results.Ok, CustomResults.Problem);
-        });
+        }).WithTags(Tags.Atividades);
     }
 }

@@ -57,6 +57,6 @@ internal sealed class Recuperar : IEndpoint
             }
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        });
+        }).WithTags(Tags.Ministerios);
     }
 }
