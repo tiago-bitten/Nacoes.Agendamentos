@@ -11,5 +11,5 @@ public interface IAmbienteContext
     bool IsThirdPartyUser { get; }
     void StartBotSession();
     void StartThirdPartyUserSession(Guid id, string? email);
-    EEnvironment GetEnvironment();
+    EEnvironment GetEnvironment { get; }
 }

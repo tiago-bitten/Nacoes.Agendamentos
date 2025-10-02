@@ -6,24 +6,24 @@ public sealed record RecorrenciaEvento
 {
     public Guid? Id { get; init; }
     public ETipoRecorrenciaEvento Tipo { get; init; }
-    public int? Valor { get; init; }
+    public int? Intervalo { get; init; }
     public DateOnly? DataFinal { get; init; }
     
-    private RecorrenciaEvento() { }
+    internal RecorrenciaEvento() { }
     
-    public RecorrenciaEvento(ETipoRecorrenciaEvento tipo, int? valor, DateOnly? dataFinal)
+    public RecorrenciaEvento(ETipoRecorrenciaEvento tipo, int? intervalo, DateOnly? dataFinal)
     {
         Tipo = tipo;
         
         if (tipo is ETipoRecorrenciaEvento.Nenhuma)
         {
             Id = null;
-            Valor = null;
+            Intervalo = null;
             DataFinal = null;
             return;
         }
         
-        if (valor is null or <= 0)
+        if (intervalo is null or <= 0)
         {
             throw new InvalidOperationException();
         }
@@ -34,18 +34,18 @@ public sealed record RecorrenciaEvento
         }
         
         Id = Guid.NewGuid();
-        Valor = valor.Value;
+        Intervalo = intervalo.Value;
         DataFinal = dataFinal;
     }
     
     public bool Equals(RecorrenciaEvento? other) =>
-        other != null && Id == other.Id && Tipo == other.Tipo && Valor == other.Valor && DataFinal == other.DataFinal;
+        other != null && Id == other.Id && Tipo == other.Tipo && Intervalo == other.Intervalo && DataFinal == other.DataFinal;
 
     public override int GetHashCode() =>
-        HashCode.Combine(Id, Tipo, Valor, DataFinal);
+        HashCode.Combine(Id, Tipo, Intervalo, DataFinal);
 
     public override string ToString() =>
-        $"{Id} {Tipo} {Valor} {DataFinal}";
+        $"{Id} {Tipo} {Intervalo} {DataFinal}";
 }
 
 public enum ETipoRecorrenciaEvento
@@ -57,11 +57,14 @@ public enum ETipoRecorrenciaEvento
     Anual = 4
 }
 
-public static class RecorrenciaEventoErrors
+public static class RecorrenciaEventoExtensions
 {
-    public static readonly Error ValorNaoPodeSerMenorOuIgualAZero =
-        Error.Problem("RecorrenciaEvento.ValorNaoPodeSerMenorOuIgualAZero", "Valor da recorrencia deve ser maior que zero.");
-    
-    public static readonly Error DataFinalNaoPodeSerAnterioraDataHoje =
-        Error.Problem("RecorrenciaEvento.DataFinalNaoPodeSerAnterioraDataHoje", "Data final da recorrencia deve ser posterior ou igual à data de hoje.");
+    public static RecorrenciaEvento Copiar(this RecorrenciaEvento recorrenciaEvento) 
+        => new()
+        {
+            Id = recorrenciaEvento.Id,
+            Tipo = recorrenciaEvento.Tipo,
+            Intervalo = recorrenciaEvento.Intervalo,
+            DataFinal = recorrenciaEvento.DataFinal
+        };
 }

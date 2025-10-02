@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Entities.Eventos;
+using Nacoes.Agendamentos.Domain.Entities.Eventos.Reservas;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -20,7 +21,7 @@ internal class NacoesDbContext(
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<UsuarioConvite> Convites { get; set; }
     public DbSet<Evento> Eventos { get; set; }
-    public DbSet<Agendamento> Agendamentos { get; set; }
+    public DbSet<Reserva> Agendamentos { get; set; }
     public DbSet<Voluntario> Voluntarios { get; set; }
     public DbSet<VoluntarioMinisterio> VoluntariosMinisterios { get; set; }
     public DbSet<Ministerio> Ministerios { get; set; }

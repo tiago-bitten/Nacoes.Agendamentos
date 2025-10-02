@@ -2,13 +2,12 @@
 
 public sealed record Horario
 {
-    public DateTime DataInicial { get; }
-    public DateTime? DataFinal { get; }
+    public DateTimeOffset DataInicial { get; }
+    public DateTimeOffset DataFinal { get; }
 
-    public int? DuracaoEmSegundos =>
-        DataFinal.HasValue ? (int)(DataFinal.Value - DataInicial).TotalSeconds : null;
+    public int DuracaoEmSegundos => (int)(DataFinal - DataInicial).TotalSeconds;
 
-    public Horario(DateTime dataInicial, DateTime? dataFinal = null)
+    public Horario(DateTimeOffset dataInicial, DateTimeOffset dataFinal)
     {
         if (dataInicial < DateTime.UtcNow)
         {
@@ -32,7 +31,7 @@ public sealed record Horario
 
     public override string ToString()
     {
-        var finalStr = DataFinal.HasValue ? $" até {DataFinal:dd/MM/yyyy HH:mm}" : "";
+        var finalStr = $" até {DataFinal:dd/MM/yyyy HH:mm}";
         return $"{DataInicial:dd/MM/yyyy HH:mm}{finalStr}";
     }
 

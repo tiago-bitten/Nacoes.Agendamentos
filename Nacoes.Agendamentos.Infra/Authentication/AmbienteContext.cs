@@ -20,7 +20,7 @@ internal sealed class AmbienteContext(
     public bool IsUsuario => !IsBot && !IsThirdPartyUser;
     public bool IsBot => ClaimHelper.GetIsBot(context);
     public bool IsThirdPartyUser => ClaimHelper.GetIsThirdPartyUser(context);
-    public EEnvironment GetEnvironment() => ClaimHelper.GetEnvironment(context);
+    public EEnvironment GetEnvironment => ClaimHelper.GetEnvironment(context);
 
     public void StartBotSession()
     {

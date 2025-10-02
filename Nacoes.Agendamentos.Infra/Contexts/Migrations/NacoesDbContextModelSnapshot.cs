@@ -22,44 +22,11 @@ namespace Nacoes.Agendamentos.Infra.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Agendas.Agenda", b =>
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Eventos.Agendamento", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    b.Property<DateTimeOffset>("DataCriacao")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("data_criacao");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("descricao");
-
-                    b.Property<bool>("Inativo")
-                        .HasColumnType("boolean")
-                        .HasColumnName("inativo");
-
-                    b.HasKey("Id")
-                        .HasName("pk_agenda");
-
-                    b.HasIndex("DataCriacao", "Id")
-                        .IsDescending()
-                        .HasDatabaseName("ix_agenda_data_criacao_id");
-
-                    b.ToTable("agenda", (string)null);
-                });
-
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Agendas.Agendamento", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("AgendaId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("agenda_id");
 
                     b.Property<Guid>("AtividadeId")
                         .HasColumnType("uuid")
@@ -68,6 +35,10 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.Property<DateTimeOffset>("DataCriacao")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("data_criacao");
+
+                    b.Property<Guid>("EventoId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("evento_id");
 
                     b.Property<bool>("Inativo")
                         .HasColumnType("boolean")
@@ -87,31 +58,96 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("voluntario_ministerio_id");
 
-                    b.Property<Guid>("agenda_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("agenda_id");
-
                     b.HasKey("Id")
                         .HasName("pk_agendamento");
 
                     b.HasIndex("AtividadeId")
                         .HasDatabaseName("ix_agendamento_atividade_id");
 
+                    b.HasIndex("EventoId")
+                        .HasDatabaseName("ix_agendamento_evento_id");
+
                     b.HasIndex("VoluntarioMinisterioId")
                         .HasDatabaseName("ix_agendamento_voluntario_ministerio_id");
-
-                    b.HasIndex("agenda_id")
-                        .HasDatabaseName("ix_agendamento_agenda_id");
 
                     b.HasIndex("DataCriacao", "Id")
                         .IsDescending()
                         .HasDatabaseName("ix_agendamento_data_criacao_id");
 
-                    b.ToTable("agendamento", null, t =>
-                        {
-                            t.Property("agenda_id")
-                                .HasColumnName("agenda_id1");
-                        });
+                    b.ToTable("agendamento", (string)null);
+                });
+
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Eventos.Evento", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("DataCriacao")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("data_criacao");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("descricao");
+
+                    b.Property<bool>("Inativo")
+                        .HasColumnType("boolean")
+                        .HasColumnName("inativo");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id")
+                        .HasName("pk_evento");
+
+                    b.HasIndex("DataCriacao", "Id")
+                        .IsDescending()
+                        .HasDatabaseName("ix_evento_data_criacao_id");
+
+                    b.ToTable("evento", (string)null);
+                });
+
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Eventos.Suspensoes.EventoSuspensao", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("DataConclusaoEncerramento")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("data_conclusao_encerramento");
+
+                    b.Property<DateTimeOffset>("DataCriacao")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("data_criacao");
+
+                    b.Property<DateOnly?>("DataEncerramento")
+                        .HasColumnType("date")
+                        .HasColumnName("data_encerramento");
+
+                    b.Property<Guid>("EventoId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("evento_id");
+
+                    b.Property<bool>("Inativo")
+                        .HasColumnType("boolean")
+                        .HasColumnName("inativo");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id")
+                        .HasName("pk_evento_suspensao");
+
+                    b.HasIndex("EventoId")
+                        .HasDatabaseName("ix_evento_suspensao_evento_id");
+
+                    b.ToTable("evento_suspensao", (string)null);
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Historicos.Historico", b =>
@@ -169,19 +205,19 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("inativo");
 
+                    b.Property<Guid>("MinisterioId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ministerio_id");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("nome");
 
-                    b.Property<Guid?>("ministerio_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("ministerio_id");
-
                     b.HasKey("Id")
                         .HasName("pk_atividade");
 
-                    b.HasIndex("ministerio_id")
+                    b.HasIndex("MinisterioId")
                         .HasDatabaseName("ix_atividade_ministerio_id");
 
                     b.HasIndex("DataCriacao", "Id")
@@ -478,36 +514,7 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Agendas.Agenda", b =>
-                {
-                    b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Horario", "Horario", b1 =>
-                        {
-                            b1.Property<Guid>("AgendaId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<DateTime?>("DataFinal")
-                                .HasColumnType("timestamp with time zone")
-                                .HasColumnName("horario_data_final");
-
-                            b1.Property<DateTime>("DataInicial")
-                                .HasColumnType("timestamp with time zone")
-                                .HasColumnName("horario_data_inicial");
-
-                            b1.HasKey("AgendaId");
-
-                            b1.ToTable("agenda");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AgendaId")
-                                .HasConstraintName("fk_agenda_agenda_id");
-                        });
-
-                    b.Navigation("Horario")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Agendas.Agendamento", b =>
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Eventos.Agendamento", b =>
                 {
                     b.HasOne("Nacoes.Agendamentos.Domain.Entities.Ministerios.Atividade", null)
                         .WithMany()
@@ -516,6 +523,13 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_agendamento_atividade_atividade_id");
 
+                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Eventos.Evento", "Evento")
+                        .WithMany("Agendamentos")
+                        .HasForeignKey("EventoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_agendamento_evento_evento_id");
+
                     b.HasOne("Nacoes.Agendamentos.Domain.Entities.Voluntarios.VoluntarioMinisterio", null)
                         .WithMany()
                         .HasForeignKey("VoluntarioMinisterioId")
@@ -523,20 +537,92 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_agendamento_voluntario_ministerio_voluntario_ministerio_id");
 
-                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Agendas.Agenda", null)
-                        .WithMany("Agendamentos")
-                        .HasForeignKey("agenda_id")
+                    b.Navigation("Evento");
+                });
+
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Eventos.Evento", b =>
+                {
+                    b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.Horario", "Horario", b1 =>
+                        {
+                            b1.Property<Guid>("EventoId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<DateTimeOffset>("DataFinal")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("horario_data_final");
+
+                            b1.Property<DateTimeOffset>("DataInicial")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("horario_data_inicial");
+
+                            b1.HasKey("EventoId");
+
+                            b1.ToTable("evento");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EventoId")
+                                .HasConstraintName("fk_evento_evento_id");
+                        });
+
+                    b.OwnsOne("Nacoes.Agendamentos.Domain.ValueObjects.RecorrenciaEvento", "Recorrencia", b1 =>
+                        {
+                            b1.Property<Guid>("EventoId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<DateOnly?>("DataFinal")
+                                .HasColumnType("date")
+                                .HasColumnName("data_final_recorrencia");
+
+                            b1.Property<Guid?>("Id")
+                                .HasColumnType("uuid")
+                                .HasColumnName("recorrencia_id");
+
+                            b1.Property<int?>("Intervalo")
+                                .HasColumnType("integer")
+                                .HasColumnName("intervalo_recorrencia");
+
+                            b1.Property<int>("Tipo")
+                                .HasColumnType("integer")
+                                .HasColumnName("tipo_recorrencia");
+
+                            b1.HasKey("EventoId");
+
+                            b1.ToTable("evento");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EventoId")
+                                .HasConstraintName("fk_evento_evento_id");
+                        });
+
+                    b.Navigation("Horario")
+                        .IsRequired();
+
+                    b.Navigation("Recorrencia")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Eventos.Suspensoes.EventoSuspensao", b =>
+                {
+                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Eventos.Evento", null)
+                        .WithMany("Suspensoes")
+                        .HasForeignKey("EventoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_agendamento_agenda_agenda_id");
+                        .HasConstraintName("fk_evento_suspensao_evento_evento_id");
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Ministerios.Atividade", b =>
                 {
-                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio", null)
+                    b.HasOne("Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio", "Ministerio")
                         .WithMany("Atividades")
-                        .HasForeignKey("ministerio_id")
+                        .HasForeignKey("MinisterioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_atividade_ministerio_ministerio_id");
+
+                    b.Navigation("Ministerio");
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio", b =>
@@ -854,9 +940,11 @@ namespace Nacoes.Agendamentos.Infra.Migrations
                     b.Navigation("Voluntario");
                 });
 
-            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Agendas.Agenda", b =>
+            modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Eventos.Evento", b =>
                 {
                     b.Navigation("Agendamentos");
+
+                    b.Navigation("Suspensoes");
                 });
 
             modelBuilder.Entity("Nacoes.Agendamentos.Domain.Entities.Ministerios.Ministerio", b =>

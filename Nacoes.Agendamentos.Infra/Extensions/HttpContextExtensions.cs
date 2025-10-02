@@ -13,7 +13,6 @@ internal static class HttpContextExtensions
     
     public static void SetUser(this IHttpContextAccessor context, ClaimsPrincipal user)
     {
-        context.GetUser();
         context.HttpContext!.User = user;
     }
 

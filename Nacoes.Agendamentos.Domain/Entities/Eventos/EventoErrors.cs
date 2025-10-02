@@ -18,4 +18,16 @@ public static class EventoErrors
     
     public static readonly Error NaoEstaDisponivelParaSuspender = 
         Error.Problem("Evento.EventoNaoEstaDisponivelParaSuspender", "O evento não está disponível para suspender.");
+    
+    public static readonly Error NaoEstaDisponivelParaCancelar = 
+        Error.Problem("Evento.EventoNaoEstaDisponivelParaCancelar", "O evento não está disponível para cancelar.");
+    
+    public static readonly Error NaoEstaDisponivelParaAtualizarHorario = 
+        Error.Problem("Evento.EventoNaoEstaDisponivelParaAtualizarHorario", "O evento não está disponível para atualizar o horário.");
+    
+    public static readonly Error NaoEstaDisponivelParaAtualizarRecorrencia = 
+        Error.Problem("Evento.EventoNaoEstaDisponivelParaAtualizarRecorrencia", "O evento não está disponível para atualizar a recorrência.");
+    
+    public static readonly Error QuantidadeMaximaReservasInvalida = 
+        Error.Problem("Evento.QuantidadeMaximaReservasInvalida", "A quantidade máxima de reservas deve ser maior que zero.");
 }

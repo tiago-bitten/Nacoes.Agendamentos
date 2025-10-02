@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nacoes.Agendamentos.Domain.Entities.Eventos;
+using Nacoes.Agendamentos.Domain.Entities.Eventos.Reservas;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios;
 using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Eventos.Configurations;
 
-internal class AgendamentoConfiguration : EntityIdConfiguration<Agendamento>
+internal class ReservaConfiguration : EntityIdConfiguration<Reserva>
 {
-    public override void Configure(EntityTypeBuilder<Agendamento> builder)
+    public override void Configure(EntityTypeBuilder<Reserva> builder)
     {
         base.Configure(builder);
         
