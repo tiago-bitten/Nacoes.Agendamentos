@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Nacoes.Agendamentos.Domain.Entities.Eventos;
 using Nacoes.Agendamentos.Infra.Abstracts;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Eventos.Configurations;
-internal class EventoConfiguration : EntityIdConfiguration<Evento>
+
+internal sealed class EventoConfiguration : EntityIdConfiguration<Evento>
 {
     public override void Configure(EntityTypeBuilder<Evento> builder)
     {
@@ -16,6 +18,19 @@ internal class EventoConfiguration : EntityIdConfiguration<Evento>
             horarioBuilder.Property(h => h.DataInicial);
 
             horarioBuilder.Property(h => h.DataFinal);
+        });
+        
+        builder.OwnsOne(a => a.Recorrencia, recorrenciaBuilder =>
+        {
+            recorrenciaBuilder.Property(r => r.Tipo)
+                .IsRequired()
+                .HasColumnName("tipo_recorrencia");
+
+            recorrenciaBuilder.Property(r => r.Intervalo)
+                .HasColumnName("intervalo_recorrencia");
+
+            recorrenciaBuilder.Property(r => r.DataFinal)
+                .HasColumnName("data_final_recorrencia");
         });
     }
 }

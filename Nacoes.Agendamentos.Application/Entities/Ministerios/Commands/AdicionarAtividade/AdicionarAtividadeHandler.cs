@@ -1,29 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
-using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios;
 using Nacoes.Agendamentos.Domain.Entities.Ministerios.DomainEvents;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Ministerios.Commands.AdicionarAtividade;
 
 internal sealed class AdicionarAtividadeHandler(
-    INacoesDbContext context, 
-    IMinisterioRepository ministerioRepository)
+    INacoesDbContext context)
     : ICommandHandler<AdicionarAtividadeCommand, Guid>
 {
     public async Task<Result<Guid>> HandleAsync(AdicionarAtividadeCommand command, CancellationToken cancellation = default)
     {
-        var ministerio = await ministerioRepository.GetByIdAsync(command.MinisterioId);
+        var ministerio = await context.Ministerios.SingleOrDefaultAsync(x => x.Id == command.MinisterioId, cancellation);
         if (ministerio is null)
         {
             return MinisterioErrors.NaoEncontrado;
         }
         
-        var existeAtividadeComNome = await ministerioRepository.RecuperarPorNomeAtividade(command.Nome)
-                                                               .AnyAsync(cancellation);
+        var existeAtividadeComNome = await context.Atividades
+            .AnyAsync(x => x.MinisterioId == command.MinisterioId && x.Nome == command.Nome, cancellation);
         if (existeAtividadeComNome)
         {
             return AtividadeErrors.NomeEmUso;

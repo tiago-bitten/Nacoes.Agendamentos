@@ -1,11 +1,31 @@
-@Nacoes.Agendamentos.API_HostAddress = http://localhost:5171
+@baseUrl = http://localhost:5171
 
-GET {{Nacoes.Agendamentos.API_HostAddress}}/weatherforecast/
+### Autenticação
+# Endpoints relacionados à autenticação
+GET {{baseUrl}}/api/auth
 Accept: application/json
 
-
-Send request | Debug
-POST {{Nacoes.Agendamentos.API_HostAddress}}/api/Usuarios
+### Eventos
+# Endpoints relacionados a eventos
+GET {{baseUrl}}/api/eventos
 Accept: application/json
 
-###
+### Tags
+# Endpoints relacionados a tags
+GET {{baseUrl}}/api/tags
+Accept: application/json
+
+### Usuários
+# Endpoints relacionados a usuários
+GET {{baseUrl}}/api/usuarios
+Accept: application/json
+
+### Ministérios
+# Endpoints relacionados a ministérios
+GET {{baseUrl}}/api/ministerios
+Accept: application/json
+
+### Voluntários
+# Endpoints relacionados a voluntários
+GET {{baseUrl}}/api/voluntarios
+Accept: application/json

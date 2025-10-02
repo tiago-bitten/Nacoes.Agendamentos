@@ -6,4 +6,5 @@ namespace Nacoes.Agendamentos.Application.Entities.Eventos.Commands.Adicionar;
 public sealed record AdicionarEventoCommand(
     string Descricao,
     HorarioDto Horario,
-    RecorrenciaEventoDto Recorrencia) : ICommand<Guid>;
+    RecorrenciaEventoDto Recorrencia,
+    int? QuantidadeMaximaReservas) : ICommand<Guid>;

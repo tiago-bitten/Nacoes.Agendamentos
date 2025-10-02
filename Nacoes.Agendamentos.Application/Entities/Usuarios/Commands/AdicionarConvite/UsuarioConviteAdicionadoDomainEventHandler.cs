@@ -1,14 +1,14 @@
-﻿using Nacoes.Agendamentos.Application.Abstracts.Notifications;
+﻿using Microsoft.EntityFrameworkCore;
+using Nacoes.Agendamentos.Application.Abstracts.Data;
+using Nacoes.Agendamentos.Application.Abstracts.Notifications;
 using Nacoes.Agendamentos.Domain.Abstracts;
-using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.DomainEvents;
-using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Usuarios.Commands.AdicionarConvite;
 
-internal sealed class UsuarioConviteAdicionadoDomainEventHandler(IUsuarioConviteRepository usuarioConviteRepository,
+internal sealed class UsuarioConviteAdicionadoDomainEventHandler(INacoesDbContext context,
                                                                  IEmailSenderFactory emailSenderFactory,
                                                                  ITemplateRenderer templateRenderer,
                                                                  IHistoricoRegister historicoRegister)     
@@ -19,7 +19,10 @@ internal sealed class UsuarioConviteAdicionadoDomainEventHandler(IUsuarioConvite
     public async Task Handle(UsuarioConviteAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         await historicoRegister.AuditAsync(domainEvent.UsuarioConviteId, acao: "Convite gerado.");
-        var usuarioConvite = await usuarioConviteRepository.GetByIdAsync(domainEvent.UsuarioConviteId, asNoTracking: true, includes: "EnviadoPor");
+        var usuarioConvite = await context.Convites
+            .AsNoTracking()
+            .Include(x => x.EnviadoPor)
+            .SingleOrDefaultAsync(x => x.Id == domainEvent.UsuarioConviteId, cancellationToken);
         try
         {
             if (usuarioConvite is null)

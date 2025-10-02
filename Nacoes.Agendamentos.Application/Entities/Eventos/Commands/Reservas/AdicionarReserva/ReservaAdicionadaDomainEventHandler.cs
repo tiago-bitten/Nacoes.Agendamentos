@@ -4,7 +4,7 @@ using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
 
 namespace Nacoes.Agendamentos.Application.Entities.Eventos.Commands.AdicionarAgendamento;
 
-internal sealed class AgendamentoAdicionadoDomainEventHandler(IHistoricoRegister historicoRegister)
+internal sealed class ReservaAdicionadaDomainEventHandler(IHistoricoRegister historicoRegister)
     : IDomainEventHandler<AgendamentoAdicionadoDomainEvent>
 {
     public Task Handle(AgendamentoAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)

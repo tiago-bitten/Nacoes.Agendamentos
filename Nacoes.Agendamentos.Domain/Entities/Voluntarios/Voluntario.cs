@@ -1,6 +1,7 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
+using Nacoes.Agendamentos.Domain.Entities.Voluntarios.DomainEvents;
 using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Errors;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
@@ -71,7 +72,10 @@ public sealed class Voluntario : EntityId, IAggregateRoot
 
         
         var voluntario = new Voluntario(nome, origemCadastro, email, celular, cpf, dataNascimento);
-        return Result<Voluntario>.Success(voluntario);
+        
+        voluntario.Raise(new VoluntarioAdicionadoDomainEvent(voluntario.Id));
+        
+        return voluntario;
     }
     #endregion
     

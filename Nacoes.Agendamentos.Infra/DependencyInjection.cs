@@ -15,20 +15,16 @@ using Nacoes.Agendamentos.Application.Authentication.Context;
 using Nacoes.Agendamentos.Application.Authentication.TokenGenerators;
 using Nacoes.Agendamentos.Application.Common.DateTime;
 using Nacoes.Agendamentos.Application.Common.Settings;
+using Nacoes.Agendamentos.Application.Generators.RecorrenciaEvento;
 using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.Ministerios.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
-using Nacoes.Agendamentos.Domain.Entities.Voluntarios.Interfaces;
 using Nacoes.Agendamentos.Infra.Authentication;
 using Nacoes.Agendamentos.Infra.BackgroundJobs;
 using Nacoes.Agendamentos.Infra.Common.DateTime;
 using Nacoes.Agendamentos.Infra.Contexts;
 using Nacoes.Agendamentos.Infra.Entities.DomainEvents;
 using Nacoes.Agendamentos.Infra.Entities.Historicos;
-using Nacoes.Agendamentos.Infra.Entities.Ministerios;
-using Nacoes.Agendamentos.Infra.Entities.Usuarios;
-using Nacoes.Agendamentos.Infra.Entities.Voluntarios;
+using Nacoes.Agendamentos.Infra.Generators;
 using Nacoes.Agendamentos.Infra.Notifications;
 using Nacoes.Agendamentos.Infra.Notifications.Emails;
 
@@ -96,6 +92,8 @@ public static class DependencyInjection
         services.AddScoped<ITemplateRenderer, TemplateRenderer>();
 
         services.AddScoped<ITimeZoneManager, TimeZoneManager>();
+
+        services.AddScoped<IRecorrenciaEventoManager, RecorrenciaEventoManager>();
         
         var infraAssembly = typeof(DependencyInjection).Assembly;
         services.Scan(scan => scan.FromAssemblies(infraAssembly)
@@ -192,8 +190,6 @@ public static class DependencyInjection
     
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IVoluntarioRepository, VoluntarioRepository>();
-        services.AddScoped<IVoluntarioMinisterioRepository, VoluntarioMinisterioRepository>();
         services.AddScoped<IHistoricoRepository, HistoricoRepository>();
         
         return services;

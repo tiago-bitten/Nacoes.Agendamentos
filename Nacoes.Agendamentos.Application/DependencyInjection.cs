@@ -6,6 +6,8 @@ using Nacoes.Agendamentos.Application.Abstracts.Notifications;
 using Nacoes.Agendamentos.Application.Authentication.Factories;
 using Nacoes.Agendamentos.Application.Authentication.Strategies;
 using Nacoes.Agendamentos.Application.Common.Factories;
+using Nacoes.Agendamentos.Application.Generators.RecorrenciaEvento.Factories;
+using Nacoes.Agendamentos.Application.Generators.RecorrenciaEvento.Strategies;
 using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Common.Factories;
 
@@ -58,6 +60,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IAuthStrategyFactory, AuthStrategyFactory>();
         services.AddScoped<ILinkFactory, LinkFactory>();
+        services.AddScoped<IHorarioGeneratorFactory, HorarioGeneratorFactory>();
 
         return services;
     }
@@ -68,6 +71,11 @@ public static class DependencyInjection
     {
         services.AddScoped<GoogleAuthStrategy>();
         services.AddScoped<LocalAuthStrategy>();
+
+        services.AddScoped<HorarioDiarioGeneratorStrategy>();
+        services.AddScoped<HorarioSemanalGeneratorStrategy>();
+        services.AddScoped<HorarioMensalGeneratorStrategy>();
+        services.AddScoped<HorarioAnualGeneratorStrategy>();
         
         return services;
     }

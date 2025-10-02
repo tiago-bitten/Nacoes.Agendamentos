@@ -5,7 +5,6 @@ using Nacoes.Agendamentos.Application.Authentication.PasswordVerifiers;
 using Nacoes.Agendamentos.Application.Extensions;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios;
-using Nacoes.Agendamentos.Domain.Entities.Usuarios.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Usuarios.Specs;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Strategies;

@@ -15,7 +15,8 @@ internal sealed class AdicionarEventoHandler(INacoesDbContext context)
         var eventoResult = Evento.Criar(
             command.Descricao,
             new Horario(command.Horario.DataInicial, command.Horario.DataFinal),
-            new RecorrenciaEvento(command.Recorrencia.Tipo, command.Recorrencia.Valor, command.Recorrencia.DataFinal));
+            new RecorrenciaEvento(command.Recorrencia.Tipo, command.Recorrencia.Valor, command.Recorrencia.DataFinal),
+            command.QuantidadeMaximaReservas);
         
         if (eventoResult.IsFailure)
         {
@@ -26,7 +27,7 @@ internal sealed class AdicionarEventoHandler(INacoesDbContext context)
 
         await context.Eventos.AddAsync(evento, cancellation);
         
-        evento.Raise(new EventoAdicionadoDomainEvent(evento.Id));
+        evento.Raise(new EventoMasterAdicionadoDomainEvent(evento.Id));
         await context.SaveChangesAsync(cancellation);
 
         return evento.Id;

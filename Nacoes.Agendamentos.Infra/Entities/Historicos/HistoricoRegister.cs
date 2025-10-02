@@ -32,7 +32,8 @@ public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
     {
         if (!ambienteContext.IsUsuarioAuthenticated)
         {
-            throw new Exception("Nao foi possivel identificar o usuario.");
+            Console.WriteLine("Nao foi possivel identificar o usuario.");
+            // throw new Exception("Nao foi possivel identificar o usuario.");
         }
         
         var usuarioAcao = ambienteContext.IsUsuario ? EHistoricoUsuarioAcao.Usuario : ambienteContext.IsBot ? 
