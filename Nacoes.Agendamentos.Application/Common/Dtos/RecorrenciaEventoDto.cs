@@ -2,4 +2,4 @@
 
 namespace Nacoes.Agendamentos.Application.Common.Dtos;
 
-public sealed record RecorrenciaEventoDto(ETipoRecorrenciaEvento Tipo, int? Valor, DateOnly? DataFinal);
+public sealed record RecorrenciaEventoDto(ETipoRecorrenciaEvento Tipo, int? Intervalo, DateOnly? DataFinal);

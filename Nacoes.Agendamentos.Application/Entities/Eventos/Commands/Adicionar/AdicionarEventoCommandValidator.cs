@@ -29,7 +29,7 @@ internal sealed class AdicionarEventoCommandValidator : AbstractValidator<Adicio
             .NotEmpty()
             .NotNull();
         
-        RuleFor(x => x.Recorrencia.Valor)
+        RuleFor(x => x.Recorrencia.Intervalo)
             .NotEmpty()
             .NotNull()
             .When(x => x.Recorrencia.Tipo is not ETipoRecorrenciaEvento.Nenhuma);

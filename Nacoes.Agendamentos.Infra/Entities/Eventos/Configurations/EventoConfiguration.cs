@@ -11,14 +11,25 @@ internal sealed class EventoConfiguration : EntityIdConfiguration<Evento>
     {
         base.Configure(builder);
 
-        builder.Property(a => a.Descricao);
+        builder.Property(a => a.Descricao)
+            .IsRequired();
 
         builder.OwnsOne(a => a.Horario, horarioBuilder =>
         {
-            horarioBuilder.Property(h => h.DataInicial);
+            horarioBuilder.Property(h => h.DataInicial)
+                .IsRequired();
 
-            horarioBuilder.Property(h => h.DataFinal);
+            horarioBuilder.Property(h => h.DataFinal)
+                .IsRequired();
         });
+        
+        builder.Property(a => a.QuantidadeMaximaReservas);
+
+        builder.Property(a => a.QuantidadeReservas)
+            .IsRequired();
+        
+        builder.Property(a => a.Status)
+            .IsRequired();
         
         builder.OwnsOne(a => a.Recorrencia, recorrenciaBuilder =>
         {

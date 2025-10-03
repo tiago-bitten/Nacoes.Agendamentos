@@ -21,8 +21,8 @@ internal sealed class Recuperar : IEndpoint
         public Guid Id { get; init; }
         public string Descricao { get; init; } = string.Empty;
         public int QuantidadeReservas { get; init; }
-        public int QuantidadeMaximaReservas { get; init; }
-        public HorarioDto Horario { get; init; } = default!;
+        public int? QuantidadeMaximaReservas { get; init; }
+        public HorarioDto Horario { get; init; } = null!;
         public EStatusEvento Status { get; init; }
     }
     
@@ -32,7 +32,7 @@ internal sealed class Recuperar : IEndpoint
             [FromServices] INacoesDbContext context,
             CancellationToken cancellationToken) =>
         {
-            Result<PagedResponse<Response>> result;
+            Result<List<Response>> result;
             
             try
             {
@@ -40,16 +40,21 @@ internal sealed class Recuperar : IEndpoint
                     .Where(x => x.Status != EStatusEvento.Cancelado)
                     .Select(x => new Response
                     {
-                        
+                        Id = x.Id,
+                        Descricao = x.Descricao,
+                        QuantidadeReservas = x.QuantidadeReservas,
+                        QuantidadeMaximaReservas = x.QuantidadeMaximaReservas,
+                        Horario = x.Horario.ToDto(),
+                        Status = x.Status
                     })
                     .ToListAsync(cancellationToken);
                 
-                
+                result = Result<List<Response>>.Success(eventos);
             }
             catch (Exception ex)
             {
                 var error = Error.Problem("RecuperarEventos", ex.Message);
-                result = Result<PagedResponse<Response>>.Failure(error);
+                result = Result<List<Response>>.Failure(error);
             }
             
             return result.Match(Results.Ok, CustomResults.Problem);
