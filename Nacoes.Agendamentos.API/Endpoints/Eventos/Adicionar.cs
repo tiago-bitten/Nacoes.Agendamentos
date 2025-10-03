@@ -12,7 +12,8 @@ internal sealed class Adicionar : IEndpoint
     public sealed record Request(
         string Descricao,
         HorarioDto Horario,
-        RecorrenciaEventoDto Recorrencia);
+        RecorrenciaEventoDto Recorrencia,
+        int? QuantidadeMaximaReservas);
     
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -21,7 +22,11 @@ internal sealed class Adicionar : IEndpoint
             [FromServices] ICommandHandler<AdicionarEventoCommand, Guid> handler,
             CancellationToken cancellationToken) =>
         {
-            var command = new AdicionarEventoCommand(request.Descricao, request.Horario, request.Recorrencia);
+            var command = new AdicionarEventoCommand(
+                request.Descricao,
+                request.Horario,
+                request.Recorrencia,
+                request.QuantidadeMaximaReservas);
             
             var result = await handler.HandleAsync(command, cancellationToken);
 
