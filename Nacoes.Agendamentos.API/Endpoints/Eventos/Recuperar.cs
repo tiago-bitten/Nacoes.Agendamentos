@@ -5,8 +5,6 @@ using Nacoes.Agendamentos.API.Infra;
 using Nacoes.Agendamentos.Application.Abstracts.Data;
 using Nacoes.Agendamentos.Application.Abstracts.Messaging;
 using Nacoes.Agendamentos.Application.Common.Dtos;
-using Nacoes.Agendamentos.Application.Common.Pagination;
-using Nacoes.Agendamentos.Application.Entities.Eventos.Queries.Recuperar;
 using Nacoes.Agendamentos.Domain.Common;
 using Nacoes.Agendamentos.Domain.Entities.Eventos;
 
@@ -29,6 +27,7 @@ internal sealed class Recuperar : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("api/v1/eventos", async (
+            [AsParameters] Request request,
             [FromServices] INacoesDbContext context,
             CancellationToken cancellationToken) =>
         {
@@ -37,7 +36,9 @@ internal sealed class Recuperar : IEndpoint
             try
             {
                 var eventos = await context.Eventos
-                    .Where(x => x.Status != EStatusEvento.Cancelado)
+                    .Where(x => x.Status != EStatusEvento.Cancelado &&
+                                DateOnly.FromDateTime(x.Horario.DataInicial.DateTime) >= request.DataInicial &&
+                                DateOnly.FromDateTime(x.Horario.DataFinal.DateTime) <= request.DataFinal)
                     .Select(x => new Response
                     {
                         Id = x.Id,

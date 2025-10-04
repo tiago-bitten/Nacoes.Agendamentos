@@ -16,6 +16,13 @@ internal static class HttpContextExtensions
         context.HttpContext!.User = user;
     }
 
+    public static void SetUser(this IHttpContextAccessor context, Claim[] claims, string? authenticationType)
+    {
+        var identity = new ClaimsIdentity(claims, authenticationType);
+        var principal = new ClaimsPrincipal(identity);
+        context.SetUser(principal);
+    }
+
     public static IIdentity GetIdentity(this IHttpContextAccessor context)
     {
         return context.GetUser().Identity ?? throw new Exception("Erro ao obter identity");

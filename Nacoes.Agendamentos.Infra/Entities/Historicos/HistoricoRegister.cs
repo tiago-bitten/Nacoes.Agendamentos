@@ -4,44 +4,33 @@ using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Entities.Historicos;
 using Nacoes.Agendamentos.Domain.Entities.Historicos.Interfaces;
+using Nacoes.Agendamentos.Domain.Enums;
 
 namespace Nacoes.Agendamentos.Infra.Entities.Historicos;
 
-public sealed class HistoricoRegister(IHistoricoRepository historicoRepository,
-                                      IAmbienteContext ambienteContext,
-                                      INacoesDbContext context) 
+public sealed class HistoricoRegister(
+    IAmbienteContext ambienteContext, 
+    INacoesDbContext context) 
     : IHistoricoRegister
 {
-    public Task AuditAsync(Guid entidadeId, string acao, string? detalhes)
+    public async Task AuditAsync(Guid entidadeId, string acao, string? detalhes)
     {
-        return RegistrarAsync(entidadeId, acao, detalhes);
+        if (!ambienteContext.IsUserAuthenticated)
+        {
+            throw new Exception("Usuário não identificado");
+        }
+        
+        var usuarioId = ambienteContext.UserId;
+        var usuarioAcao = ambienteContext.UserContextType;
+        
+        var historico = Historico.Criar(entidadeId, usuarioId, acao, usuarioAcao, detalhes);
+
+        await context.Historicos.AddAsync(historico);
+        await context.SaveChangesAsync();    
     }
 
     public Task AuditAsync<T>(T entidade, string acao, string? detalhes) where T : EntityId
     {
-        return RegistrarAsync(entidade.Id, acao, detalhes);
-    }
-
-    private async Task RegistrarHistoricoInternoAsync(Guid? entidadeId, string acao, EHistoricoUsuarioAcao usuarioAcao, string? detalhes, Guid usuarioId)
-    {
-        var historico = Historico.Criar(entidadeId, DateTimeOffset.UtcNow, usuarioId, acao, usuarioAcao, detalhes);
-        await historicoRepository.AddAsync(historico);
-    }
-
-    private async Task RegistrarAsync(Guid? entidadeId, string acao, string? detalhes)
-    {
-        if (!ambienteContext.IsUsuarioAuthenticated)
-        {
-            Console.WriteLine("Nao foi possivel identificar o usuario.");
-            // throw new Exception("Nao foi possivel identificar o usuario.");
-        }
-        
-        var usuarioAcao = ambienteContext.IsUsuario ? EHistoricoUsuarioAcao.Usuario : ambienteContext.IsBot ? 
-            EHistoricoUsuarioAcao.Bot : EHistoricoUsuarioAcao.ThirdPartyUser;
-        
-        var usuarioId = ambienteContext.UserId;
-
-        await RegistrarHistoricoInternoAsync(entidadeId, acao, usuarioAcao, detalhes, usuarioId);
-        await context.SaveChangesAsync();
+        return AuditAsync(entidade.Id, acao, detalhes);
     }
 }

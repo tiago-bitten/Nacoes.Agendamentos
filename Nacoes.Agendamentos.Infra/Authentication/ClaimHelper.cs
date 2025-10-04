@@ -1,48 +1,48 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Nacoes.Agendamentos.Application.Common.Enums;
+using Nacoes.Agendamentos.Domain.Enums;
 using Nacoes.Agendamentos.Infra.Extensions;
 
 namespace Nacoes.Agendamentos.Infra.Authentication;
 
 internal static class ClaimHelper
 {
-    public static readonly string IsAutenticado = "IsAutenticado";
     public static readonly string UserId = "UserId";
     public static readonly string UserEmailAddress = "UserEmailAddress";
+    public static readonly string UserContextType = "UserContextType";
     public static readonly string Environment = "Environment";
-    public static readonly string IsBot = "IsBot";
-    public static readonly string IsThirdPartyUser = "IsThirdPartyUser";    
+    
+    public static readonly Guid BotId = Guid.Empty;
+    public static readonly string BotEmail = "bot@nacoes.com";
+    public static readonly string ExternalEmail = "voluntario-sem-email@nacoes.com";
 
     public static Claim[] InvokeUsuario(Guid id, string email, EEnvironment environment)
     {
-        return GetContractClaims(id, email, isBot: false, isThirdPartyUser: false, environment);
+        return BuildClaims(id, email, EUserContextType.Usuario, environment);
     }
 
     public static Claim[] InvokeBot(EEnvironment environment)
     {
-       return GetContractClaims(Guid.NewGuid(), "bot@nacoes.com", isBot: true, isThirdPartyUser: false, environment);
+       return BuildClaims(BotId, BotEmail, EUserContextType.Bot, environment);
     }
     
-    public static Claim[] InvokeThirdPartyUser(Guid id, string? email, EEnvironment environment)
+    public static Claim[] InvokeExternal(Guid id, string? email, EEnvironment environment)
     {
-        return GetContractClaims(id, email ?? "voluntario-sem-email@nacoes.com", isBot: false, isThirdPartyUser: true,
-            environment);
+        return BuildClaims(id, email ?? ExternalEmail, EUserContextType.External, environment);
     }
     
-    private static Claim[] GetContractClaims(
+    private static Claim[] BuildClaims(
         Guid id, 
         string email, 
-        bool isBot, 
-        bool isThirdPartyUser, 
+        EUserContextType userContextType,
         EEnvironment environment)
     {
         return
         [
             new Claim(UserId, id.ToString()),
             new Claim(UserEmailAddress, email),
-            new Claim(IsBot, isBot.ToString()),
-            new Claim(IsThirdPartyUser, isThirdPartyUser.ToString()),
+            new Claim(UserContextType, ((int)userContextType).ToString()),
             new Claim(Environment, ((int)environment).ToString())
         ];
     }
@@ -62,14 +62,9 @@ internal static class ClaimHelper
         return context.GetClaim(UserEmailAddress).Value;
     }
     
-    public static bool GetIsBot(IHttpContextAccessor context)
+    public static EUserContextType GetUserContextType(IHttpContextAccessor context)
     {
-        return bool.Parse(context.GetClaim(IsBot).Value);
-    }
-    
-    public static bool GetIsThirdPartyUser(IHttpContextAccessor context)
-    {
-        return bool.Parse(context.GetClaim(IsThirdPartyUser).Value);
+        return (EUserContextType)int.Parse(context.GetClaim(UserContextType).Value);
     }
 
     public static EEnvironment GetEnvironment(IHttpContextAccessor context)
