@@ -1,6 +1,7 @@
 ﻿using Nacoes.Agendamentos.Domain.Abstracts;
 using Nacoes.Agendamentos.Domain.Abstracts.Interfaces;
 using Nacoes.Agendamentos.Domain.Common;
+using Nacoes.Agendamentos.Domain.Entities.Usuarios.DomainEvents;
 using Nacoes.Agendamentos.Domain.ValueObjects;
 
 namespace Nacoes.Agendamentos.Domain.Entities.Usuarios;
@@ -69,6 +70,8 @@ public sealed class UsuarioConvite : EntityId, IAggregateRoot
             var usuarioConviteMinisterio = usuarioConviteMinisterioResult.Value;
             usuarioConvite._ministerios.Add(usuarioConviteMinisterio);
         }
+
+        usuarioConvite.Raise(new UsuarioConviteAdicionadoDomainEvent(usuarioConvite.Id, token));
         
         return usuarioConvite;
     }

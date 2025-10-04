@@ -30,7 +30,7 @@ public sealed class LoginExternoHandler(INacoesDbContext context,
             return VoluntarioErrors.DeveCriarConta;
         }
         
-        ambienteContext.StartThirdPartyUserSession(voluntario.Id, voluntario.EmailAddress);
+        ambienteContext.StartExternalSession(voluntario.Id, voluntario.EmailAddress);
         
         return Result.Success();
     }

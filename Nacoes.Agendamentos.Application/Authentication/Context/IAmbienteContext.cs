@@ -1,15 +1,14 @@
 ﻿using Nacoes.Agendamentos.Application.Common.Enums;
+using Nacoes.Agendamentos.Domain.Enums;
 
 namespace Nacoes.Agendamentos.Application.Authentication.Context;
 
 public interface IAmbienteContext
 {
     Guid UserId { get; }
-    bool IsUsuarioAuthenticated { get; }
-    bool IsUsuario { get; }
-    bool IsBot { get; }
-    bool IsThirdPartyUser { get; }
+    bool IsUserAuthenticated { get; }
+    EUserContextType UserContextType { get; }
     void StartBotSession();
-    void StartThirdPartyUserSession(Guid id, string? email);
-    EEnvironment GetEnvironment { get; }
+    void StartExternalSession(Guid id, string? email);
+    EEnvironment Environment { get; }
 }

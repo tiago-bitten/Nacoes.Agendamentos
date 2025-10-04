@@ -44,8 +44,6 @@ internal sealed class AdicionarUsuarioConviteHandler(
         var link = linkFactory.Create(usuarioConvite.Path);
         var response = new UsuarioConviteResponse(link);
         
-        usuarioConvite.Raise(new UsuarioConviteAdicionadoDomainEvent(usuarioConvite.Id, link));
-        
         await context.Convites.AddAsync(usuarioConvite, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 

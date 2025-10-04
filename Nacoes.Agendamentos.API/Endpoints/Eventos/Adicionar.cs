@@ -34,3 +34,4 @@ internal sealed class Adicionar : IEndpoint
         }).WithTags(Tags.Eventos);
     }
 }
+ 
