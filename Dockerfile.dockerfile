@@ -1,14 +1,14 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
 WORKDIR /app
 
-COPY . . 
+COPY . .
 
 # Publica o projeto da API
-RUN dotnet restore "Nacoes.Agendamentos.API/Nacoes.Agendamentos.API.csproj"
-RUN dotnet publish "Nacoes.Agendamentos.API/Nacoes.Agendamentos.API.csproj" -c Release -o /App
+RUN dotnet restore "src/Adapters/Driving/API/API.csproj"
+RUN dotnet publish "src/Adapters/Driving/API/API.csproj" -c Release -o /App
 
 # Stage 2: Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /App
 
 # Instala pacotes adicionais
@@ -20,4 +20,4 @@ RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 COPY --from=build-env /App .
 
 # Define o ponto de entrada da API
-ENTRYPOINT ["dotnet", "Nacoes.Agendamentos.API.dll"]
+ENTRYPOINT ["dotnet", "API.dll"]

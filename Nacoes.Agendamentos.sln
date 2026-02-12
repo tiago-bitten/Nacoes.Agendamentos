@@ -1,21 +1,32 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nacoes.Agendamentos.Domain", "Nacoes.Agendamentos.Domain\Nacoes.Agendamentos.Domain.csproj", "{CA710A68-E055-4B28-B1C3-75652FA3A28C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{A1111111-1111-1111-1111-111111111111}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nacoes.Agendamentos.Infra", "Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj", "{1D34C5C2-54C3-48EA-B333-62E5775718AF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{B2222222-2222-2222-2222-222222222222}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nacoes.Agendamentos.Application", "Nacoes.Agendamentos.Application\Nacoes.Agendamentos.Application.csproj", "{F20EED1F-7641-42FA-860B-073E55B7964B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Driving", "Driving", "{C3333333-3333-3333-3333-333333333333}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nacoes.Agendamentos.API", "Nacoes.Agendamentos.API\Nacoes.Agendamentos.API.csproj", "{B79844C4-3913-428E-BC08-1D62AB7C8802}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Driven", "Driven", "{D4444444-4444-4444-4444-444444444444}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 		Dockerfile.dockerfile = Dockerfile.dockerfile
+		ARCHITECTURE.md = ARCHITECTURE.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Core\Domain\Domain.csproj", "{CA710A68-E055-4B28-B1C3-75652FA3A28C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Core\Application\Application.csproj", "{F20EED1F-7641-42FA-860B-073E55B7964B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postgres", "src\Adapters\Driven\Postgres\Postgres.csproj", "{1D34C5C2-54C3-48EA-B333-62E5775718AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{E5555555-5555-5555-5555-555555555555}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "src\Adapters\Driving\API\API.csproj", "{B79844C4-3913-428E-BC08-1D62AB7C8802}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,14 +38,18 @@ Global
 		{CA710A68-E055-4B28-B1C3-75652FA3A28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA710A68-E055-4B28-B1C3-75652FA3A28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA710A68-E055-4B28-B1C3-75652FA3A28C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F20EED1F-7641-42FA-860B-073E55B7964B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F20EED1F-7641-42FA-860B-073E55B7964B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F20EED1F-7641-42FA-860B-073E55B7964B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F20EED1F-7641-42FA-860B-073E55B7964B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D34C5C2-54C3-48EA-B333-62E5775718AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5555555-5555-5555-5555-555555555555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5555555-5555-5555-5555-555555555555}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5555555-5555-5555-5555-555555555555}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5555555-5555-5555-5555-555555555555}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B79844C4-3913-428E-BC08-1D62AB7C8802}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B79844C4-3913-428E-BC08-1D62AB7C8802}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B79844C4-3913-428E-BC08-1D62AB7C8802}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,6 +57,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CA710A68-E055-4B28-B1C3-75652FA3A28C} = {A1111111-1111-1111-1111-111111111111}
+		{F20EED1F-7641-42FA-860B-073E55B7964B} = {A1111111-1111-1111-1111-111111111111}
+		{C3333333-3333-3333-3333-333333333333} = {B2222222-2222-2222-2222-222222222222}
+		{D4444444-4444-4444-4444-444444444444} = {B2222222-2222-2222-2222-222222222222}
+		{B79844C4-3913-428E-BC08-1D62AB7C8802} = {C3333333-3333-3333-3333-333333333333}
+		{1D34C5C2-54C3-48EA-B333-62E5775718AF} = {D4444444-4444-4444-4444-444444444444}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FBF35E6B-C994-412C-B680-41448D3E7845}

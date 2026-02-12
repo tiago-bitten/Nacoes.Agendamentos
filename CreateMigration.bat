@@ -1,12 +1,12 @@
-﻿@echo off
+@echo off
 setlocal
 
 :: Nome da Migration
-set /p MigrationName=Digite o nome da migration: 
+set /p MigrationName=Digite o nome da migration:
 
 :: Caminhos do projeto
-set StartupProjectPath=.\Nacoes.Agendamentos.API\Nacoes.Agendamentos.API.csproj
-set RepositoryProjectPath=.\Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj
+set StartupProjectPath=.\src\Adapters\Driving\API\API.csproj
+set RepositoryProjectPath=.\src\Adapters\Driven\Postgres\Postgres.csproj
 set DbContextName=NacoesDbContext
 
 :: Comando para criar a migration

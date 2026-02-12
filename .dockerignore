@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+**/.git/
+**/.vs/
+**/.vscode/
+**/.idea/
+**/node_modules/
+*.md
+*.bat
+.gitignore
+.dockerignore

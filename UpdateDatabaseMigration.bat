@@ -1,5 +1,4 @@
-﻿@echo off
-cd..
-echo Executando migrations: dotnet ef database update --verbose --context NacoesDbContext --project ".\Nacoes.Agendamentos\Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj" --startup-project ".\Nacoes.Agendamentos.API\Nacoes.Agendamentos\Nacoes.Agendamentos.API.csproj"
-dotnet ef database update --verbose --context NacoesDbContext --project ".\Nacoes.Agendamentos\Nacoes.Agendamentos.Infra\Nacoes.Agendamentos.Infra.csproj" --startup-project ".\Nacoes.Agendamentos\Nacoes.Agendamentos.API\Nacoes.Agendamentos.API.csproj"
+@echo off
+echo Executando migrations...
+dotnet ef database update --verbose --context NacoesDbContext --project ".\src\Adapters\Driven\Postgres\Postgres.csproj" --startup-project ".\src\Adapters\Driving\API\API.csproj"
 pause

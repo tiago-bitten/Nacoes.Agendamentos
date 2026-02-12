@@ -1,0 +1,31 @@
+@baseUrl = http://localhost:5171
+
+### Autenticacao
+# Endpoints relacionados a autenticacao
+GET {{baseUrl}}/api/auth
+Accept: application/json
+
+### Eventos
+# Endpoints relacionados a eventos
+GET {{baseUrl}}/api/eventos
+Accept: application/json
+
+### Tags
+# Endpoints relacionados a tags
+GET {{baseUrl}}/api/tags
+Accept: application/json
+
+### Usuarios
+# Endpoints relacionados a usuarios
+GET {{baseUrl}}/api/usuarios
+Accept: application/json
+
+### Ministerios
+# Endpoints relacionados a ministerios
+GET {{baseUrl}}/api/ministerios
+Accept: application/json
+
+### Voluntarios
+# Endpoints relacionados a voluntarios
+GET {{baseUrl}}/api/voluntarios
+Accept: application/json
