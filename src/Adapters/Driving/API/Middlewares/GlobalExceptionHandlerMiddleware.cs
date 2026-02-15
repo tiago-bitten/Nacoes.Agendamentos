@@ -1,6 +1,4 @@
-using Application.Common.Responses;
-using System.Text.Json;
-using Domain.Shared.Results;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Middlewares;
 
@@ -14,22 +12,18 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next)
         }
         catch (Exception ex)
         {
-            context.Response.StatusCode = 500;
-            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "application/problem+json";
 
-            var baseResponse = new ApiResponse<object>
+            var problemDetails = new ProblemDetails
             {
-                Sucesso = false,
-                Mensagem = "Ocorreu um erro interno no servidor",
-                Erro = Error.Failure("Interno", ex.Message)
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Server failure",
+                Detail = ex.Message,
+                Status = StatusCodes.Status500InternalServerError
             };
 
-            await context.Response.WriteAsJsonAsync(baseResponse, PascalCaseOptions);
+            await context.Response.WriteAsJsonAsync(problemDetails);
         }
     }
-
-    private static JsonSerializerOptions PascalCaseOptions => new()
-    {
-        PropertyNamingPolicy = null
-    };
 }

@@ -41,10 +41,7 @@ app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
 app.MapEndpoints();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwaggerWithUi();
-}
+app.UseSwaggerWithUi();
 
 app.UseHangfireDashboard();
 
@@ -58,8 +55,6 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 
 // app.UseAuthorization();
-
-app.MapControllers();
 
 await app.RunAsync();
 
