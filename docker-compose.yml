@@ -19,7 +19,7 @@ services:
   app:
     build:
       context: ./
-      dockerfile: Dockerfile.dockerfile
+      dockerfile: Dockerfile
     container_name: nacoes-api
     restart: unless-stopped
     environment:

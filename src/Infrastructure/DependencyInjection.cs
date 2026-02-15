@@ -56,11 +56,6 @@ public static class DependencyInjection
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
-        services.AddOptions<DevSettings>()
-                .Bind(configuration.GetSection("Dev"))
-                .ValidateDataAnnotations()
-                .ValidateOnStart();
-
         services.AddOptions<AmbienteSettings>()
                 .Bind(configuration.GetSection("Ambiente"))
                 .ValidateDataAnnotations()
@@ -73,7 +68,6 @@ public static class DependencyInjection
 
         services.AddSingleton(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
         services.AddSingleton(sp => sp.GetRequiredService<IOptions<AuthenticationSettings>>().Value);
-        services.AddSingleton(sp => sp.GetRequiredService<IOptions<DevSettings>>().Value);
 
         return services;
     }

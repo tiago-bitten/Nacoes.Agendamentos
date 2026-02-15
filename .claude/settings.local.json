@@ -5,7 +5,9 @@
       "Bash(dotnet nuget list:*)",
       "Bash(docker-compose build:*)",
       "Bash(docker-compose up:*)",
-      "Bash(timeout 15 docker-compose logs:*)"
+      "Bash(timeout 15 docker-compose logs:*)",
+      "Bash(git mv:*)",
+      "Bash(git rm:*)"
     ]
   }
 }

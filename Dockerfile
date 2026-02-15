@@ -25,5 +25,9 @@ RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 # Copia a aplicação do build
 COPY --from=build-env /App .
 
-# Define o ponto de entrada da API
-ENTRYPOINT ["dotnet", "API.dll"]
+# Railway atribui a porta via $PORT; default 8080
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_HTTP_PORTS=8080
+
+# Ponto de entrada compatível com Railway ($PORT dinâmico)
+ENTRYPOINT ["sh", "-c", "dotnet API.dll --urls http://+:${PORT:-8080}"]

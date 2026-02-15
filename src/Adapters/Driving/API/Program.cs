@@ -1,6 +1,5 @@
 using System.Reflection;
 using Hangfire;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using API;
 using API.Extensions;
 using API.Middlewares;
@@ -8,7 +7,16 @@ using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Suporte ao DATABASE_URL do Railway (converte URI para formato Npgsql)
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':');
+    var connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]}";
+    builder.Configuration["ConnectionStrings:Postgres"] = connectionString;
+}
+
 builder.Services
     .AddProjectDependencies(builder.Configuration)
     .AddApi();
@@ -25,12 +33,11 @@ builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
+await Postgres.DependencyInjection.MigrateDatabaseAsync(app.Services);
+
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-// app.UseHealthChecks("/health", new HealthCheckOptions
-// {
-//     Predicate = _ => true,
-// });
+app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
 app.MapEndpoints();
 
@@ -43,7 +50,10 @@ app.UseHangfireDashboard();
 
 app.UseCors();
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 

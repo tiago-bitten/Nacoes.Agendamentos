@@ -9,3 +9,5 @@
 *.bat
 .gitignore
 .dockerignore
+railway.toml
+docker-compose.yml
