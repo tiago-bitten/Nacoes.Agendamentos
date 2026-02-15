@@ -25,6 +25,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__Postgres=Host=postgres;Database=nacoesagendamentos;Username=postgres;Password=nacoes
+      - Ambiente__Tipo=Local
     ports:
       - "5000:8080"
     depends_on:

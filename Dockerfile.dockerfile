@@ -13,7 +13,13 @@ WORKDIR /App
 
 # Instala pacotes adicionais
 RUN apt-get update && apt-get install -y libgdiplus
-RUN sed -i 's/^Components: main$/& contrib/' /etc/apt/sources.list.d/debian.sources
+RUN if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
+      sed -i 's/^Components: main$/& contrib/' /etc/apt/sources.list.d/debian.sources; \
+    elif [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then \
+      sed -i 's/^Components: main/& contrib/' /etc/apt/sources.list.d/ubuntu.sources; \
+    elif [ -f /etc/apt/sources.list ]; then \
+      sed -i 's/^\(deb .* main\)$/\1 contrib/' /etc/apt/sources.list; \
+    fi
 RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 
 # Copia a aplicação do build
