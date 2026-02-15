@@ -23,13 +23,13 @@ internal sealed class AmbienteContext(
 
     public void StartBotSession()
     {
-        var claims = ClaimHelper.InvokeBot(_ambienteSettings.TipoEnum);
+        var claims = ClaimHelper.InvokeBot(_ambienteSettings.GetTipoEnum());
         context.SetUser(claims, authenticationType: "Bot");
     }
 
     public void StartExternalSession(Guid id, string? email)
     {
-        var claims = ClaimHelper.InvokeExternal(id, email, _ambienteSettings.TipoEnum);
+        var claims = ClaimHelper.InvokeExternal(id, email, _ambienteSettings.GetTipoEnum());
         context.SetUser(claims, authenticationType: "External");
     }
 }

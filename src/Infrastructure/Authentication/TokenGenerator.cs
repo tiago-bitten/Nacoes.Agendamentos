@@ -24,7 +24,7 @@ internal sealed class TokenGenerator(
     public string GenerateAuth(Usuario usuario)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var claims = ClaimHelper.InvokeUsuario(usuario.Id, usuario.Email.Address, _ambienteSettings.TipoEnum);
+        var claims = ClaimHelper.InvokeUsuario(usuario.Id, usuario.Email.Address, _ambienteSettings.GetTipoEnum());
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

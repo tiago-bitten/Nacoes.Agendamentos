@@ -5,5 +5,6 @@ namespace Application.Common.Settings;
 public sealed record AmbienteSettings
 {
     public required string Tipo { get; init; }
-    public EEnvironment TipoEnum => Enum.Parse<EEnvironment>(Tipo);
+
+    public EEnvironment GetTipoEnum() => Enum.Parse<EEnvironment>(Tipo);
 }
