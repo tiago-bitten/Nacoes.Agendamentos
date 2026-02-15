@@ -11,7 +11,10 @@ internal static class ModelBuilderExtensions
         {
             foreach (var property in entityType.ClrType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                if (!property.PropertyType.IsGenericType) continue;
+                if (!property.PropertyType.IsGenericType)
+                {
+                    continue;
+                }
 
                 var genericType = property.PropertyType.GetGenericTypeDefinition();
             }

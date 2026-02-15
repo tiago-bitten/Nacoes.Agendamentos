@@ -4,16 +4,16 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Generators.RecorrenciaEvento.Factories;
 
-internal sealed class HorarioGeneratorFactory(IServiceProvider provider)
-    : IHorarioGeneratorFactory
+internal sealed class ScheduleGeneratorFactory(IServiceProvider provider)
+    : IScheduleGeneratorFactory
 {
-    public IHorarioGeneratorStrategy Create(ETipoRecorrenciaEvento tipo)
-        => tipo switch
+    public IScheduleGeneratorStrategy Create(EEventRecurrenceType type)
+        => type switch
         {
-            ETipoRecorrenciaEvento.Diario => provider.GetRequiredService<HorarioDiarioGeneratorStrategy>(),
-            ETipoRecorrenciaEvento.Semanal => provider.GetRequiredService<HorarioSemanalGeneratorStrategy>(),
-            ETipoRecorrenciaEvento.Mensal => provider.GetRequiredService<HorarioMensalGeneratorStrategy>(),
-            ETipoRecorrenciaEvento.Anual => provider.GetRequiredService<HorarioAnualGeneratorStrategy>(),
+            EEventRecurrenceType.Daily => provider.GetRequiredService<DailyScheduleGeneratorStrategy>(),
+            EEventRecurrenceType.Weekly => provider.GetRequiredService<WeeklyScheduleGeneratorStrategy>(),
+            EEventRecurrenceType.Monthly => provider.GetRequiredService<MonthlyScheduleGeneratorStrategy>(),
+            EEventRecurrenceType.Yearly => provider.GetRequiredService<YearlyScheduleGeneratorStrategy>(),
             _ => throw new NotImplementedException()
         };
 }

@@ -15,10 +15,10 @@ internal sealed class DailyAppInfoJob : ICronJob
 
         manager.Schedule<IQueryExecutor>(
             jobId,
-            executor => executor.ExecuteQueryAsync<RecuperarInfoDiariaUsoAppQuery, RecuperarInfoDiariaUsoAppResponse>(
-                new RecuperarInfoDiariaUsoAppQuery
+            executor => executor.ExecuteQueryAsync<GetDailyAppUsageInfoQuery, GetDailyAppUsageInfoResponse>(
+                new GetDailyAppUsageInfoQuery
             {
-                EnviarPorEmail = true
+                SendByEmail = true
             }),
             cronExpression,
             queue);

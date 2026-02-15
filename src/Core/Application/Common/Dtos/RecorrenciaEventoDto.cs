@@ -2,4 +2,4 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Common.Dtos;
 
-public sealed record RecorrenciaEventoDto(ETipoRecorrenciaEvento Tipo, int? Intervalo, DateOnly? DataFinal);
+public sealed record EventRecurrenceDto(EEventRecurrenceType Type, int? Interval, DateOnly? EndDate);

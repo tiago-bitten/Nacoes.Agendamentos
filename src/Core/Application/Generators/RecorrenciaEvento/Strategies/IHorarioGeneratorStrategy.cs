@@ -4,7 +4,7 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Generators.RecorrenciaEvento.Strategies;
 
-public interface IHorarioGeneratorStrategy
+public interface IScheduleGeneratorStrategy
 {
-    Result<Horario> GenerateAsync(Evento eventoMaster, DateTimeOffset dataInicioAnterior);
+    Result<Schedule> Generate(Event masterEvent, DateTimeOffset previousStartDate);
 }

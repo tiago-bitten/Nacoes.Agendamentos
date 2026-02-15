@@ -31,7 +31,8 @@ public abstract class RemovableEntity : Entity
     {
         if (IsRemoved)
         {
-            // TODO: return error
+            return Result.Failure(
+                Error.Problem("entity.already_removed", "The entity has already been removed."));
         }
 
         IsRemoved = true;
@@ -42,7 +43,8 @@ public abstract class RemovableEntity : Entity
     {
         if (!IsRemoved)
         {
-            // TODO: return error
+            return Result.Failure(
+                Error.Problem("entity.not_removed", "The entity is not removed."));
         }
 
         IsRemoved = false;

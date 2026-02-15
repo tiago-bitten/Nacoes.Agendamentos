@@ -3,60 +3,60 @@ using Domain.Shared.Results;
 
 namespace Domain.Eventos.Reservas;
 
-public sealed class Reserva : RemovableEntity
+public sealed class Reservation : RemovableEntity
 {
-    private Reserva()
+    private Reservation()
     {
     }
 
-    private Reserva(
-        Guid voluntarioMinisterioId,
-        Guid atividadeId,
-        EStatusReserva status,
-        EOrigemReserva origem)
+    private Reservation(
+        Guid volunteerMinistryId,
+        Guid activityId,
+        EReservationStatus status,
+        EReservationOrigin origin)
     {
-        VoluntarioMinisterioId = voluntarioMinisterioId;
-        AtividadeId = atividadeId;
+        VolunteerMinistryId = volunteerMinistryId;
+        ActivityId = activityId;
         Status = status;
-        Origem = origem;
+        Origin = origin;
     }
 
-    public Guid EventoId { get; private set; }
-    public Guid VoluntarioMinisterioId { get; private set; }
-    public Guid AtividadeId { get; private set; }
-    public EStatusReserva Status { get; private set; }
-    public EOrigemReserva Origem { get; private set; }
+    public Guid EventId { get; private set; }
+    public Guid VolunteerMinistryId { get; private set; }
+    public Guid ActivityId { get; private set; }
+    public EReservationStatus Status { get; private set; }
+    public EReservationOrigin Origin { get; private set; }
 
-    public Evento Evento { get; private set; } = null!;
+    public Event Event { get; private set; } = null!;
 
-    internal static Result<Reserva> Criar(Guid voluntarioMinisterioId, Guid atividadeId, EOrigemReserva origem)
+    internal static Result<Reservation> Create(Guid volunteerMinistryId, Guid activityId, EReservationOrigin origin)
     {
-        return new Reserva(voluntarioMinisterioId, atividadeId, EStatusReserva.Confirmado, origem);
+        return new Reservation(volunteerMinistryId, activityId, EReservationStatus.Confirmed, origin);
     }
 
-    internal Result Cancelar()
+    internal Result Cancel()
     {
-        if (Status is not (EStatusReserva.Confirmado or EStatusReserva.AguardandoConfirmacao))
+        if (Status is not (EReservationStatus.Confirmed or EReservationStatus.AwaitingConfirmation))
         {
-            return ReservaErrors.NaoEstaReservado;
+            return ReservationErrors.NotReserved;
         }
 
-        Status = EStatusReserva.Cancelado;
+        Status = EReservationStatus.Cancelled;
 
         return Result.Success();
     }
 }
 
-public enum EStatusReserva
+public enum EReservationStatus
 {
-    AguardandoConfirmacao = 0,
-    Confirmado = 1,
-    Cancelado = 2
+    AwaitingConfirmation = 0,
+    Confirmed = 1,
+    Cancelled = 2
 }
 
-public enum EOrigemReserva
+public enum EReservationOrigin
 {
     Manual = 0,
-    Automatico = 1,
-    Escala = 2
+    Automatic = 1,
+    Roster = 2
 }

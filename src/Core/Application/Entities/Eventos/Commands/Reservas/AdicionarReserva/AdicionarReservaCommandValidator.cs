@@ -2,11 +2,11 @@ using FluentValidation;
 
 namespace Application.Entities.Eventos.Commands.Reservas.AdicionarReserva;
 
-internal sealed class AdicionarReservaCommandValidator : AbstractValidator<AdicionarReservaCommand>
+internal sealed class AddReservationCommandValidator : AbstractValidator<AddReservationCommand>
 {
-    public AdicionarReservaCommandValidator()
+    public AddReservationCommandValidator()
     {
-        RuleFor(x => x.VoluntarioMinisterioId).NotEmpty();
-        RuleFor(x => x.AtividadeId).NotEmpty();
+        RuleFor(x => x.VolunteerMinistryId).NotEmpty();
+        RuleFor(x => x.ActivityId).NotEmpty();
     }
 }

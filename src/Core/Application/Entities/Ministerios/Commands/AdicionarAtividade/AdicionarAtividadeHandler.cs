@@ -7,36 +7,38 @@ using Domain.Ministerios.DomainEvents;
 
 namespace Application.Entities.Ministerios.Commands.AdicionarAtividade;
 
-internal sealed class AdicionarAtividadeHandler(
+internal sealed class AddActivityHandler(
     INacoesDbContext context)
-    : ICommandHandler<AdicionarAtividadeCommand, Guid>
+    : ICommandHandler<AddActivityCommand, Guid>
 {
-    public async Task<Result<Guid>> HandleAsync(AdicionarAtividadeCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> HandleAsync(
+        AddActivityCommand command,
+        CancellationToken ct)
     {
-        var ministerio = await context.Ministerios.SingleOrDefaultAsync(x => x.Id == command.MinisterioId, cancellation);
-        if (ministerio is null)
+        var ministry = await context.Ministries.SingleOrDefaultAsync(x => x.Id == command.MinistryId, ct);
+        if (ministry is null)
         {
-            return MinisterioErrors.NaoEncontrado;
+            return MinistryErrors.NotFound;
         }
 
-        var existeAtividadeComNome = await context.Atividades
-            .AnyAsync(x => x.MinisterioId == command.MinisterioId && x.Nome == command.Nome, cancellation);
-        if (existeAtividadeComNome)
+        var activityWithNameExists = await context.Activities
+            .AnyAsync(x => x.MinistryId == command.MinistryId && x.Name == command.Name, ct);
+        if (activityWithNameExists)
         {
-            return AtividadeErrors.NomeEmUso;
+            return ActivityErrors.NameInUse;
         }
 
-        var atividadeResult = ministerio.AdicionarAtividade(command.Nome, command.Descricao);
-        if (atividadeResult.IsFailure)
+        var activityResult = ministry.AddActivity(command.Name, command.Description);
+        if (activityResult.IsFailure)
         {
-            return atividadeResult.Error;
+            return activityResult.Error;
         }
 
-        var atividade = atividadeResult.Value;
+        var activity = activityResult.Value;
 
-        ministerio.Raise(new AtividadeAdicionadaDomainEvent(atividade.Id));
-        await context.SaveChangesAsync(cancellation);
+        ministry.Raise(new ActivityAddedDomainEvent(activity.Id));
+        await context.SaveChangesAsync(ct);
 
-        return Result<Guid>.Success(atividade.Id);
+        return Result<Guid>.Success(activity.Id);
     }
 }

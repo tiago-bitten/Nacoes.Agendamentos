@@ -10,16 +10,18 @@ internal sealed class RecuperarPorToken : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v1/usuarios-convites/token/{token}", async (
+        app.MapGet("v1/user-invitations/token/{token}", async (
             [FromRoute] string token,
-            [FromServices] IQueryHandler<RecuperarUsuarioConvitePorTokenQuery, RecuperarUsuarioConvitePorTokenResponse> handler,
-            CancellationToken cancellationToken) =>
+            [FromServices] IQueryHandler<
+                GetUserInvitationByTokenQuery,
+                GetUserInvitationByTokenResponse> handler,
+            CancellationToken ct) =>
         {
-            var query = new RecuperarUsuarioConvitePorTokenQuery(token);
+            var query = new GetUserInvitationByTokenQuery(token);
 
-            var result = await handler.Handle(query, cancellationToken);
+            var result = await handler.Handle(query, ct);
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Convites);
+        }).WithTags(Tags.Invitations);
     }
 }

@@ -3,7 +3,7 @@ using Domain.Enums;
 
 namespace Application.Authentication.Context;
 
-public interface IAmbienteContext
+public interface IEnvironmentContext
 {
     Guid UserId { get; }
     bool IsUserAuthenticated { get; }

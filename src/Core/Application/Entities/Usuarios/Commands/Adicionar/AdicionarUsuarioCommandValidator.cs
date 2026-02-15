@@ -3,15 +3,15 @@ using Domain.Usuarios;
 
 namespace Application.Entities.Usuarios.Commands.Adicionar;
 
-public sealed class AdicionarUsuarioCommandValidator : AbstractValidator<AdicionarUsuarioCommand>
+internal sealed class AddUserCommandValidator : AbstractValidator<AddUserCommand>
 {
-  public AdicionarUsuarioCommandValidator()
-  {
-    RuleFor(x => x.Nome).NotEmpty();
-    RuleFor(x => x.Email).NotEmpty().EmailAddress();
-    RuleFor(x => x.Senha).NotEmpty().When(x => x.AuthType is EAuthType.Local);
-    RuleFor(x => x.AuthType).NotNull();
-    RuleFor(x => x.Celular!.Ddd).NotEmpty().When(x => x.Celular is not null);
-    RuleFor(x => x.Celular!.Numero).NotEmpty().When(x => x.Celular is not null);
-  }
+    public AddUserCommandValidator()
+    {
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(User.NameMaxLength);
+        RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        RuleFor(x => x.Password).NotEmpty().When(x => x.AuthType is EAuthType.Local);
+        RuleFor(x => x.AuthType).NotNull();
+        RuleFor(x => x.PhoneNumber!.AreaCode).NotEmpty().When(x => x.PhoneNumber is not null);
+        RuleFor(x => x.PhoneNumber!.Number).NotEmpty().When(x => x.PhoneNumber is not null);
+    }
 }

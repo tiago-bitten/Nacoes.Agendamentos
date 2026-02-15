@@ -15,16 +15,16 @@ internal static class ClaimHelper
 
     public static readonly Guid BotId = Guid.Empty;
     public static readonly string BotEmail = "bot@nacoes.com";
-    public static readonly string ExternalEmail = "voluntario-sem-email@nacoes.com";
+    public static readonly string ExternalEmail = "volunteer-no-email@nacoes.com";
 
-    public static Claim[] InvokeUsuario(Guid id, string email, EEnvironment environment)
+    public static Claim[] InvokeUser(Guid id, string email, EEnvironment environment)
     {
-        return BuildClaims(id, email, EUserContextType.Usuario, environment);
+        return BuildClaims(id, email, EUserContextType.User, environment);
     }
 
     public static Claim[] InvokeBot(EEnvironment environment)
     {
-       return BuildClaims(BotId, BotEmail, EUserContextType.Bot, environment);
+        return BuildClaims(BotId, BotEmail, EUserContextType.Bot, environment);
     }
 
     public static Claim[] InvokeExternal(Guid id, string? email, EEnvironment environment)

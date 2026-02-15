@@ -1,18 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Voluntarios;
-using Domain.Shared.ValueObjects;
 using Postgres.Abstracts;
 
 namespace Postgres.Configurations.Voluntarios;
 
-internal class VoluntarioConfiguration : EntityIdConfiguration<Voluntario>
+internal sealed class VoluntarioConfiguration : EntityIdConfiguration<Volunteer>
 {
-    public override void Configure(EntityTypeBuilder<Voluntario> builder)
+    public override void Configure(EntityTypeBuilder<Volunteer> builder)
     {
         base.Configure(builder);
 
-        builder.Property(v => v.Nome);
+        builder.ToTable("voluntarios");
+
+        builder.Property(v => v.Name)
+            .HasColumnName("nome")
+            .HasMaxLength(Volunteer.NameMaxLength);
 
         builder.OwnsOne(v => v.Email, emailBuilder =>
         {
@@ -29,26 +32,31 @@ internal class VoluntarioConfiguration : EntityIdConfiguration<Voluntario>
                         .HasColumnName("email_data_expiracao_codigo_confirmacao");
         });
 
-        builder.OwnsOne(v => v.Celular, celularBuilder =>
+        builder.OwnsOne(v => v.PhoneNumber, celularBuilder =>
         {
-            celularBuilder.Property(c => c.Numero);
+            celularBuilder.Property(c => c.Number)
+                .HasColumnName("numero");
 
-            celularBuilder.Property(c => c.Ddd);
+            celularBuilder.Property(c => c.AreaCode)
+                .HasColumnName("ddd");
         });
 
         builder.OwnsOne(v => v.Cpf, cpfBuilder =>
         {
-            cpfBuilder.Property(c => c.Numero)
+            cpfBuilder.Property(c => c.Number)
                       .HasColumnName("cpf");
         });
 
-        builder.OwnsOne(v => v.DataNascimento, dataNascimentoBuilder =>
+        builder.OwnsOne(v => v.BirthDate, birthDateBuilder =>
         {
-            dataNascimentoBuilder.Property(d => d.Valor)
+            birthDateBuilder.Property(d => d.Value)
                                  .HasColumnName("data_nascimento");
         });
 
-        builder.HasMany(v => v.Ministerios)
+        builder.Property(v => v.RegistrationOrigin)
+            .HasColumnName("origem_cadastro");
+
+        builder.HasMany(v => v.Ministries)
                .WithOne()
                .HasForeignKey("voluntario_id");
     }

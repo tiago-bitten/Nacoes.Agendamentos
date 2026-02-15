@@ -4,34 +4,34 @@ using Domain.Ministerios;
 
 namespace Domain.Usuarios;
 
-public sealed class UsuarioConviteMinisterio : RemovableEntity
+public sealed class UserInvitationMinistry : RemovableEntity
 {
-    private UsuarioConviteMinisterio() { }
+    private UserInvitationMinistry() { }
 
-    private UsuarioConviteMinisterio(Guid conviteId, Guid ministerioId)
+    private UserInvitationMinistry(Guid invitationId, Guid ministryId)
     {
-        ConviteId = conviteId;
-        MinisterioId = ministerioId;
+        InvitationId = invitationId;
+        MinistryId = ministryId;
     }
 
-    public Guid ConviteId { get; private set; }
-    public Guid MinisterioId { get; private set; }
+    public Guid InvitationId { get; private set; }
+    public Guid MinistryId { get; private set; }
 
-    public UsuarioConvite Convite { get; private set; } = null!;
-    public Ministerio Ministerio { get; private set; } = null!;
+    public UserInvitation Invitation { get; private set; } = null!;
+    public Ministry Ministry { get; private set; } = null!;
 
-    public static Result<UsuarioConviteMinisterio> Criar(Guid conviteId, Guid ministerioId)
+    public static Result<UserInvitationMinistry> Create(Guid invitationId, Guid ministryId)
     {
-        if (conviteId == Guid.Empty)
+        if (invitationId == Guid.Empty)
         {
-            return UsuarioConviteMinisterioErrors.ConviteObrigatorio;
+            return UserInvitationMinistryErrors.InvitationRequired;
         }
 
-        if (ministerioId == Guid.Empty)
+        if (ministryId == Guid.Empty)
         {
-            return UsuarioConviteMinisterioErrors.MinisterioObrigatorio;
+            return UserInvitationMinistryErrors.MinistryRequired;
         }
 
-        return new UsuarioConviteMinisterio(conviteId, ministerioId);
+        return new UserInvitationMinistry(invitationId, ministryId);
     }
 }

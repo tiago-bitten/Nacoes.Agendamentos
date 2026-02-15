@@ -5,7 +5,7 @@ using Application.Common.Settings;
 
 namespace Infrastructure.Notifications.Emails;
 
-public sealed class EmailSenderFactory(IOptions<NotificationsSettings> notificationsSettings)
+internal sealed class EmailSenderFactory(IOptions<NotificationsSettings> notificationsSettings)
     : IEmailSenderFactory
 {
     private EEmailProvider Provider => notificationsSettings.Value.Email.GetProvider;

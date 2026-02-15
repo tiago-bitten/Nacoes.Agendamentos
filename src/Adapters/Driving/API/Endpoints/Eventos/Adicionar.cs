@@ -10,27 +10,27 @@ namespace API.Endpoints.Eventos;
 internal sealed class Adicionar : IEndpoint
 {
     public sealed record Request(
-        string Descricao,
-        HorarioDto Horario,
-        RecorrenciaEventoDto Recorrencia,
-        int? QuantidadeMaximaReservas);
+        string Description,
+        ScheduleDto Schedule,
+        EventRecurrenceDto Recurrence,
+        int? MaxReservationCount);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/v1/eventos", async (
+        app.MapPost("v1/events", async (
             [FromBody] Request request,
-            [FromServices] ICommandHandler<AdicionarEventoCommand, Guid> handler,
-            CancellationToken cancellationToken) =>
+            [FromServices] ICommandHandler<AddEventCommand, Guid> handler,
+            CancellationToken ct) =>
         {
-            var command = new AdicionarEventoCommand(
-                request.Descricao,
-                request.Horario,
-                request.Recorrencia,
-                request.QuantidadeMaximaReservas);
+            var command = new AddEventCommand(
+                request.Description,
+                request.Schedule,
+                request.Recurrence,
+                request.MaxReservationCount);
 
-            var result = await handler.HandleAsync(command, cancellationToken);
+            var result = await handler.HandleAsync(command, ct);
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Eventos);
+        }).WithTags(Tags.Events);
     }
 }

@@ -2,17 +2,21 @@ using Domain.Shared.Results;
 
 namespace Domain.Eventos.Suspensoes;
 
-public static class EventoSuspensaoErrors
+public static class EventSuspensionErrors
 {
-    public static readonly Error DataFinalNaoPodeSerAnterioraDataHoje =
-        Error.Problem("eventos.suspensoes.dataFinalNaoPodeSerAnterioraDataHoje", "A data final da suspenção não pode ser anterior à data de hoje.");
+    public static readonly Error EndDateCannotBeBeforeToday =
+        Error.Problem(
+            "event_suspension.end_date_cannot_be_before_today",
+            "The suspension end date cannot be before today.");
 
-    public static readonly Error DataFinalNaoPodeSerHoje =
-        Error.Problem("eventos.suspensoes.dataFinalNaoPodeSerHoje", "A data final da suspenção não pode ser hoje.");
+    public static readonly Error EndDateCannotBeToday =
+        Error.Problem("event_suspension.end_date_cannot_be_today", "The suspension end date cannot be today.");
 
-    public static readonly Error NaoEstaDisponivelParaEncerrar =
-        Error.Problem("eventos.suspensoes.naoEstaDisponivelParaEncerrar", "A suspenção não está disponível para encerramento.");
+    public static readonly Error NotAvailableToClose =
+        Error.Problem(
+            "event_suspension.not_available_to_close",
+            "The suspension is not available to close.");
 
-    public static readonly Error NaoEstaDisponivelParaCancelar =
-        Error.Problem("eventos.suspensoes.naoEstaDisponivelParaCancelar", "A suspenção já foi cancelada.");
+    public static readonly Error NotAvailableToCancel =
+        Error.Problem("event_suspension.not_available_to_cancel", "The suspension has already been cancelled.");
 }

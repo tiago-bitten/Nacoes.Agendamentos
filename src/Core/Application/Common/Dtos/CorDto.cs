@@ -2,4 +2,4 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Common.Dtos;
 
-public sealed record CorDto(string Valor, ETipoCor Tipo);
+public sealed record ColorDto(string Value, EColorType Type);

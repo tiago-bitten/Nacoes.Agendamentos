@@ -6,100 +6,98 @@ using Domain.Shared.ValueObjects;
 
 namespace Domain.Voluntarios;
 
-public sealed class Voluntario : RemovableEntity, IAggregateRoot
+public sealed class Volunteer : RemovableEntity, IAggregateRoot
 {
-    private readonly List<VoluntarioMinisterio> _ministerios = [];
+    public const int NameMaxLength = 100;
 
-    private Voluntario() { }
+    private readonly List<VolunteerMinistry> _ministries = [];
 
-    private Voluntario(string nome, EOrigemCadastroVoluntario origemCadastro, Email? email, Celular? celular, CPF? cpf, DataNascimento? dataNascimento)
+    private Volunteer() { }
+
+    private Volunteer(
+        string name,
+        EVolunteerRegistrationOrigin registrationOrigin,
+        Email? email,
+        PhoneNumber? phoneNumber,
+        CPF? cpf,
+        BirthDate? birthDate)
     {
-        Nome = nome;
-        OrigemCadastro = origemCadastro;
+        Name = name;
+        RegistrationOrigin = registrationOrigin;
         Email = email;
-        Celular = celular;
+        PhoneNumber = phoneNumber;
         Cpf = cpf;
-        DataNascimento = dataNascimento;
+        BirthDate = birthDate;
     }
 
-    public string Nome { get; private set; } = null!;
+    public string Name { get; private set; } = null!;
     public Email? Email { get; private set; }
-    public Celular? Celular { get; private set; }
+    public PhoneNumber? PhoneNumber { get; private set; }
     public CPF? Cpf { get; private set; }
-    public DataNascimento? DataNascimento { get; private set; }
-    public EOrigemCadastroVoluntario OrigemCadastro { get; private set; }
+    public BirthDate? BirthDate { get; private set; }
+    public EVolunteerRegistrationOrigin RegistrationOrigin { get; private set; }
 
-    public IReadOnlyCollection<VoluntarioMinisterio> Ministerios => _ministerios.AsReadOnly();
+    public IReadOnlyCollection<VolunteerMinistry> Ministries => _ministries.AsReadOnly();
 
     public string EmailAddress => Email?.Address ?? string.Empty;
-    public int Idade => DataNascimento?.Idade ?? 0;
-    public bool MenorDeIdade => DataNascimento?.MenorDeIdade ?? false;
+    public int Age => BirthDate?.Age ?? 0;
+    public bool IsMinor => BirthDate?.IsMinor ?? false;
 
-    public static Result<Voluntario> Criar(string nome, Email? email, Celular? celular, CPF? cpf,
-        DataNascimento? dataNascimento, EOrigemCadastroVoluntario origemCadastro)
+    public static Result<Volunteer> Create(
+        string name,
+        Email? email,
+        PhoneNumber? phoneNumber,
+        CPF? cpf,
+        BirthDate? birthDate,
+        EVolunteerRegistrationOrigin registrationOrigin)
     {
-        if (string.IsNullOrWhiteSpace(nome))
+        name = name.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
         {
-            return VoluntarioErrors.NomeObrigatorio;
+            return VolunteerErrors.NameRequired;
         }
 
-        if (origemCadastro is not EOrigemCadastroVoluntario.Sistema && (email is null || cpf is null || dataNascimento is null))
+        if (registrationOrigin is not EVolunteerRegistrationOrigin.System
+            && (email is null || cpf is null || birthDate is null))
         {
-            var dadosObrigatoriosAusentes = new List<string>();
-
-            if (email is null)
-            {
-                dadosObrigatoriosAusentes.Add("e-mail");
-            }
-
-            if (cpf is null)
-            {
-                dadosObrigatoriosAusentes.Add("CPF");
-            }
-
-            if (dataNascimento is null)
-            {
-                dadosObrigatoriosAusentes.Add("data de nascimento");
-            }
-
-            var dadosObrigatoriosFormatado = dadosObrigatoriosAusentes.ToSingleMessage();
-            return VoluntarioErrors.DadosPessoaisObrigatorio(dadosObrigatoriosFormatado);
+            return VolunteerErrors.PersonalDataRequired;
         }
 
-        var voluntario = new Voluntario(nome, origemCadastro, email, celular, cpf, dataNascimento);
+        var volunteer = new Volunteer(name, registrationOrigin, email, phoneNumber, cpf, birthDate);
 
-        voluntario.Raise(new VoluntarioAdicionadoDomainEvent(voluntario.Id));
+        volunteer.Raise(new VolunteerAddedDomainEvent(volunteer.Id));
 
-        return voluntario;
+        return volunteer;
     }
 
-    public Result VincularMinisterio(Guid ministerioId)
+    public Result LinkMinistry(Guid ministryId)
     {
-        var existeVinculo = _ministerios.SingleOrDefault(x => x.MinisterioId == ministerioId);
-        if (existeVinculo is null)
+        var existingLink = _ministries.SingleOrDefault(x => x.MinistryId == ministryId);
+        if (existingLink is null)
         {
-            _ministerios.Add(new VoluntarioMinisterio(ministerioId));
+            _ministries.Add(new VolunteerMinistry(ministryId));
             return Result.Success();
         }
 
-        return existeVinculo.Restore();
+        return existingLink.Restore();
     }
 
-    public Result DesvincularMinisterio(Guid ministerioId)
+    public Result UnlinkMinistry(Guid ministryId)
     {
-        var existeVinculo = _ministerios.SingleOrDefault(x => x.MinisterioId == ministerioId);
-        if (existeVinculo is null)
+        var existingLink = _ministries.SingleOrDefault(x => x.MinistryId == ministryId);
+        if (existingLink is null)
         {
-            return VoluntarioMinisterioErrors.VoluntarioNaoEstaVinculadoAoMinisterio;
+            return VolunteerMinistryErrors.VolunteerNotLinkedToMinistry;
         }
 
-        return existeVinculo.Remove();
+        return existingLink.Remove();
     }
 }
 
-public enum EOrigemCadastroVoluntario
+public enum EVolunteerRegistrationOrigin
 {
-    Sistema = 0,
-    Site = 1,
+    System = 0,
+    Website = 1,
     App = 2
 }

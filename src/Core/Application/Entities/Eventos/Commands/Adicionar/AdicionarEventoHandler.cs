@@ -7,29 +7,31 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Entities.Eventos.Commands.Adicionar;
 
-internal sealed class AdicionarEventoHandler(INacoesDbContext context)
-    : ICommandHandler<AdicionarEventoCommand, Guid>
+internal sealed class AddEventHandler(INacoesDbContext context)
+    : ICommandHandler<AddEventCommand, Guid>
 {
-    public async Task<Result<Guid>> HandleAsync(AdicionarEventoCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> HandleAsync(
+        AddEventCommand command,
+        CancellationToken ct)
     {
-        var eventoResult = Evento.Criar(
-            command.Descricao,
-            new Horario(command.Horario.DataInicial, command.Horario.DataFinal),
-            new RecorrenciaEvento(command.Recorrencia.Tipo, command.Recorrencia.Intervalo, command.Recorrencia.DataFinal),
-            command.QuantidadeMaximaReservas);
+        var eventResult = Event.Create(
+            command.Description,
+            new Schedule(command.Schedule.StartDate, command.Schedule.EndDate),
+            new EventRecurrence(command.Recurrence.Type, command.Recurrence.Interval, command.Recurrence.EndDate),
+            command.MaxReservationCount);
 
-        if (eventoResult.IsFailure)
+        if (eventResult.IsFailure)
         {
-            return eventoResult.Error;
+            return eventResult.Error;
         }
 
-        var evento = eventoResult.Value;
+        var @event = eventResult.Value;
 
-        await context.Eventos.AddAsync(evento, cancellation);
+        await context.Events.AddAsync(@event, ct);
 
-        evento.Raise(new EventoMasterAdicionadoDomainEvent(evento.Id));
-        await context.SaveChangesAsync(cancellation);
+        @event.Raise(new MasterEventAddedDomainEvent(@event.Id));
+        await context.SaveChangesAsync(ct);
 
-        return evento.Id;
+        return @event.Id;
     }
 }

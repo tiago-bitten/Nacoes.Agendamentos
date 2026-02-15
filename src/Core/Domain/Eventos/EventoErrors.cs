@@ -2,32 +2,40 @@ using Domain.Shared.Results;
 
 namespace Domain.Eventos;
 
-public static class EventoErrors
+public static class EventErrors
 {
-    public static readonly Error DescricaoObrigatoria =
-        Error.Problem("Evento.DescricaoObrigatoria", "A descrição do evento deve ser informada.");
+    public static readonly Error DescriptionRequired =
+        Error.Problem("event.description_required", "The event description is required.");
 
-    public static readonly Error AgendamentoExistente =
-        Error.Problem("Evento.AgendamentoExistente", "Já existe um agendamento para esse voluntário no evento.");
+    public static readonly Error ReservationAlreadyExists =
+        Error.Problem("event.reservation_already_exists", "A reservation already exists for this volunteer in this event.");
 
-    public static readonly Error NaoEstaDisponivelParaCancelarAgendamento =
-        Error.Problem("Evento.EventoNaoEstaDisponivelParaCancelarAgendamento", "O evento não está disponível para cancelar o agendamento.");
+    public static readonly Error NotAvailableToCancelReservation =
+        Error.Problem(
+            "event.not_available_to_cancel_reservation",
+            "The event is not available to cancel the reservation.");
 
-    public static readonly Error NaoEstaDisponivelParaAbrir =
-        Error.Problem("Evento.EventoNaoEstaDisponivelParaAbrir", "O evento não está disponível para abrir.");
+    public static readonly Error NotAvailableToOpen =
+        Error.Problem("event.not_available_to_open", "The event is not available to open.");
 
-    public static readonly Error NaoEstaDisponivelParaSuspender =
-        Error.Problem("Evento.EventoNaoEstaDisponivelParaSuspender", "O evento não está disponível para suspender.");
+    public static readonly Error NotAvailableToSuspend =
+        Error.Problem("event.not_available_to_suspend", "The event is not available to suspend.");
 
-    public static readonly Error NaoEstaDisponivelParaCancelar =
-        Error.Problem("Evento.EventoNaoEstaDisponivelParaCancelar", "O evento não está disponível para cancelar.");
+    public static readonly Error NotAvailableToCancel =
+        Error.Problem("event.not_available_to_cancel", "The event is not available to cancel.");
 
-    public static readonly Error NaoEstaDisponivelParaAtualizarHorario =
-        Error.Problem("Evento.EventoNaoEstaDisponivelParaAtualizarHorario", "O evento não está disponível para atualizar o horário.");
+    public static readonly Error NotAvailableToUpdateSchedule =
+        Error.Problem(
+            "event.not_available_to_update_schedule",
+            "The event is not available to update the schedule.");
 
-    public static readonly Error NaoEstaDisponivelParaAtualizarRecorrencia =
-        Error.Problem("Evento.EventoNaoEstaDisponivelParaAtualizarRecorrencia", "O evento não está disponível para atualizar a recorrência.");
+    public static readonly Error NotAvailableToUpdateRecurrence =
+        Error.Problem(
+            "event.not_available_to_update_recurrence",
+            "The event is not available to update the recurrence.");
 
-    public static readonly Error QuantidadeMaximaReservasInvalida =
-        Error.Problem("Evento.QuantidadeMaximaReservasInvalida", "A quantidade máxima de reservas deve ser maior que zero.");
+    public static readonly Error InvalidMaxReservationCount =
+        Error.Problem(
+            "event.invalid_max_reservation_count",
+            "The maximum reservation count must be greater than zero.");
 }

@@ -10,27 +10,30 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Authentication.Commands.LoginExterno;
 
-public sealed class LoginExternoHandler(INacoesDbContext context,
-                                        IAmbienteContext ambienteContext)
-    : ICommandHandler<LoginExternoCommand>
+internal sealed class ExternalLoginHandler(
+    INacoesDbContext context,
+    IEnvironmentContext environmentContext)
+    : ICommandHandler<ExternalLoginCommand>
 {
-    public async Task<Result> HandleAsync(LoginExternoCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(
+        ExternalLoginCommand command,
+        CancellationToken ct)
     {
-        var voluntario = await context.Voluntarios
-            .ApplySpec(new VoluntarioParaLoginExternoSpec(
-                new DataNascimento(command.DataNascimento),
+        var volunteer = await context.Volunteers
+            .ApplySpec(new VolunteerForExternalLoginSpec(
+                new BirthDate(command.BirthDate),
                 new CPF(command.Cpf)))
             .Select(x => new
             {
                 x.Id,
                 x.EmailAddress
-            }).SingleOrDefaultAsync(cancellationToken);
-        if (voluntario is null)
+            }).SingleOrDefaultAsync(ct);
+        if (volunteer is null)
         {
-            return VoluntarioErrors.DeveCriarConta;
+            return VolunteerErrors.MustCreateAccount;
         }
 
-        ambienteContext.StartExternalSession(voluntario.Id, voluntario.EmailAddress);
+        environmentContext.StartExternalSession(volunteer.Id, volunteer.EmailAddress);
 
         return Result.Success();
     }

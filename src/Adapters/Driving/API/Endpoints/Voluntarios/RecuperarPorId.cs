@@ -13,61 +13,61 @@ internal sealed class RecuperarPorId : IEndpoint
     public sealed record Response
     {
         public Guid Id { get; init; }
-        public string Nome { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
         public string? Email { get; init; }
-        public string? Celular { get; init; }
+        public string? PhoneNumber { get; init; }
         public string? Cpf { get; init; }
-        public DateOnly? DataNascimento { get; init; }
-        public EOrigemCadastroVoluntario OrigemCadastro { get; init; }
-        public List<MinisterioItem> Ministerios { get; init; } = [];
+        public DateOnly? BirthDate { get; init; }
+        public EVolunteerRegistrationOrigin RegistrationOrigin { get; init; }
+        public List<MinistryItem> Ministries { get; init; } = [];
 
-        public sealed record MinisterioItem
+        public sealed record MinistryItem
         {
             public Guid Id { get; init; }
-            public string Nome { get; init; } = string.Empty;
-            public string Cor { get; init; } = string.Empty;
+            public string Name { get; init; } = string.Empty;
+            public string Color { get; init; } = string.Empty;
         }
     }
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v1/voluntarios/{id:guid}", async (
+        app.MapGet("v1/volunteers/{id:guid}", async (
             [FromServices] INacoesDbContext context,
             [FromRoute] Guid id,
-            CancellationToken cancellationToken) =>
+            CancellationToken ct) =>
         {
             Result<Response> result;
 
             try
             {
-                var voluntario = await context.Voluntarios
+                var volunteer = await context.Volunteers
                     .AsNoTracking()
                     .Select(x => new Response
                     {
                         Id = x.Id,
-                        Nome = x.Nome,
+                        Name = x.Name,
                         Email = x.EmailAddress,
-                        Celular = x.Celular !.ToString(),
-                        Cpf = x.Cpf != null ? x.Cpf.Numero : null,
-                        DataNascimento = x.DataNascimento != null ? x.DataNascimento.Valor : null,
-                        OrigemCadastro = x.OrigemCadastro,
-                        Ministerios = x.Ministerios.Select(m => new Response.MinisterioItem
+                        PhoneNumber = x.PhoneNumber !.ToString(),
+                        Cpf = x.Cpf != null ? x.Cpf.Number : null,
+                        BirthDate = x.BirthDate != null ? x.BirthDate.Value : null,
+                        RegistrationOrigin = x.RegistrationOrigin,
+                        Ministries = x.Ministries.Select(m => new Response.MinistryItem
                         {
                             Id = m.Id,
-                            Nome = m.Ministerio.Nome,
-                            Cor = m.Ministerio.Cor.ToCssString()
+                            Name = m.Ministry.Name,
+                            Color = m.Ministry.Color.ToCssString()
                         }).ToList()
-                    }).SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+                    }).SingleOrDefaultAsync(x => x.Id == id, ct);
 
-                result = Result<Response>.Success(voluntario);
+                result = Result<Response>.Success(volunteer);
             }
             catch (Exception ex)
             {
-                var error = Error.Problem("RecuperarVoluntarioPorId", ex.Message);
+                var error = Error.Problem("GetVolunteerById", ex.Message);
                 result = Result<Response>.Failure(error);
             }
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Voluntarios);
+        }).WithTags(Tags.Volunteers);
     }
 }

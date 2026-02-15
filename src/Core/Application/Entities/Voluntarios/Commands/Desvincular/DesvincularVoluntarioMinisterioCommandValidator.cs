@@ -2,10 +2,10 @@ using FluentValidation;
 
 namespace Application.Entities.Voluntarios.Commands.Desvincular;
 
-public sealed class DesvincularVoluntarioMinisterioCommandValidator : AbstractValidator<DesvincularVoluntarioMinisterioCommand>
+internal sealed class UnlinkVolunteerMinistryCommandValidator : AbstractValidator<UnlinkVolunteerMinistryCommand>
 {
-    public DesvincularVoluntarioMinisterioCommandValidator()
+    public UnlinkVolunteerMinistryCommandValidator()
     {
-        RuleFor(x => x.VoluntarioMinisterioId).NotEmpty().NotNull();
+        RuleFor(x => x.VolunteerMinistryId).NotEmpty().NotNull();
     }
 }

@@ -12,53 +12,53 @@ internal sealed class RecuperarPorId : IEndpoint
     public sealed record Response
     {
         public Guid Id { get; init; }
-        public string Nome { get; init; } = string.Empty;
-        public string? Descricao { get; init; } = string.Empty;
-        public string Cor { get; init; } = string.Empty;
-        public List<AtividadeItem> Atividades { get; init; } = [];
+        public string Name { get; init; } = string.Empty;
+        public string? Description { get; init; } = string.Empty;
+        public string Color { get; init; } = string.Empty;
+        public List<ActivityItem> Activities { get; init; } = [];
 
-        public sealed record AtividadeItem
+        public sealed record ActivityItem
         {
             public Guid Id { get; init; }
-            public string Nome { get; init; } = string.Empty;
+            public string Name { get; init; } = string.Empty;
         }
     }
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v1/ministerios/{id:guid}", async (
+        app.MapGet("v1/ministries/{id:guid}", async (
             [FromServices] INacoesDbContext context,
             [FromRoute] Guid id,
-            CancellationToken cancellationToken) =>
+            CancellationToken ct) =>
         {
             Result<Response> result;
 
             try
             {
-                var ministerio = await context.Ministerios
+                var ministry = await context.Ministries
                     .AsNoTracking()
                     .Select(x => new Response
                     {
                         Id = x.Id,
-                        Nome = x.Nome,
-                        Descricao = x.Descricao,
-                        Cor = x.Cor.ToString(),
-                        Atividades = x.Atividades.Select(a => new Response.AtividadeItem
+                        Name = x.Name,
+                        Description = x.Description,
+                        Color = x.Color.ToString(),
+                        Activities = x.Activities.Select(a => new Response.ActivityItem
                         {
                             Id = a.Id,
-                            Nome = a.Nome
+                            Name = a.Name
                         }).ToList()
-                    }).SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+                    }).SingleOrDefaultAsync(x => x.Id == id, ct);
 
-                result = Result<Response>.Success(ministerio);
+                result = Result<Response>.Success(ministry);
             }
             catch (Exception ex)
             {
-                var error = Error.Problem("RecuperarMinisterioPorId", ex.Message);
+                var error = Error.Problem("GetMinistryById", ex.Message);
                 result = Result<Response>.Failure(error);
             }
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Ministerios);
+        }).WithTags(Tags.Ministries);
     }
 }

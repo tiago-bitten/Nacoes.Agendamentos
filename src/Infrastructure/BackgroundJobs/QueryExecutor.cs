@@ -4,9 +4,12 @@ using Domain.Shared.Results;
 
 namespace Infrastructure.BackgroundJobs;
 
-public class QueryExecutor(IServiceProvider serviceProvider) : IQueryExecutor
+internal sealed class QueryExecutor(IServiceProvider serviceProvider) : IQueryExecutor
 {
-    public async Task<Result<TResponse>> ExecuteQueryAsync<TQuery, TResponse>(TQuery command) where TQuery : IQuery<TResponse>
+    public async Task<Result<TResponse>> ExecuteQueryAsync<TQuery, TResponse>(
+        TQuery command,
+        CancellationToken ct = default)
+        where TQuery : IQuery<TResponse>
     {
         var handlerType = typeof(ICommandHandler<,>).MakeGenericType(typeof(TQuery), typeof(TResponse));
 
@@ -15,6 +18,6 @@ public class QueryExecutor(IServiceProvider serviceProvider) : IQueryExecutor
             throw new InvalidOperationException($"No handler found for command {typeof(TQuery).Name} with response {typeof(TResponse).Name}.");
         }
 
-        return await handler.Handle(command, CancellationToken.None);
+        return await handler.Handle(command, ct);
     }
 }

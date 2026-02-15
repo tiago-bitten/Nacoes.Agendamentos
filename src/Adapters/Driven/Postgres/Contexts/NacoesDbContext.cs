@@ -13,21 +13,21 @@ using Postgres.Extensions;
 
 namespace Postgres.Contexts;
 
-internal class NacoesDbContext(
+internal sealed class NacoesDbContext(
     DbContextOptions<NacoesDbContext> options,
     IDomainEventsDispatcher domainEventsDispatcher)
     : DbContext(options), INacoesDbContext
 {
-    public DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<UsuarioConvite> Convites { get; set; }
-    public DbSet<Evento> Eventos { get; set; }
-    public DbSet<Reserva> Agendamentos { get; set; }
-    public DbSet<Voluntario> Voluntarios { get; set; }
-    public DbSet<VoluntarioMinisterio> VoluntariosMinisterios { get; set; }
-    public DbSet<Ministerio> Ministerios { get; set; }
-    public DbSet<Atividade> Atividades { get; set; }
-    public DbSet<Historico> Historicos { get; set; }
-    public DbSet<UsuarioConviteMinisterio> ConvitesMinisterios { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<UserInvitation> Invitations { get; set; }
+    public DbSet<Event> Events { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<Volunteer> Volunteers { get; set; }
+    public DbSet<VolunteerMinistry> VolunteerMinistries { get; set; }
+    public DbSet<Ministry> Ministries { get; set; }
+    public DbSet<Activity> Activities { get; set; }
+    public DbSet<AuditLog> AuditLogs { get; set; }
+    public DbSet<UserInvitationMinistry> InvitationMinistries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,7 +36,7 @@ internal class NacoesDbContext(
         base.OnModelCreating(modelBuilder);
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken ct = default)
     {
         var entityEntries = ChangeTracker
             .Entries()
@@ -44,30 +44,16 @@ internal class NacoesDbContext(
 
         foreach (var entity in entityEntries)
         {
-            switch (entity.State)
+            if (entity.State is EntityState.Modified)
             {
-                case EntityState.Added:
-                    SaveAdded(entity);
-                    break;
-
-                case EntityState.Modified:
-                    SaveModified(entity);
-                    break;
+                SaveModified(entity);
             }
         }
-        var result = await base.SaveChangesAsync(cancellationToken);
+        var result = await base.SaveChangesAsync(ct);
 
-        await PublishDomainEventsAsync(cancellationToken);
+        await PublishDomainEventsAsync(ct);
 
         return result;
-    }
-
-    private static void SaveAdded(EntityEntry entityEntry)
-    {
-        var newEntity = entityEntry.Entity;
-        var type = newEntity.GetType();
-
-        Console.WriteLine(type.Name + " criado.");
     }
 
     private const string CreatedAtPropertyName = "CreatedAt";
@@ -76,7 +62,7 @@ internal class NacoesDbContext(
         entityEntry.Property(CreatedAtPropertyName).IsModified = false;
     }
 
-    public Task PublishDomainEventsAsync(CancellationToken cancellationToken = default)
+    public Task PublishDomainEventsAsync(CancellationToken ct = default)
     {
         var domainEvents = ChangeTracker
             .Entries<IEntity>()
@@ -88,6 +74,6 @@ internal class NacoesDbContext(
                 return domainEvents;
             }).ToList();
 
-        return domainEventsDispatcher.DispatchAsync(domainEvents, cancellationToken);
+        return domainEventsDispatcher.DispatchAsync(domainEvents, ct);
     }
 }

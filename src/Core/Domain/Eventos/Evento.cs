@@ -7,154 +7,167 @@ using Domain.Shared.ValueObjects;
 
 namespace Domain.Eventos;
 
-public sealed class Evento : RemovableEntity, IAggregateRoot
+public sealed class Event : RemovableEntity, IAggregateRoot
 {
-    private readonly List<Reserva> _agendamentos = [];
-    private readonly List<EventoSuspensao> _suspensoes = [];
+    public const int DescriptionMaxLength = 200;
 
-    private Evento() { }
+    private readonly List<Reservation> _reservations = [];
+    private readonly List<EventSuspension> _suspensions = [];
 
-    private Evento(string descricao, Horario horario, EStatusEvento status, RecorrenciaEvento recorrencia, int? quantidadeMaximaReservas)
+    private Event() { }
+
+    private Event(
+        string description,
+        Schedule schedule,
+        EEventStatus status,
+        EventRecurrence recurrence,
+        int? maxReservationCount)
     {
-        Descricao = descricao;
-        Horario = horario;
+        Description = description;
+        Schedule = schedule;
         Status = status;
-        Recorrencia = recorrencia;
-        QuantidadeMaximaReservas = quantidadeMaximaReservas;
+        Recurrence = recurrence;
+        MaxReservationCount = maxReservationCount;
     }
 
-    public string Descricao { get; private set; } = string.Empty;
-    public Horario Horario { get; private set; } = null!;
-    public int QuantidadeReservas { get; private set; }
-    public int? QuantidadeMaximaReservas { get; private set; }
-    public EStatusEvento Status { get; private set; }
-    public RecorrenciaEvento Recorrencia { get; private set; } = null!;
+    public string Description { get; private set; } = string.Empty;
+    public Schedule Schedule { get; private set; } = null!;
+    public int ReservationCount { get; private set; }
+    public int? MaxReservationCount { get; private set; }
+    public EEventStatus Status { get; private set; }
+    public EventRecurrence Recurrence { get; private set; } = null!;
 
-    public IReadOnlyCollection<Reserva> Agendamentos => _agendamentos.AsReadOnly();
-    public IReadOnlyCollection<EventoSuspensao> Suspensoes => _suspensoes.AsReadOnly();
+    public IReadOnlyCollection<Reservation> Reservations => _reservations.AsReadOnly();
+    public IReadOnlyCollection<EventSuspension> Suspensions => _suspensions.AsReadOnly();
 
-    public static Result<Evento> Criar(string descricao, Horario horario, RecorrenciaEvento recorrencia, int? quantidadeMaximaReservas)
+    public static Result<Event> Create(
+        string description,
+        Schedule schedule,
+        EventRecurrence recurrence,
+        int? maxReservationCount)
     {
-        if (string.IsNullOrWhiteSpace(descricao))
+        description = description.Trim();
+
+        if (string.IsNullOrWhiteSpace(description))
         {
-            return EventoErrors.DescricaoObrigatoria;
+            return EventErrors.DescriptionRequired;
         }
 
-        if (quantidadeMaximaReservas is < 1)
+        if (maxReservationCount is < 1)
         {
-            return EventoErrors.QuantidadeMaximaReservasInvalida;
+            return EventErrors.InvalidMaxReservationCount;
         }
 
-        var evento = new Evento(descricao, horario, EStatusEvento.Aberto, recorrencia, quantidadeMaximaReservas);
+        var @event = new Event(description, schedule, EEventStatus.Open, recurrence, maxReservationCount);
 
-        evento.Raise(new EventoAdicionadoDomainEvent(evento.Id));
+        @event.Raise(new EventAddedDomainEvent(@event.Id));
 
-        return evento;
+        return @event;
     }
 
-    public Result AtualizarHorario(Horario horario)
+    public Result UpdateSchedule(Schedule schedule)
     {
-        if (Status is not (EStatusEvento.Aberto or EStatusEvento.Lotado or EStatusEvento.Suspenso))
+        if (Status is not (EEventStatus.Open or EEventStatus.Full or EEventStatus.Suspended))
         {
-            return EventoErrors.NaoEstaDisponivelParaAtualizarHorario;
+            return EventErrors.NotAvailableToUpdateSchedule;
         }
 
-        Horario = horario;
+        Schedule = schedule;
 
         return Result.Success();
     }
 
-    public Result AtualizarRecorrencia(RecorrenciaEvento recorrencia)
+    public Result UpdateRecurrence(EventRecurrence recurrence)
     {
-        if (Status is not (EStatusEvento.Aberto or EStatusEvento.Lotado or EStatusEvento.Suspenso))
+        if (Status is not (EEventStatus.Open or EEventStatus.Full or EEventStatus.Suspended))
         {
-            return EventoErrors.NaoEstaDisponivelParaAtualizarRecorrencia;
+            return EventErrors.NotAvailableToUpdateRecurrence;
         }
 
-        Recorrencia = recorrencia;
+        Recurrence = recurrence;
 
         return Result.Success();
     }
 
-    public Result Cancelar()
+    public Result Cancel()
     {
-        if (Status is not (EStatusEvento.Aberto or EStatusEvento.Lotado or EStatusEvento.Suspenso))
+        if (Status is not (EEventStatus.Open or EEventStatus.Full or EEventStatus.Suspended))
         {
-            return EventoErrors.NaoEstaDisponivelParaCancelar;
+            return EventErrors.NotAvailableToCancel;
         }
 
-        var agendamentosParaCancelar = _agendamentos
-            .Where(x => x.Status is EStatusReserva.Confirmado or EStatusReserva.AguardandoConfirmacao);
+        var reservationsToCancel = _reservations
+            .Where(x => x.Status is EReservationStatus.Confirmed or EReservationStatus.AwaitingConfirmation);
 
-        foreach (var agendamento in agendamentosParaCancelar)
+        foreach (var reservation in reservationsToCancel)
         {
-            var agendamentoCanceladoResult = agendamento.Cancelar();
-            if (agendamentoCanceladoResult.IsFailure)
+            var cancelResult = reservation.Cancel();
+            if (cancelResult.IsFailure)
             {
-                return agendamentoCanceladoResult.Error;
+                return cancelResult.Error;
             }
         }
 
-        Status = EStatusEvento.Cancelado;
+        Status = EEventStatus.Cancelled;
 
         return Result.Success();
     }
 
-    public Result Suspender(DateOnly? dataEncerramento)
+    public Result Suspend(DateOnly? endDate)
     {
-        if (Status is not (EStatusEvento.Aberto or EStatusEvento.Lotado))
+        if (Status is not (EEventStatus.Open or EEventStatus.Full))
         {
-            return EventoErrors.NaoEstaDisponivelParaSuspender;
+            return EventErrors.NotAvailableToSuspend;
         }
 
-        var suspencaoResult = EventoSuspensao.Criar(dataEncerramento);
-        if (suspencaoResult.IsFailure)
+        var suspensionResult = EventSuspension.Create(endDate);
+        if (suspensionResult.IsFailure)
         {
-            return suspencaoResult.Error;
+            return suspensionResult.Error;
         }
 
-        var suspencao = suspencaoResult.Value;
-        _suspensoes.Add(suspencao);
+        var suspension = suspensionResult.Value;
+        _suspensions.Add(suspension);
 
         return Result.Success();
     }
 
-    public Result<Reserva> CriarAgendamento(Guid voluntarioMinisterioId, Guid atividadeId, EOrigemReserva origem)
+    public Result<Reservation> CreateReservation(Guid volunteerMinistryId, Guid activityId, EReservationOrigin origin)
     {
-        var agendamentoResult = Reserva.Criar(voluntarioMinisterioId, atividadeId, origem);
-        if (agendamentoResult.IsFailure)
+        var reservationResult = Reservation.Create(volunteerMinistryId, activityId, origin);
+        if (reservationResult.IsFailure)
         {
-            return agendamentoResult.Error;
+            return reservationResult.Error;
         }
 
-        var agendamento = agendamentoResult.Value;
-        _agendamentos.Add(agendamento);
+        var reservation = reservationResult.Value;
+        _reservations.Add(reservation);
 
-        return agendamento;
+        return reservation;
     }
 
-    public Result CancelarAgendamento(Guid agendamentoId)
+    public Result CancelReservation(Guid reservationId)
     {
-        if (Status is not (EStatusEvento.Aberto or EStatusEvento.Lotado or EStatusEvento.Suspenso))
+        if (Status is not (EEventStatus.Open or EEventStatus.Full or EEventStatus.Suspended))
         {
-            return EventoErrors.NaoEstaDisponivelParaCancelarAgendamento;
+            return EventErrors.NotAvailableToCancelReservation;
         }
 
-        var agendamento = _agendamentos.FirstOrDefault(a => a.Id == agendamentoId);
-        if (agendamento is null)
+        var reservation = _reservations.FirstOrDefault(a => a.Id == reservationId);
+        if (reservation is null)
         {
-            return ReservaErrors.NaoEncontrado;
+            return ReservationErrors.NotFound;
         }
 
-        return agendamento.Cancelar();
+        return reservation.Cancel();
     }
 }
 
-public enum EStatusEvento
+public enum EEventStatus
 {
-    Aberto = 0,
-    Cancelado = 1,
-    Encerrado = 2,
-    Lotado = 3,
-    Suspenso = 4
+    Open = 0,
+    Cancelled = 1,
+    Closed = 2,
+    Full = 3,
+    Suspended = 4
 }

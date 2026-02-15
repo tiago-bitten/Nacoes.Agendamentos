@@ -8,21 +8,21 @@ namespace API.Endpoints.Voluntarios.Ministerios;
 
 internal sealed class Vincular : IEndpoint
 {
-    public sealed record Request(Guid MinisterioId);
+    public sealed record Request(Guid MinistryId);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("api/v1/voluntarios/{voluntarioId:guid}/ministerios", async (
-            [FromRoute] Guid voluntarioId,
+        app.MapPut("v1/volunteers/{volunteerId:guid}/ministries", async (
+            [FromRoute] Guid volunteerId,
             [FromBody] Request request,
-            [FromServices] ICommandHandler<VincularVoluntarioMinisterioCommand> handler,
-            CancellationToken cancellationToken) =>
+            [FromServices] ICommandHandler<LinkVolunteerMinistryCommand> handler,
+            CancellationToken ct) =>
         {
-            var command = new VincularVoluntarioMinisterioCommand(voluntarioId, request.MinisterioId);
+            var command = new LinkVolunteerMinistryCommand(volunteerId, request.MinistryId);
 
-            var result = await handler.HandleAsync(command, cancellationToken);
+            var result = await handler.HandleAsync(command, ct);
 
             return result.Match(Results.NoContent, CustomResults.Problem);
-        }).WithTags(Tags.Voluntarios);
+        }).WithTags(Tags.Volunteers);
     }
 }

@@ -1,3 +1,3 @@
 namespace Application.Entities.Usuarios.Commands.AdicionarConvite;
 
-public sealed record UsuarioConviteResponse(string Link);
+public sealed record UserInvitationResponse(string Link);

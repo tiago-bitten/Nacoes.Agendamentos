@@ -2,9 +2,9 @@ using Application.Common.Enums;
 
 namespace Application.Common.Settings;
 
-public sealed record AmbienteSettings
+public sealed record EnvironmentSettings
 {
-    public required string Tipo { get; init; }
+    public required string Type { get; init; }
 
-    public EEnvironment GetTipoEnum() => Enum.Parse<EEnvironment>(Tipo);
+    public EEnvironment GetTypeEnum() => Enum.Parse<EEnvironment>(Type);
 }

@@ -9,31 +9,31 @@ using Domain.Usuarios.Specs;
 
 namespace Application.Authentication.Strategies;
 
-internal class LocalAuthStrategy(INacoesDbContext context) : IAuthStrategy
+internal sealed class LocalAuthStrategy(INacoesDbContext context) : IAuthStrategy
 {
-    public async Task<Result<Usuario>> AutenticarAsync(LoginCommand command)
+    public async Task<Result<User>> AuthenticateAsync(LoginCommand command, CancellationToken ct)
     {
-        var usuario = await context.Usuarios
-            .ApplySpec(new UsuarioComEmailAddressSpec(command.Email!))
+        var user = await context.Users
+            .ApplySpec(new UserWithEmailAddressSpec(command.Email!))
             .Where(x => x.AuthType == EAuthType.Local)
             .AsNoTracking()
-            .SingleOrDefaultAsync();
-        if (usuario is null)
+            .SingleOrDefaultAsync(ct);
+        if (user is null)
         {
-            return UsuarioErrors.NaoEncontrado;
+            return UserErrors.NotFound;
         }
 
-        if (usuario.AuthType is not EAuthType.Local)
+        if (user.AuthType is not EAuthType.Local)
         {
-            return UsuarioErrors.AutenticacaoInvalida;
+            return UserErrors.InvalidAuthentication;
         }
 
-        var senhaValida = PasswordHelper.Verify(command.Senha!, usuario.Senha!);
-        if (!senhaValida)
+        var passwordValid = PasswordHelper.Verify(command.Password!, user.Password!);
+        if (!passwordValid)
         {
-            return UsuarioErrors.SenhaInvalida;
+            return UserErrors.InvalidPassword;
         }
 
-        return usuario;
+        return user;
     }
 }

@@ -5,7 +5,7 @@ namespace Infrastructure.Notifications.Emails;
 
 internal sealed class SendGridEmailSender : IEmailSender
 {
-    public Task SendAsync(Email to, string subject, string body)
+    public Task SendAsync(Email to, string subject, string body, CancellationToken ct = default)
     {
         throw new NotImplementedException();
     }

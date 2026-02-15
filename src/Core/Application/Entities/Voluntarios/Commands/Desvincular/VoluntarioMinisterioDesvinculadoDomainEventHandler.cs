@@ -4,11 +4,15 @@ using Domain.Voluntarios.DomainEvents;
 
 namespace Application.Entities.Voluntarios.Commands.Desvincular;
 
-internal sealed class VoluntarioMinisterioDesvinculadoDomainEventHandler(IHistoricoRegister historicoRegister)
-    : IDomainEventHandler<VoluntarioMinisterioDesvinculadoDomainEvent>
+internal sealed class VolunteerMinistryUnlinkedDomainEventHandler(IAuditLogRegister auditLogRegister)
+    : IDomainEventHandler<VolunteerMinistryUnlinkedDomainEvent>
 {
-    public Task Handle(VoluntarioMinisterioDesvinculadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public Task Handle(
+        VolunteerMinistryUnlinkedDomainEvent domainEvent,
+        CancellationToken ct)
     {
-        return historicoRegister.AuditAsync(domainEvent.VoluntarioId, acao: $"Voluntário desvinculado ao ministério {domainEvent.NomeMinisterio}.");
+        return auditLogRegister.AuditAsync(
+            domainEvent.VolunteerId,
+            action: $"Volunteer unlinked from ministry {domainEvent.MinistryName}.");
     }
 }

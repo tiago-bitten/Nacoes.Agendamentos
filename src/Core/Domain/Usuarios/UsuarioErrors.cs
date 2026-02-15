@@ -2,35 +2,43 @@ using Domain.Shared.Results;
 
 namespace Domain.Usuarios;
 
-public static class UsuarioErrors
+public static class UserErrors
 {
-    public static readonly Error SenhaCurta =
-        Error.Problem("Usuarios.SenhaCurta", "A senha deve ter no mínimo 4 caracteres.");
+    public static readonly Error PasswordTooShort =
+        Error.Problem("user.password_too_short", "Password must be at least 4 characters.");
 
-    public static readonly Error NomeObrigatorio =
-        Error.Problem("Usuarios.NomeObrigatorio", "O nome do usuário é obrigatório.");
+    public static readonly Error NameRequired =
+        Error.Problem("user.name_required", "The user name is required.");
 
-    public static readonly Error SenhaNaoNecessaria =
-        Error.Problem("Usuarios.SenhaNaoNecessaria", "Autenticação difeente de conta Nações não precisa informar senha.");
+    public static readonly Error PasswordNotRequired =
+        Error.Problem(
+            "user.password_not_required",
+            "Non-local authentication does not require a password.");
 
-    public static readonly Error EmailEmUso =
-        Error.Conflict("Usuarios.EmailEmUso", "O email informado já esta em uso.");
+    public static readonly Error EmailInUse =
+        Error.Conflict("user.email_in_use", "The provided email is already in use.");
 
-    public static readonly Error NaoEncontrado =
-        Error.NotFound("Usuarios.NaoEncontrado", "Não foi possivel encontrar o usuário.");
+    public static readonly Error NotFound =
+        Error.NotFound("user.not_found", "User not found.");
 
-    public static readonly Error AutenticacaoInvalida =
-        Error.Problem("Usuarios.AutenticacaoInvalida", "Autenticação inválida.");
+    public static readonly Error InvalidAuthentication =
+        Error.Problem("user.invalid_authentication", "Invalid authentication.");
 
-    public static readonly Error SenhaInvalida =
-        Error.Problem("Usuarios.SenhaInvalida", "Senha inválida.");
+    public static readonly Error InvalidPassword =
+        Error.Problem("user.invalid_password", "Invalid password.");
 
-    public static readonly Error MinisteriosObrigatorio =
-        Error.Problem("Usuarios.MinisteriosObrigatorio", "O usuário deve estar vinculado a pelo menos um ministerio.");
+    public static readonly Error MinistriesRequired =
+        Error.Problem(
+            "user.ministries_required",
+            "The user must be linked to at least one ministry.");
 
-    public static readonly Error MinisterioNaoVinculadoAoUsuario =
-        Error.Problem("Usuarios.MinisterioNaoVinculadoAoUsuario", "O ministerio informado não está vinculado ao usuario.");
+    public static readonly Error MinistryNotLinkedToUser =
+        Error.Problem(
+            "user.ministry_not_linked_to_user",
+            "The specified ministry is not linked to the user.");
 
-    public static readonly Error MinisterioJaVinculadoAoUsuario =
-        Error.Problem("Usuarios.MinisterioJaVinculadoAoUsuario", "O ministerio informado já está vinculado ao usuario.");
+    public static readonly Error MinistryAlreadyLinkedToUser =
+        Error.Problem(
+            "user.ministry_already_linked_to_user",
+            "The specified ministry is already linked to the user.");
 }

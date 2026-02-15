@@ -1,47 +1,54 @@
 using Domain.Shared.Entities;
 using Domain.Enums;
+using Domain.Shared.Results;
 
 namespace Domain.Historicos;
 
-public sealed class Historico : RemovableEntity
+public sealed class AuditLog : RemovableEntity
 {
-    private Historico() { }
+    public const int ActionMaxLength = 200;
+    public const int DetailsMaxLength = 2000;
 
-    private Historico(
-        Guid? entidadeId,
-        DateTimeOffset data,
-        Guid? usuarioId,
-        string acao,
-        EUserContextType usuarioAcao,
-        string? detalhes)
+    private AuditLog() { }
+
+    private AuditLog(
+        Guid? entityId,
+        DateTimeOffset date,
+        Guid? userId,
+        string action,
+        EUserContextType userAction,
+        string? details)
     {
-        EntidadeId = entidadeId;
-        Data = data;
-        UsuarioId = usuarioId;
-        Acao = acao;
-        UsuarioAcao = usuarioAcao;
-        Detalhes = detalhes;
+        EntityId = entityId;
+        Date = date;
+        UserId = userId;
+        Action = action;
+        UserAction = userAction;
+        Details = details;
     }
 
-    public Guid? EntidadeId { get; private set; }
-    public DateTimeOffset Data { get; private set; }
-    public Guid? UsuarioId { get; private set; }
-    public string Acao { get; private set; } = string.Empty;
-    public EUserContextType UsuarioAcao { get; private set; }
-    public string? Detalhes { get; private set; }
+    public Guid? EntityId { get; private set; }
+    public DateTimeOffset Date { get; private set; }
+    public Guid? UserId { get; private set; }
+    public string Action { get; private set; } = string.Empty;
+    public EUserContextType UserAction { get; private set; }
+    public string? Details { get; private set; }
 
-    public static Historico Criar(
-        Guid? entidadeId,
-        Guid? usuarioId,
-        string acao,
-        EUserContextType usuarioAcao,
-        string? detalhes)
+    public static Result<AuditLog> Create(
+        Guid? entityId,
+        Guid? userId,
+        string action,
+        EUserContextType userAction,
+        string? details)
     {
-        if (string.IsNullOrEmpty(acao))
+        action = action.Trim();
+        details = details?.Trim();
+
+        if (string.IsNullOrEmpty(action))
         {
-            throw new ArgumentNullException(nameof(acao));
+            return AuditLogErrors.ActionRequired;
         }
 
-        return new Historico(entidadeId, DateTimeOffset.UtcNow, usuarioId, acao, usuarioAcao, detalhes);
+        return new AuditLog(entityId, DateTimeOffset.UtcNow, userId, action, userAction, details);
     }
 }

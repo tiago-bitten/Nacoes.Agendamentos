@@ -6,35 +6,35 @@ using Domain.Usuarios;
 
 namespace Application.Entities.Usuarios.Commands.AceitarConvite;
 
-public sealed record AceitarUsuarioConviteCommand(
-    Guid UsuarioConviteId,
-    string? TokenExterno,
-    string? Senha,
+public sealed record AcceptUserInvitationCommand(
+    Guid UserInvitationId,
+    string? ExternalToken,
+    string? Password,
     EAuthType AuthType,
-    CelularItemDto? Celular) : ICommand<AceitarUsuarioConviteResponse>;
+    PhoneNumberItemDto? PhoneNumber) : ICommand<AcceptUserInvitationResponse>;
 
-public static class AceitarUsuarioConviteCommandExtensions
+public static class AcceptUserInvitationCommandExtensions
 {
-    public static AdicionarUsuarioCommand ToAdicionarUsuarioCommand(
-        this AceitarUsuarioConviteCommand command,
-        string nome,
+    public static AddUserCommand ToAddUserCommand(
+        this AcceptUserInvitationCommand command,
+        string name,
         string email,
-        List<Guid> ministeriosIds) => new()
+        List<Guid> ministryIds) => new()
         {
-            Nome = nome,
+            Name = name,
             Email = email,
             AuthType = command.AuthType,
-            Celular = command.Celular is null
+            PhoneNumber = command.PhoneNumber is null
                 ? null
-                : new AdicionarUsuarioCommand.CelularItem
+                : new AddUserCommand.PhoneNumberItem
                 {
-                    Ddd = command.Celular.Ddd,
-                    Numero = command.Celular.Numero
+                    AreaCode = command.PhoneNumber.AreaCode,
+                    Number = command.PhoneNumber.Number
                 },
-            Senha = command.Senha,
-            MinisteriosIds = ministeriosIds
+            Password = command.Password,
+            MinistryIds = ministryIds
         };
 
-    public static LoginCommand ToLoginCommand(this AceitarUsuarioConviteCommand command, string email)
-        => new(email, command.Senha, command.TokenExterno, command.AuthType);
+    public static LoginCommand ToLoginCommand(this AcceptUserInvitationCommand command, string email)
+        => new(email, command.Password, command.ExternalToken, command.AuthType);
 }

@@ -6,24 +6,26 @@ using Domain.Usuarios;
 
 namespace Application.Entities.Usuarios.Commands.RecusarConvite;
 
-internal sealed class RecusarUsuarioConviteHandler(INacoesDbContext context)
-    : ICommandHandler<RecusarUsuarioConviteCommand>
+internal sealed class DeclineUserInvitationHandler(INacoesDbContext context)
+    : ICommandHandler<DeclineUserInvitationCommand>
 {
-    public async Task<Result> HandleAsync(RecusarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result> HandleAsync(
+        DeclineUserInvitationCommand command,
+        CancellationToken ct)
     {
-        var usuarioConvite = await context.Convites
-            .SingleOrDefaultAsync(x => x.Id == command.UsuarioConviteId, cancellationToken);
-        if (usuarioConvite is null)
+        var invitation = await context.Invitations
+            .SingleOrDefaultAsync(x => x.Id == command.UserInvitationId, ct);
+        if (invitation is null)
         {
-            return UsuarioConviteErrors.ConviteNaoEncontrado;
+            return UserInvitationErrors.InvitationNotFound;
         }
 
-        var recusarConviteResult = usuarioConvite.Recusar();
-        if (recusarConviteResult.IsFailure)
+        var declineResult = invitation.Decline();
+        if (declineResult.IsFailure)
         {
-            return recusarConviteResult.Error;
+            return declineResult.Error;
         }
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(ct);
 
         return Result.Success();
     }

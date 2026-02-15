@@ -5,10 +5,10 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Entities.Voluntarios.Commands.Adicionar;
 
-public sealed record AdicionarVoluntarioCommand(
-    string Nome,
+public sealed record AddVolunteerCommand(
+    string Name,
     string? Email,
-    CelularItemDto? Celular,
+    PhoneNumberItemDto? PhoneNumber,
     string? Cpf,
-    DateOnly? DataNascimento,
-    EOrigemCadastroVoluntario OrigemCadastro) : ICommand<Guid>;
+    DateOnly? BirthDate,
+    EVolunteerRegistrationOrigin RegistrationOrigin) : ICommand<Guid>;

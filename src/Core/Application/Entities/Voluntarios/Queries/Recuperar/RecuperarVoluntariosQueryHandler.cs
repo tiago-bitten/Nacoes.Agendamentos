@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Application.Shared.Contexts;
 using Application.Shared.Messaging;
 using Application.Shared.Pagination;
@@ -5,23 +6,26 @@ using Domain.Shared.Results;
 
 namespace Application.Entities.Voluntarios.Queries.Recuperar;
 
-internal sealed class RecuperarVoluntariosQueryHandler(INacoesDbContext context)
-    : IQueryHandler<RecuperarVoluntariosQuery, PagedResponse<VoluntarioResponse>>
+internal sealed class GetVolunteersQueryHandler(INacoesDbContext context)
+    : IQueryHandler<GetVolunteersQuery, PagedResponse<VolunteerResponse>>
 {
-    public async Task<Result<PagedResponse<VoluntarioResponse>>> Handle(RecuperarVoluntariosQuery query, CancellationToken cancellationToken = default)
+    public async Task<Result<PagedResponse<VolunteerResponse>>> Handle(
+        GetVolunteersQuery query,
+        CancellationToken ct)
     {
-        var voluntarios = await context.Voluntarios
-            .Select(x => new VoluntarioResponse
+        var volunteers = await context.Volunteers
+            .AsNoTracking()
+            .Select(x => new VolunteerResponse
             {
                 Id = x.Id,
                 CreatedAt = x.CreatedAt,
-                Nome = x.Nome,
-                Ministerios = x.Ministerios.Select(m => new VoluntarioResponse.MinisterioItem
+                Name = x.Name,
+                Ministries = x.Ministries.Select(m => new VolunteerResponse.MinistryItem
                 {
-                    Nome = m.Ministerio.Nome
+                    Name = m.Ministry.Name
                 }).ToList()
-            }).ToPagedResponseAsync(query.Limit, query.Cursor, cancellationToken);
+            }).ToPagedResponseAsync(query.Limit, query.Cursor, ct);
 
-        return voluntarios;
+        return volunteers;
     }
 }

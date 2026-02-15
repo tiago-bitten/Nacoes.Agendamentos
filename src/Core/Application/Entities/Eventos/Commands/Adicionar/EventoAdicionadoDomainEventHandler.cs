@@ -4,11 +4,11 @@ using Domain.Historicos.Interfaces;
 
 namespace Application.Entities.Eventos.Commands.Adicionar;
 
-internal sealed class EventoAdicionadoDomainEventHandler(IHistoricoRegister historicoRegister)
-    : IDomainEventHandler<EventoAdicionadoDomainEvent>
+internal sealed class EventAddedDomainEventHandler(IAuditLogRegister auditLogRegister)
+    : IDomainEventHandler<EventAddedDomainEvent>
 {
-    public Task Handle(EventoAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public Task Handle(EventAddedDomainEvent domainEvent, CancellationToken ct)
     {
-        return historicoRegister.AuditAsync(domainEvent.EventoId, acao: "Evento adicionado.");
+        return auditLogRegister.AuditAsync(domainEvent.EventId, action: "Event added.");
     }
 }

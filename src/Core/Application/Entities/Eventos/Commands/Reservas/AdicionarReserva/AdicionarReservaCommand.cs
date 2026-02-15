@@ -2,9 +2,9 @@ using Application.Shared.Messaging;
 
 namespace Application.Entities.Eventos.Commands.Reservas.AdicionarReserva;
 
-internal sealed record AdicionarReservaCommand : ICommand<Guid>
+public sealed record AddReservationCommand : ICommand<Guid>
 {
-    public Guid EventoId { get; init; }
-    public Guid VoluntarioMinisterioId { get; init; }
-    public Guid AtividadeId { get; init; }
+    public Guid EventId { get; init; }
+    public Guid VolunteerMinistryId { get; init; }
+    public Guid ActivityId { get; init; }
 }

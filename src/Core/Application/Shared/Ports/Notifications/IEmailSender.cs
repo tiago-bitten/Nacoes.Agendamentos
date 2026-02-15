@@ -4,5 +4,5 @@ namespace Application.Shared.Ports.Notifications;
 
 public interface IEmailSender
 {
-    Task SendAsync(Email to, string subject, string body);
+    Task SendAsync(Email to, string subject, string body, CancellationToken ct = default);
 }

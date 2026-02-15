@@ -2,7 +2,7 @@ using Domain.Shared.Events;
 
 namespace Postgres.DomainEvents;
 
-public interface IDomainEventsDispatcher
+internal interface IDomainEventsDispatcher
 {
-    Task DispatchAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken cancellationToken = default);
+    Task DispatchAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken ct = default);
 }

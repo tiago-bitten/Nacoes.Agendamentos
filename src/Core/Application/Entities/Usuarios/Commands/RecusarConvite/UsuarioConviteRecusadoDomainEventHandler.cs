@@ -4,11 +4,11 @@ using Domain.Usuarios.DomainEvents;
 
 namespace Application.Entities.Usuarios.Commands.RecusarConvite;
 
-internal sealed class UsuarioConviteRecusadoDomainEventHandler(IHistoricoRegister historicoRegister)
-    : IDomainEventHandler<UsuarioConviteRecusadoDomainEvent>
+internal sealed class UserInvitationDeclinedDomainEventHandler(IAuditLogRegister auditLogRegister)
+    : IDomainEventHandler<UserInvitationDeclinedDomainEvent>
 {
-    public Task Handle(UsuarioConviteRecusadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public Task Handle(UserInvitationDeclinedDomainEvent domainEvent, CancellationToken ct)
     {
-        return historicoRegister.AuditAsync(domainEvent.UsuarioConviteId, acao: "Convite recusado.");
+        return auditLogRegister.AuditAsync(domainEvent.UserInvitationId, action: "Invitation declined.");
     }
 }

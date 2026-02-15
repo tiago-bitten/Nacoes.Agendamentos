@@ -2,4 +2,4 @@ using Application.Shared.Messaging;
 
 namespace Application.Entities.Usuarios.Commands.RecusarConvite;
 
-public sealed record RecusarUsuarioConviteCommand(Guid UsuarioConviteId) : ICommand;
+public sealed record DeclineUserInvitationCommand(Guid UserInvitationId) : ICommand;

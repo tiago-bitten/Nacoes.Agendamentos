@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Middlewares;
 
-public class GlobalExceptionHandlerMiddleware(RequestDelegate next)
+internal sealed class GlobalExceptionHandlerMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext context)
     {

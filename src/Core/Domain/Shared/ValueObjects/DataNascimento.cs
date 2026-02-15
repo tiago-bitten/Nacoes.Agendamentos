@@ -1,42 +1,46 @@
 namespace Domain.Shared.ValueObjects;
 
-public sealed record DataNascimento
+public sealed record BirthDate
 {
-    public DateOnly Valor { get; }
-    public int Idade => CalcularIdade(Valor);
-    public bool MenorDeIdade => Idade < 18;
+    public DateOnly Value { get; }
+    public int Age => CalculateAge(Value);
+    public bool IsMinor => Age < 18;
 
-    public DataNascimento(DateOnly valor)
+    public BirthDate(DateOnly value)
     {
-        if (valor == DateOnly.FromDateTime(DateTime.Today))
+        if (value == DateOnly.FromDateTime(DateTime.Today))
         {
-            throw new ArgumentException("Data de nascimento não pode ser hoje.", nameof(valor));
+            throw new ArgumentException("Birth date cannot be today.", nameof(value));
         }
 
-        if (valor > DateOnly.FromDateTime(DateTime.Today))
+        if (value > DateOnly.FromDateTime(DateTime.Today))
         {
-            throw new ArgumentException("Data de nascimento não pode ser no futuro.", nameof(valor));
+            throw new ArgumentException("Birth date cannot be in the future.", nameof(value));
         }
 
-        var idade = CalcularIdade(valor);
-        if (idade > 140)
+        var age = CalculateAge(value);
+        if (age > 140)
         {
-            throw new ArgumentException("Idade não pode ser superior a 140 anos.", nameof(valor));
+            throw new ArgumentException("Age cannot exceed 140 years.", nameof(value));
         }
 
-        Valor = valor;
+        Value = value;
     }
 
-    private static int CalcularIdade(DateOnly nascimento)
+    private static int CalculateAge(DateOnly birthDate)
     {
-        var hoje = DateOnly.FromDateTime(DateTime.Today);
-        var idade = hoje.Year - nascimento.Year;
-        if (nascimento > hoje.AddYears(-idade)) idade--;
-        return idade;
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var age = today.Year - birthDate.Year;
+        if (birthDate > today.AddYears(-age))
+        {
+            age--;
+        }
+
+        return age;
     }
 
-    public override string ToString() => Valor.ToString("dd/MM/yyyy");
+    public override string ToString() => Value.ToString("dd/MM/yyyy");
 
-    public bool Equals(DataNascimento? other) => other != null && Valor == other.Valor;
-    public override int GetHashCode() => Valor.GetHashCode();
+    public bool Equals(BirthDate? other) => other != null && Value == other.Value;
+    public override int GetHashCode() => Value.GetHashCode();
 }

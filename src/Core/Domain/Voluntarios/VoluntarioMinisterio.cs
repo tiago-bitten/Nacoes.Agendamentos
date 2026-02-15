@@ -3,17 +3,17 @@ using Domain.Ministerios;
 
 namespace Domain.Voluntarios;
 
-public sealed class VoluntarioMinisterio : RemovableEntity
+public sealed class VolunteerMinistry : RemovableEntity
 {
-    private VoluntarioMinisterio() { }
+    private VolunteerMinistry() { }
 
-    internal VoluntarioMinisterio(Guid ministerioId)
+    internal VolunteerMinistry(Guid ministryId)
     {
-        MinisterioId = ministerioId;
+        MinistryId = ministryId;
     }
 
-    public Guid MinisterioId { get; private set; }
+    public Guid MinistryId { get; private set; }
 
-    public Ministerio Ministerio { get; private set; } = null!;
-    public Voluntario Voluntario { get; private set; } = null!;
+    public Ministry Ministry { get; private set; } = null!;
+    public Volunteer Volunteer { get; private set; } = null!;
 }

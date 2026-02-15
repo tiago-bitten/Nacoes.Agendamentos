@@ -12,53 +12,53 @@ namespace API.Endpoints.Eventos;
 
 internal sealed class Recuperar : IEndpoint
 {
-    public sealed record Request(DateOnly DataInicial, DateOnly DataFinal);
+    public sealed record Request(DateOnly StartDate, DateOnly EndDate);
 
     public sealed record Response
     {
         public Guid Id { get; init; }
-        public string Descricao { get; init; } = string.Empty;
-        public int QuantidadeReservas { get; init; }
-        public int? QuantidadeMaximaReservas { get; init; }
-        public HorarioDto Horario { get; init; } = null!;
-        public EStatusEvento Status { get; init; }
+        public string Description { get; init; } = string.Empty;
+        public int ReservationCount { get; init; }
+        public int? MaxReservationCount { get; init; }
+        public ScheduleDto Schedule { get; init; } = null!;
+        public EEventStatus Status { get; init; }
     }
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v1/eventos", async (
+        app.MapGet("v1/events", async (
             [AsParameters] Request request,
             [FromServices] INacoesDbContext context,
-            CancellationToken cancellationToken) =>
+            CancellationToken ct) =>
         {
             Result<List<Response>> result;
 
             try
             {
-                var eventos = await context.Eventos
-                    .Where(x => x.Status != EStatusEvento.Cancelado &&
-                                DateOnly.FromDateTime(x.Horario.DataInicial.DateTime) >= request.DataInicial &&
-                                DateOnly.FromDateTime(x.Horario.DataFinal.DateTime) <= request.DataFinal)
+                var events = await context.Events
+                    .Where(x => x.Status != EEventStatus.Cancelled &&
+                                DateOnly.FromDateTime(x.Schedule.StartDate.DateTime) >= request.StartDate &&
+                                DateOnly.FromDateTime(x.Schedule.EndDate.DateTime) <= request.EndDate)
                     .Select(x => new Response
                     {
                         Id = x.Id,
-                        Descricao = x.Descricao,
-                        QuantidadeReservas = x.QuantidadeReservas,
-                        QuantidadeMaximaReservas = x.QuantidadeMaximaReservas,
-                        Horario = x.Horario.ToDto(),
+                        Description = x.Description,
+                        ReservationCount = x.ReservationCount,
+                        MaxReservationCount = x.MaxReservationCount,
+                        Schedule = x.Schedule.ToDto(),
                         Status = x.Status
                     })
-                    .ToListAsync(cancellationToken);
+                    .ToListAsync(ct);
 
-                result = Result<List<Response>>.Success(eventos);
+                result = Result<List<Response>>.Success(events);
             }
             catch (Exception ex)
             {
-                var error = Error.Problem("RecuperarEventos", ex.Message);
+                var error = Error.Problem("GetEvents", ex.Message);
                 result = Result<List<Response>>.Failure(error);
             }
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Eventos);
+        }).WithTags(Tags.Events);
     }
 }

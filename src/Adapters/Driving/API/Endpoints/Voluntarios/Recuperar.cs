@@ -12,43 +12,43 @@ namespace API.Endpoints.Voluntarios;
 
 internal sealed class Recuperar : IEndpoint
 {
-    public sealed record Request(string? Nome) : BaseQueryParam;
+    public sealed record Request(string? Name) : BaseQueryParam;
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v1/voluntarios", async (
+        app.MapGet("v1/volunteers", async (
             [AsParameters] Request request,
             [FromServices] INacoesDbContext context,
-            CancellationToken cancellationToken) =>
+            CancellationToken ct) =>
         {
-            Result<PagedResponse<VoluntarioResponse>> result;
+            Result<PagedResponse<VolunteerResponse>> result;
 
             try
             {
-                var filtrarNome = !string.IsNullOrEmpty(request.Nome);
+                var filterByName = !string.IsNullOrEmpty(request.Name);
 
-                var voluntarios = await context.Voluntarios
-                    .WhereIf(filtrarNome, x => x.Nome.Contains(request.Nome!))
-                    .Select(x => new VoluntarioResponse
+                var volunteers = await context.Volunteers
+                    .WhereIf(filterByName, x => x.Name.Contains(request.Name!))
+                    .Select(x => new VolunteerResponse
                     {
                         Id = x.Id,
                         CreatedAt = x.CreatedAt,
-                        Nome = x.Nome,
-                        Ministerios = x.Ministerios.Select(m => new VoluntarioResponse.MinisterioItem
+                        Name = x.Name,
+                        Ministries = x.Ministries.Select(m => new VolunteerResponse.MinistryItem
                         {
-                            Nome = m.Ministerio.Nome
+                            Name = m.Ministry.Name
                         }).ToList()
-                    }).ToPagedResponseAsync(request.Limit, request.Cursor, cancellationToken);
+                    }).ToPagedResponseAsync(request.Limit, request.Cursor, ct);
 
-                result = Result<PagedResponse<VoluntarioResponse>>.Success(voluntarios);
+                result = Result<PagedResponse<VolunteerResponse>>.Success(volunteers);
             }
             catch (Exception ex)
             {
-                var error = Error.Problem("RecuperarVoluntarios", ex.Message);
-                result = Result<PagedResponse<VoluntarioResponse>>.Failure(error);
+                var error = Error.Problem("GetVolunteers", ex.Message);
+                result = Result<PagedResponse<VolunteerResponse>>.Failure(error);
             }
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Voluntarios);
+        }).WithTags(Tags.Volunteers);
     }
 }

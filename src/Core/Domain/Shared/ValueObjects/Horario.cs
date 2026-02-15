@@ -1,42 +1,42 @@
 namespace Domain.Shared.ValueObjects;
 
-public sealed record Horario
+public sealed record Schedule
 {
-    public DateTimeOffset DataInicial { get; }
-    public DateTimeOffset DataFinal { get; }
+    public DateTimeOffset StartDate { get; }
+    public DateTimeOffset EndDate { get; }
 
-    public int DuracaoEmSegundos => (int)(DataFinal - DataInicial).TotalSeconds;
+    public int DurationInSeconds => (int)(EndDate - StartDate).TotalSeconds;
 
-    public Horario(DateTimeOffset dataInicial, DateTimeOffset dataFinal)
+    public Schedule(DateTimeOffset startDate, DateTimeOffset endDate)
     {
-        if (dataInicial < DateTime.UtcNow)
+        if (startDate < DateTime.UtcNow)
         {
-            throw new ArgumentException("Data inicial não pode estar no passado.", nameof(dataInicial));
+            throw new ArgumentException("Start date cannot be in the past.", nameof(startDate));
         }
 
-        if (dataFinal <= dataInicial)
+        if (endDate <= startDate)
         {
-            throw new ArgumentException("Data final deve ser posterior à data inicial.", nameof(dataFinal));
+            throw new ArgumentException("End date must be after the start date.", nameof(endDate));
         }
 
-        DataInicial = dataInicial;
-        DataFinal = dataFinal;
+        StartDate = startDate;
+        EndDate = endDate;
     }
 
-    public bool Equals(Horario? other) =>
-        other != null && DataInicial.Equals(other.DataInicial) && Nullable.Equals(DataFinal, other.DataFinal);
+    public bool Equals(Schedule? other) =>
+        other != null && StartDate.Equals(other.StartDate) && Nullable.Equals(EndDate, other.EndDate);
 
     public override int GetHashCode() =>
-        HashCode.Combine(DataInicial, DataFinal);
+        HashCode.Combine(StartDate, EndDate);
 
     public override string ToString()
     {
-        var finalStr = $" até {DataFinal:dd/MM/yyyy HH:mm}";
-        return $"{DataInicial:dd/MM/yyyy HH:mm}{finalStr}";
+        var finalStr = $" to {EndDate:dd/MM/yyyy HH:mm}";
+        return $"{StartDate:dd/MM/yyyy HH:mm}{finalStr}";
     }
 
-    public static bool operator >(Horario left, Horario right) => left.DataInicial > right.DataInicial;
-    public static bool operator <(Horario left, Horario right) => left.DataInicial < right.DataInicial;
-    public static bool operator >=(Horario left, Horario right) => left.DataInicial >= right.DataInicial;
-    public static bool operator <=(Horario left, Horario right) => left.DataInicial <= right.DataInicial;
+    public static bool operator >(Schedule left, Schedule right) => left.StartDate > right.StartDate;
+    public static bool operator <(Schedule left, Schedule right) => left.StartDate < right.StartDate;
+    public static bool operator >=(Schedule left, Schedule right) => left.StartDate >= right.StartDate;
+    public static bool operator <=(Schedule left, Schedule right) => left.StartDate <= right.StartDate;
 }

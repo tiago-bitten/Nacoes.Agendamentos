@@ -13,7 +13,7 @@ namespace Application;
 
 public static class DependencyInjection
 {
-    #region AddApplication
+
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddHandlers();
@@ -24,9 +24,9 @@ public static class DependencyInjection
 
         return services;
     }
-    #endregion
 
-    #region AddHandlers
+
+
     private static IServiceCollection AddHandlers(this IServiceCollection services)
     {
         services.Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
@@ -42,44 +42,44 @@ public static class DependencyInjection
 
         return services;
     }
-    #endregion
 
-    #region AddValidators
+
+
     private static IServiceCollection AddValidators(this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
 
         return services;
     }
-    #endregion
 
-    #region AddFactories
+
+
     private static IServiceCollection AddFactories(this IServiceCollection services)
     {
         services.AddScoped<IAuthStrategyFactory, AuthStrategyFactory>();
         services.AddScoped<ILinkFactory, LinkFactory>();
-        services.AddScoped<IHorarioGeneratorFactory, HorarioGeneratorFactory>();
+        services.AddScoped<IScheduleGeneratorFactory, ScheduleGeneratorFactory>();
 
         return services;
     }
-    #endregion
 
-    #region AddServices
+
+
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<GoogleAuthStrategy>();
         services.AddScoped<LocalAuthStrategy>();
 
-        services.AddScoped<HorarioDiarioGeneratorStrategy>();
-        services.AddScoped<HorarioSemanalGeneratorStrategy>();
-        services.AddScoped<HorarioMensalGeneratorStrategy>();
-        services.AddScoped<HorarioAnualGeneratorStrategy>();
+        services.AddScoped<DailyScheduleGeneratorStrategy>();
+        services.AddScoped<WeeklyScheduleGeneratorStrategy>();
+        services.AddScoped<MonthlyScheduleGeneratorStrategy>();
+        services.AddScoped<YearlyScheduleGeneratorStrategy>();
 
         return services;
     }
-    #endregion
 
-    #region AddDecorators
+
+
     private static IServiceCollection AddDecorators(this IServiceCollection services)
     {
         services.Decorate(typeof(ICommandHandler<,>), typeof(ValidationDecorator.CommandHandler<,>));
@@ -93,5 +93,5 @@ public static class DependencyInjection
 
         return services;
     }
-    #endregion
+
 }

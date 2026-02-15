@@ -1,68 +1,68 @@
 namespace Domain.Shared.ValueObjects;
 
-public sealed record RecorrenciaEvento
+public sealed record EventRecurrence
 {
     public Guid? Id { get; init; }
-    public ETipoRecorrenciaEvento Tipo { get; init; }
-    public int? Intervalo { get; init; }
-    public DateOnly? DataFinal { get; init; }
+    public EEventRecurrenceType Type { get; init; }
+    public int? Interval { get; init; }
+    public DateOnly? EndDate { get; init; }
 
-    internal RecorrenciaEvento() { }
+    internal EventRecurrence() { }
 
-    public RecorrenciaEvento(ETipoRecorrenciaEvento tipo, int? intervalo, DateOnly? dataFinal)
+    public EventRecurrence(EEventRecurrenceType type, int? interval, DateOnly? endDate)
     {
-        Tipo = tipo;
+        Type = type;
 
-        if (tipo is ETipoRecorrenciaEvento.Nenhuma)
+        if (type is EEventRecurrenceType.None)
         {
             Id = null;
-            Intervalo = null;
-            DataFinal = null;
+            Interval = null;
+            EndDate = null;
             return;
         }
 
-        if (intervalo is null or <= 0)
+        if (interval is null or <= 0)
         {
             throw new InvalidOperationException();
         }
 
-        if (dataFinal.HasValue && dataFinal.Value < DateOnly.FromDateTime(DateTimeOffset.UtcNow.DateTime))
+        if (endDate.HasValue && endDate.Value < DateOnly.FromDateTime(DateTimeOffset.UtcNow.DateTime))
         {
             throw new InvalidOperationException();
         }
 
         Id = Guid.NewGuid();
-        Intervalo = intervalo.Value;
-        DataFinal = dataFinal;
+        Interval = interval.Value;
+        EndDate = endDate;
     }
 
-    public bool Equals(RecorrenciaEvento? other) =>
-        other != null && Id == other.Id && Tipo == other.Tipo && Intervalo == other.Intervalo && DataFinal == other.DataFinal;
+    public bool Equals(EventRecurrence? other) =>
+        other != null && Id == other.Id && Type == other.Type && Interval == other.Interval && EndDate == other.EndDate;
 
     public override int GetHashCode() =>
-        HashCode.Combine(Id, Tipo, Intervalo, DataFinal);
+        HashCode.Combine(Id, Type, Interval, EndDate);
 
     public override string ToString() =>
-        $"{Id} {Tipo} {Intervalo} {DataFinal}";
+        $"{Id} {Type} {Interval} {EndDate}";
 }
 
-public enum ETipoRecorrenciaEvento
+public enum EEventRecurrenceType
 {
-    Nenhuma = 0,
-    Diario = 1,
-    Semanal = 2,
-    Mensal = 3,
-    Anual = 4
+    None = 0,
+    Daily = 1,
+    Weekly = 2,
+    Monthly = 3,
+    Yearly = 4
 }
 
-public static class RecorrenciaEventoExtensions
+public static class EventRecurrenceExtensions
 {
-    public static RecorrenciaEvento Copiar(this RecorrenciaEvento recorrenciaEvento)
+    public static EventRecurrence Copy(this EventRecurrence eventRecurrence)
         => new()
         {
-            Id = recorrenciaEvento.Id,
-            Tipo = recorrenciaEvento.Tipo,
-            Intervalo = recorrenciaEvento.Intervalo,
-            DataFinal = recorrenciaEvento.DataFinal
+            Id = eventRecurrence.Id,
+            Type = eventRecurrence.Type,
+            Interval = eventRecurrence.Interval,
+            EndDate = eventRecurrence.EndDate
         };
 }

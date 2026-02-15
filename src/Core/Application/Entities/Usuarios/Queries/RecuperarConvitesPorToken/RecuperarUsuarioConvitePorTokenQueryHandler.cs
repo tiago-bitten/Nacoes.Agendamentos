@@ -8,30 +8,31 @@ using Domain.Usuarios.Specs;
 
 namespace Application.Entities.Usuarios.Queries.RecuperarConvitesPorToken;
 
-internal sealed class RecuperarUsuarioConvitePorTokenQueryHandler(INacoesDbContext context)
-    : IQueryHandler<RecuperarUsuarioConvitePorTokenQuery, RecuperarUsuarioConvitePorTokenResponse>
+internal sealed class GetUserInvitationByTokenQueryHandler(INacoesDbContext context)
+    : IQueryHandler<GetUserInvitationByTokenQuery, GetUserInvitationByTokenResponse>
 {
-    public async Task<Result<RecuperarUsuarioConvitePorTokenResponse>> Handle(
-        RecuperarUsuarioConvitePorTokenQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<GetUserInvitationByTokenResponse>> Handle(
+        GetUserInvitationByTokenQuery query,
+        CancellationToken ct)
     {
-        var usuarioConviteResponse = await context.Convites
-            .ApplySpec(new ConvitesPorTokenSpec(query.Token))
-            .Select(x => new RecuperarUsuarioConvitePorTokenResponse
+        var invitationResponse = await context.Invitations
+            .AsNoTracking()
+            .ApplySpec(new InvitationsByTokenSpec(query.Token))
+            .Select(x => new GetUserInvitationByTokenResponse
             {
                 Id = x.Id,
-                Nome = x.Nome,
+                Name = x.Name,
                 Email = x.Email.Address,
-                NomeEnviadoPor = x.EnviadoPor.Nome,
+                SentByName = x.SentBy.Name,
                 Status = x.Status
             })
-            .SingleOrDefaultAsync(cancellationToken);
+            .SingleOrDefaultAsync(ct);
 
-        if (usuarioConviteResponse is null)
+        if (invitationResponse is null)
         {
-            return UsuarioConviteErrors.ConviteNaoEncontrado;
+            return UserInvitationErrors.InvitationNotFound;
         }
 
-        return usuarioConviteResponse;
+        return invitationResponse;
     }
 }

@@ -9,50 +9,50 @@ using Domain.Usuarios.DomainEvents;
 
 namespace Application.Entities.Usuarios.Commands.AceitarConvite;
 
-internal sealed class AceitarUsuarioConviteHandler(
+internal sealed class AcceptUserInvitationHandler(
     INacoesDbContext context,
-    ICommandHandler<AdicionarUsuarioCommand, Guid> adicionarUsuarioHandler,
+    ICommandHandler<AddUserCommand, Guid> addUserHandler,
     ICommandHandler<LoginCommand, LoginResponse> loginHandler)
-    : ICommandHandler<AceitarUsuarioConviteCommand, AceitarUsuarioConviteResponse>
+    : ICommandHandler<AcceptUserInvitationCommand, AcceptUserInvitationResponse>
 {
-    public async Task<Result<AceitarUsuarioConviteResponse>> HandleAsync(
-        AceitarUsuarioConviteCommand command,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<AcceptUserInvitationResponse>> HandleAsync(
+        AcceptUserInvitationCommand command,
+        CancellationToken ct)
     {
-        var usuarioConvite = await context.Convites
-            .Include(x => x.Ministerios)
-            .SingleOrDefaultAsync(x => x.Id == command.UsuarioConviteId, cancellationToken);
-        if (usuarioConvite is null)
+        var invitation = await context.Invitations
+            .Include(x => x.Ministries)
+            .SingleOrDefaultAsync(x => x.Id == command.UserInvitationId, ct);
+        if (invitation is null)
         {
-            return UsuarioConviteErrors.ConviteNaoEncontrado;
+            return UserInvitationErrors.InvitationNotFound;
         }
 
-        var ministeriosIds = usuarioConvite.Ministerios
-            .Select(x => x.MinisterioId)
+        var ministryIds = invitation.Ministries
+            .Select(x => x.MinistryId)
             .ToList();
 
-        var usuarioResult = await adicionarUsuarioHandler.HandleAsync(command.ToAdicionarUsuarioCommand(
-            usuarioConvite.Nome,
-            usuarioConvite.Email,
-            ministeriosIds), cancellationToken);
+        var userResult = await addUserHandler.HandleAsync(command.ToAddUserCommand(
+            invitation.Name,
+            invitation.Email,
+            ministryIds), ct);
 
-        if (usuarioResult.IsFailure)
+        if (userResult.IsFailure)
         {
-            return usuarioResult.Error;
+            return userResult.Error;
         }
 
-        var usuario = usuarioResult.Value;
+        var userId = userResult.Value;
 
-        var aceitarUsuarioConviteResult = usuarioConvite.Aceitar(usuario);
-        if (aceitarUsuarioConviteResult.IsFailure)
+        var acceptResult = invitation.Accept(userId);
+        if (acceptResult.IsFailure)
         {
-            return aceitarUsuarioConviteResult.Error;
+            return acceptResult.Error;
         }
 
-        usuarioConvite.Raise(new UsuarioConviteAceitoDomainEvent(usuarioConvite.Id));
-        await context.SaveChangesAsync(cancellationToken);
+        invitation.Raise(new UserInvitationAcceptedDomainEvent(invitation.Id));
+        await context.SaveChangesAsync(ct);
 
-        var loginResult = await loginHandler.HandleAsync(command.ToLoginCommand(usuarioConvite.Email), cancellationToken);
+        var loginResult = await loginHandler.HandleAsync(command.ToLoginCommand(invitation.Email), ct);
         if (loginResult.IsFailure)
         {
             return loginResult.Error;
@@ -60,7 +60,7 @@ internal sealed class AceitarUsuarioConviteHandler(
 
         var login = loginResult.Value;
 
-        var response = new AceitarUsuarioConviteResponse(login.AuthToken, login.RefreshToken);
+        var response = new AcceptUserInvitationResponse(login.AuthToken, login.RefreshToken);
 
         return response;
     }

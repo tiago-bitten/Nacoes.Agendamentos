@@ -1,11 +1,12 @@
 using FluentValidation;
+using Domain.Ministerios;
 
 namespace Application.Entities.Ministerios.Commands.AdicionarAtividade;
 
-internal sealed class AdicionarAtividadeCommandValidator : AbstractValidator<AdicionarAtividadeCommand>
+internal sealed class AddActivityCommandValidator : AbstractValidator<AddActivityCommand>
 {
-    public AdicionarAtividadeCommandValidator()
+    public AddActivityCommandValidator()
     {
-        RuleFor(x => x.Nome).NotEmpty();
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(Activity.NameMaxLength);
     }
 }

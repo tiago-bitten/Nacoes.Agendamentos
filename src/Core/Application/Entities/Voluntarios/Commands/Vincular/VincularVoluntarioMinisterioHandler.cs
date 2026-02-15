@@ -8,44 +8,46 @@ using Domain.Voluntarios.Errors;
 
 namespace Application.Entities.Voluntarios.Commands.Vincular;
 
-internal sealed class VincularVoluntarioMinisterioHandler(
+internal sealed class LinkVolunteerMinistryHandler(
     INacoesDbContext context)
-    : ICommandHandler<VincularVoluntarioMinisterioCommand>
+    : ICommandHandler<LinkVolunteerMinistryCommand>
 {
-    public async Task<Result> HandleAsync(VincularVoluntarioMinisterioCommand command, CancellationToken cancellation = default)
+    public async Task<Result> HandleAsync(
+        LinkVolunteerMinistryCommand command,
+        CancellationToken ct)
     {
-        var voluntarioMinisterioParaVincular = await context.Voluntarios
-            .Include(v => v.Ministerios)
-            .Where(v => v.Id == command.VoluntarioId)
+        var volunteerMinistryToLink = await context.Volunteers
+            .Include(v => v.Ministries)
+            .Where(v => v.Id == command.VolunteerId)
             .Select(v => new
             {
-                Voluntario = v,
-                Ministerio = context.Ministerios
-                    .SingleOrDefault(m => m.Id == command.MinisterioId)
+                Volunteer = v,
+                Ministry = context.Ministries
+                    .SingleOrDefault(m => m.Id == command.MinistryId)
             })
-            .SingleOrDefaultAsync(cancellation);
+            .SingleOrDefaultAsync(ct);
 
-        if (voluntarioMinisterioParaVincular is null)
+        if (volunteerMinistryToLink is null)
         {
-            return VoluntarioErrors.NaoEncontrado;
+            return VolunteerErrors.NotFound;
         }
 
-        var voluntario = voluntarioMinisterioParaVincular.Voluntario;
-        var ministerio = voluntarioMinisterioParaVincular.Ministerio;
+        var volunteer = volunteerMinistryToLink.Volunteer;
+        var ministry = volunteerMinistryToLink.Ministry;
 
-        if (ministerio is null)
+        if (ministry is null)
         {
-            return MinisterioErrors.NaoEncontrado;
+            return MinistryErrors.NotFound;
         }
 
-        var vinculoResult = voluntario.VincularMinisterio(ministerio.Id);
-        if (vinculoResult.IsFailure)
+        var linkResult = volunteer.LinkMinistry(ministry.Id);
+        if (linkResult.IsFailure)
         {
-            return vinculoResult.Error;
+            return linkResult.Error;
         }
 
-        voluntario.Raise(new VoluntarioMinisterioVinculadoDomainEvent(voluntario.Id, ministerio.Nome));
-        await context.SaveChangesAsync(cancellation);
+        volunteer.Raise(new VolunteerMinistryLinkedDomainEvent(volunteer.Id, ministry.Name));
+        await context.SaveChangesAsync(ct);
 
         return Result.Success();
     }

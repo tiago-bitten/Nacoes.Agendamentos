@@ -3,7 +3,7 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Generators.RecorrenciaEvento.Factories;
 
-public interface IHorarioGeneratorFactory
+public interface IScheduleGeneratorFactory
 {
-    IHorarioGeneratorStrategy Create(ETipoRecorrenciaEvento tipo);
+    IScheduleGeneratorStrategy Create(EEventRecurrenceType type);
 }

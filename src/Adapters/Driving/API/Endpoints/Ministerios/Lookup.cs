@@ -10,46 +10,46 @@ namespace API.Endpoints.Ministerios;
 
 internal sealed class Lookup : IEndpoint
 {
-    public sealed record Request(string? Nome);
+    public sealed record Request(string? Name);
 
     public sealed record Response
     {
         public Guid Id { get; init; }
-        public string Nome { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
     }
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v1/ministerios/lookup", async (
+        app.MapGet("v1/ministries/lookup", async (
             [FromServices] INacoesDbContext context,
             [AsParameters] Request request,
-            CancellationToken cancellationToken) =>
+            CancellationToken ct) =>
         {
             Result<List<Response>> result;
 
             try
             {
-                var filtrarNome = !string.IsNullOrEmpty(request.Nome);
+                var filterByName = !string.IsNullOrEmpty(request.Name);
 
-                var ministerios = await context.Ministerios
+                var ministries = await context.Ministries
                     .AsNoTracking()
                     .Take(20)
-                    .WhereIf(filtrarNome, x => x.Nome.Contains(request.Nome!))
+                    .WhereIf(filterByName, x => x.Name.Contains(request.Name!))
                     .Select(x => new Response
                     {
                         Id = x.Id,
-                        Nome = x.Nome
-                    }).ToListAsync(cancellationToken);
+                        Name = x.Name
+                    }).ToListAsync(ct);
 
-                result = Result<List<Response>>.Success(ministerios);
+                result = Result<List<Response>>.Success(ministries);
             }
             catch (Exception ex)
             {
-                var error = Error.Problem("LookupMinisterios", ex.Message);
+                var error = Error.Problem("LookupMinistries", ex.Message);
                 result = Result<List<Response>>.Failure(error);
             }
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Ministerios);
+        }).WithTags(Tags.Ministries);
     }
 }

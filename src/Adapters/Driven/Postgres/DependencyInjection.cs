@@ -28,15 +28,9 @@ public static class DependencyInjection
 
         if (pendingMigrations.Count == 0)
         {
-            Console.WriteLine("Banco de dados atualizado. Nenhuma migration pendente.");
             return;
         }
 
-        Console.WriteLine($"Aplicando {pendingMigrations.Count} migration(s) pendente(s)...");
-        foreach (var migration in pendingMigrations)
-            Console.WriteLine($"  - {migration}");
-
         await context.Database.MigrateAsync();
-        Console.WriteLine("Migrations aplicadas com sucesso.");
     }
 }

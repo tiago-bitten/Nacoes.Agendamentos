@@ -12,61 +12,61 @@ namespace API.Endpoints.Ministerios.Atividades;
 
 internal sealed class Recuperar : IEndpoint
 {
-    public sealed record Request(string? Nome) : BaseQueryParam;
+    public sealed record Request(string? Name) : BaseQueryParam;
 
     public sealed record Response : ICursorResponse
     {
         public Guid Id { get; init; }
         public DateTimeOffset CreatedAt { get; init; }
-        public string Nome { get; init; } = string.Empty;
-        public string? Descricao { get; init; }
-        public Ministerioitem Ministerio { get; init; } = null!;
+        public string Name { get; init; } = string.Empty;
+        public string? Description { get; init; }
+        public MinistryItem Ministry { get; init; } = null!;
 
-        public sealed record Ministerioitem
+        public sealed record MinistryItem
         {
             public Guid Id { get; init; }
-            public string Nome { get; init; } = string.Empty;
+            public string Name { get; init; } = string.Empty;
         }
     }
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v1/ministerios/atividades", async (
+        app.MapGet("v1/ministries/activities", async (
             [AsParameters] Request request,
             [FromServices] INacoesDbContext context,
-            CancellationToken cancellationToken) =>
+            CancellationToken ct) =>
         {
             Result<PagedResponse<Response>> result;
 
             try
             {
-                var filtrarNome = !string.IsNullOrEmpty(request.Nome);
+                var filterByName = !string.IsNullOrEmpty(request.Name);
 
-                var atividades = await context.Atividades
+                var activities = await context.Activities
                     .AsNoTracking()
-                    .WhereIf(filtrarNome, x => x.Nome.Contains(request.Nome!))
+                    .WhereIf(filterByName, x => x.Name.Contains(request.Name!))
                     .Select(x => new Response
                     {
                         Id = x.Id,
                         CreatedAt = x.CreatedAt,
-                        Nome = x.Nome,
-                        Descricao = x.Descricao,
-                        Ministerio = new Response.Ministerioitem
+                        Name = x.Name,
+                        Description = x.Description,
+                        Ministry = new Response.MinistryItem
                         {
-                            Id = x.Ministerio.Id,
-                            Nome = x.Ministerio.Nome
+                            Id = x.Ministry.Id,
+                            Name = x.Ministry.Name
                         }
-                    }).ToPagedResponseAsync(request.Limit, request.Cursor, cancellationToken);
+                    }).ToPagedResponseAsync(request.Limit, request.Cursor, ct);
 
-                result = Result<PagedResponse<Response>>.Success(atividades);
+                result = Result<PagedResponse<Response>>.Success(activities);
             }
             catch (Exception ex)
             {
-                var error = Error.Problem("RecuperarAtividades", ex.Message);
+                var error = Error.Problem("GetActivities", ex.Message);
                 result = Result<PagedResponse<Response>>.Failure(error);
             }
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Atividades);
+        }).WithTags(Tags.Activities);
     }
 }

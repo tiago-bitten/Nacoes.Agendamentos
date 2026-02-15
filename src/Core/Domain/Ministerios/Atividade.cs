@@ -1,31 +1,42 @@
 using Domain.Shared.Entities;
 using Domain.Shared.Results;
+using Domain.Ministerios.DomainEvents;
 
 namespace Domain.Ministerios;
 
-public sealed class Atividade : RemovableEntity
+public sealed class Activity : RemovableEntity
 {
-    private Atividade() { }
+    public const int NameMaxLength = 100;
+    public const int DescriptionMaxLength = 500;
 
-    private Atividade(string nome, string? descricao = null)
+    private Activity() { }
+
+    private Activity(string name, string? description = null)
     {
-        Nome = nome;
-        Descricao = descricao;
+        Name = name;
+        Description = description;
     }
 
-    public string Nome { get; private set; } = string.Empty;
-    public string? Descricao { get; private set; }
-    public Guid MinisterioId { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public string? Description { get; private set; }
+    public Guid MinistryId { get; private set; }
 
-    public Ministerio Ministerio { get; private set; } = null!;
+    public Ministry Ministry { get; private set; } = null!;
 
-    internal static Result<Atividade> Criar(string nome, string? descricao = null)
+    internal static Result<Activity> Create(string name, string? description = null)
     {
-        if (string.IsNullOrWhiteSpace(nome))
+        name = name.Trim();
+        description = description?.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
         {
-            return AtividadeErrors.NomeObrigatorio;
+            return ActivityErrors.NameRequired;
         }
 
-        return new Atividade(nome, descricao);
+        var activity = new Activity(name, description);
+
+        activity.Raise(new ActivityAddedDomainEvent(activity.Id));
+
+        return activity;
     }
 }

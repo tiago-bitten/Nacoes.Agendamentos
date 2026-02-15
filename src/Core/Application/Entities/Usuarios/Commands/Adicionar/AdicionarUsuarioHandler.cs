@@ -11,47 +11,49 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Entities.Usuarios.Commands.Adicionar;
 
-internal sealed class AdicionarUsuarioHandler(
+internal sealed class AddUserHandler(
     INacoesDbContext context)
-    : ICommandHandler<AdicionarUsuarioCommand, Guid>
+    : ICommandHandler<AddUserCommand, Guid>
 {
-    public async Task<Result<Guid>> HandleAsync(AdicionarUsuarioCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid>> HandleAsync(
+        AddUserCommand command,
+        CancellationToken ct)
     {
-        var existeUsuarioComEmail = await context.Usuarios
-            .ApplySpec(new UsuarioComEmailAddressSpec(command.Email))
-            .AnyAsync(cancellationToken);
-        if (existeUsuarioComEmail)
+        var userWithEmailExists = await context.Users
+            .ApplySpec(new UserWithEmailAddressSpec(command.Email))
+            .AnyAsync(ct);
+        if (userWithEmailExists)
         {
-            return UsuarioErrors.EmailEmUso;
+            return UserErrors.EmailInUse;
         }
 
-        var usuarioResult = Usuario.Criar(
-            command.Nome,
+        var userResult = User.Create(
+            command.Name,
             command.Email,
             command.AuthType,
-            command.MinisteriosIds,
-            command.Celular is not null
-                ? new Celular(command.Celular.Ddd, command.Celular.Numero)
+            command.MinistryIds,
+            command.PhoneNumber is not null
+                ? new PhoneNumber(command.PhoneNumber.AreaCode, command.PhoneNumber.Number)
                 : null,
-            command.Senha);
-        if (usuarioResult.IsFailure)
+            command.Password);
+        if (userResult.IsFailure)
         {
-            return usuarioResult.Error;
+            return userResult.Error;
         }
 
-        var usuario = usuarioResult.Value;
+        var user = userResult.Value;
 
-        var senhaResult = usuario.DefinirSenha(PasswordHelper.Hash(command.Senha!));
-        if (senhaResult.IsFailure)
+        var passwordResult = user.SetPassword(PasswordHelper.Hash(command.Password!));
+        if (passwordResult.IsFailure)
         {
-            return senhaResult.Error;
+            return passwordResult.Error;
         }
 
-        await context.Usuarios.AddAsync(usuario, cancellationToken);
-        usuario.Raise(new UsuarioAdicionadoDomainEvent(usuario.Id));
+        await context.Users.AddAsync(user, ct);
+        user.Raise(new UserAddedDomainEvent(user.Id));
 
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(ct);
 
-        return usuario.Id;
+        return user.Id;
     }
 }

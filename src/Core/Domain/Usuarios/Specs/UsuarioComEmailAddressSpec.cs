@@ -3,8 +3,8 @@ using Domain.Shared.Specifications;
 
 namespace Domain.Usuarios.Specs;
 
-public sealed class UsuarioComEmailAddressSpec(string emailAddress) : Specification<Usuario>
+public sealed class UserWithEmailAddressSpec(string emailAddress) : Specification<User>
 {
-    public override Expression<Func<Usuario, bool>> ToExpression()
+    public override Expression<Func<User, bool>> ToExpression()
         => x => x.Email.Address == emailAddress;
 }

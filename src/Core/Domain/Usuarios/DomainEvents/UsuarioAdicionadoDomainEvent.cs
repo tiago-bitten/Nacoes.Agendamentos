@@ -2,4 +2,4 @@ using Domain.Shared.Events;
 
 namespace Domain.Usuarios.DomainEvents;
 
-public sealed record UsuarioAdicionadoDomainEvent(Guid UsuarioId) : IDomainEvent;
+public sealed record UserAddedDomainEvent(Guid UserId) : IDomainEvent;

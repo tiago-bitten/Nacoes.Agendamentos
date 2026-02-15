@@ -2,13 +2,13 @@ using Domain.Shared.Events;
 using Domain.Eventos.DomainEvents;
 using Domain.Historicos.Interfaces;
 
-namespace Application.Entities.Eventos.Commands.AdicionarAgendamento;
+namespace Application.Entities.Eventos.Commands.Reservas.AdicionarReserva;
 
-internal sealed class ReservaAdicionadaDomainEventHandler(IHistoricoRegister historicoRegister)
-    : IDomainEventHandler<AgendamentoAdicionadoDomainEvent>
+internal sealed class ReservationAddedDomainEventHandler(IAuditLogRegister auditLogRegister)
+    : IDomainEventHandler<ReservationAddedDomainEvent>
 {
-    public Task Handle(AgendamentoAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public Task Handle(ReservationAddedDomainEvent domainEvent, CancellationToken ct)
     {
-        return historicoRegister.AuditAsync(domainEvent.AgendamentoId, acao: "Agendamento adicionado.");
+        return auditLogRegister.AuditAsync(domainEvent.ReservationId, action: "Reservation added.");
     }
 }

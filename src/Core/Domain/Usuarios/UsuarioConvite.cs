@@ -5,152 +5,168 @@ using Domain.Shared.ValueObjects;
 
 namespace Domain.Usuarios;
 
-public sealed class UsuarioConvite : RemovableEntity, IAggregateRoot
+public sealed class UserInvitation : RemovableEntity, IAggregateRoot
 {
-    private const int ExpiracaoEmDias = 7;
-    private readonly List<UsuarioConviteMinisterio> _ministerios = [];
+    public const int NameMaxLength = 100;
+    public const int ReasonMaxLength = 500;
+    public const int TokenMaxLength = 64;
 
-    private UsuarioConvite() { }
+    private const int ExpirationInDays = 7;
+    private readonly List<UserInvitationMinistry> _ministries = [];
 
-    private UsuarioConvite(
-        string nome, Email email,
-        Guid enviadopor,
-        EConviteStatus status,
-        DateTimeOffset dataExpiracao,
+    private UserInvitation() { }
+
+    private UserInvitation(
+        string name, Email email,
+        Guid sentById,
+        EInvitationStatus status,
+        DateTimeOffset expirationDate,
         string token)
     {
-        Nome = nome;
+        Name = name;
         Email = email;
-        EnviadoPorId = enviadopor;
+        SentById = sentById;
         Status = status;
-        DataExpiracao = dataExpiracao;
+        ExpirationDate = expirationDate;
         Token = token;
     }
 
-    public string Nome { get; private set; } = string.Empty;
+    public string Name { get; private set; } = string.Empty;
     public Email Email { get; private set; } = null!;
-    public Guid EnviadoPorId { get; private set; }
-    public Guid? EnviadoParaId { get; private set; }
-    public EConviteStatus Status { get; private set; }
-    public string Motivo { get; private set; } = string.Empty;
-    public DateTimeOffset DataExpiracao { get; private set; }
+    public Guid SentById { get; private set; }
+    public Guid? SentToId { get; private set; }
+    public EInvitationStatus Status { get; private set; }
+    public string Reason { get; private set; } = string.Empty;
+    public DateTimeOffset ExpirationDate { get; private set; }
     public string Token { get; private set; } = string.Empty;
 
-    public Usuario EnviadoPor { get; private set; } = null!;
-    public Usuario? EnviadoPara { get; private set; }
-    public IReadOnlyList<UsuarioConviteMinisterio> Ministerios => _ministerios.AsReadOnly();
+    public User SentBy { get; private set; } = null!;
+    public User? SentTo { get; private set; }
+    public IReadOnlyList<UserInvitationMinistry> Ministries => _ministries.AsReadOnly();
 
-    public string Path => $"usuarios/convites/{Token}";
+    public string Path => $"users/invitations/{Token}";
 
-    public static Result<UsuarioConvite> Criar(string nome, Email email, Guid enviadoPorId, List<Guid> ministeriosIds)
+    public static Result<UserInvitation> Create(
+        string name,
+        Email email,
+        Guid sentById,
+        List<Guid> ministryIds)
     {
-        if (string.IsNullOrWhiteSpace(nome))
+        name = name.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
         {
-            return UsuarioErrors.NomeObrigatorio;
+            return UserErrors.NameRequired;
         }
 
-        if (ministeriosIds.Count == 0)
+        if (ministryIds.Count == 0)
         {
-            return UsuarioErrors.MinisteriosObrigatorio;
+            return UserErrors.MinistriesRequired;
         }
 
-        var dataExpiracao = DateTimeOffset.UtcNow.AddDays(ExpiracaoEmDias);
+        var expirationDate = DateTimeOffset.UtcNow.AddDays(ExpirationInDays);
         var token = Guid.NewGuid().ToString("N");
-        var usuarioConvite = new UsuarioConvite(nome, email, enviadoPorId, EConviteStatus.Pendente, dataExpiracao, token);
+        var invitation = new UserInvitation(
+            name,
+            email,
+            sentById,
+            EInvitationStatus.Pending,
+            expirationDate,
+            token);
 
-        foreach (var ministerioId in ministeriosIds)
+        foreach (var ministryId in ministryIds)
         {
-            var usuarioConviteMinisterioResult = UsuarioConviteMinisterio.Criar(usuarioConvite.Id, ministerioId);
-            if (usuarioConviteMinisterioResult.IsFailure)
+            var invitationMinistryResult = UserInvitationMinistry.Create(invitation.Id, ministryId);
+            if (invitationMinistryResult.IsFailure)
             {
-                return usuarioConviteMinisterioResult.Error;
+                return invitationMinistryResult.Error;
             }
 
-            var usuarioConviteMinisterio = usuarioConviteMinisterioResult.Value;
-            usuarioConvite._ministerios.Add(usuarioConviteMinisterio);
+            var invitationMinistry = invitationMinistryResult.Value;
+            invitation._ministries.Add(invitationMinistry);
         }
 
-        usuarioConvite.Raise(new UsuarioConviteAdicionadoDomainEvent(usuarioConvite.Id, token));
+        invitation.Raise(new UserInvitationAddedDomainEvent(invitation.Id, token));
 
-        return usuarioConvite;
+        return invitation;
     }
 
-    public Result Aceitar(Guid enviadoParaId)
+    public Result Accept(Guid sentToId)
     {
-        if (Status is not EConviteStatus.Pendente)
+        if (Status is not EInvitationStatus.Pending)
         {
-            return UsuarioConviteErrors.StatusInvalidoParaAceitar;
+            return UserInvitationErrors.InvalidStatusToAccept;
         }
 
-        Status = EConviteStatus.Aceito;
-        EnviadoParaId = enviadoParaId;
+        Status = EInvitationStatus.Accepted;
+        SentToId = sentToId;
 
         return Result.Success();
     }
 
-    public Result Recusar()
+    public Result Decline()
     {
-        if (Status is not EConviteStatus.Pendente)
+        if (Status is not EInvitationStatus.Pending)
         {
-            return UsuarioConviteErrors.StatusInvalidoParaRecusar;
+            return UserInvitationErrors.InvalidStatusToDecline;
         }
 
-        Status = EConviteStatus.Recusado;
+        Status = EInvitationStatus.Declined;
 
         return Result.Success();
     }
 
-    public Result Expirar()
+    public Result Expire()
     {
-        if (Status is not EConviteStatus.Pendente)
+        if (Status is not EInvitationStatus.Pending)
         {
-            return UsuarioConviteErrors.StatusInvalidoParaRecusar;
+            return UserInvitationErrors.InvalidStatusToExpire;
         }
 
-        var dataHoje = DateTimeOffset.UtcNow;
-        if (DataExpiracao > dataHoje)
+        var today = DateTimeOffset.UtcNow;
+        if (ExpirationDate > today)
         {
-            return UsuarioConviteErrors.DataExpiracaoNaoAtingida;
+            return UserInvitationErrors.ExpirationDateNotReached;
         }
 
-        Status = EConviteStatus.Expirado;
+        Status = EInvitationStatus.Expired;
 
         return Result.Success();
     }
 
-    public Result Cancelar(string motivo)
+    public Result Cancel(string reason)
     {
-        if (Status is not EConviteStatus.Pendente)
+        if (Status is not EInvitationStatus.Pending)
         {
-            return UsuarioConviteErrors.StatusInvalidoParaCancelar;
+            return UserInvitationErrors.InvalidStatusToCancel;
         }
 
-        if (string.IsNullOrWhiteSpace(motivo))
+        if (string.IsNullOrWhiteSpace(reason))
         {
-            return UsuarioConviteErrors.MotivoObrigatorio;
+            return UserInvitationErrors.ReasonRequired;
         }
 
-        Status = EConviteStatus.Cancelado;
-        Motivo = motivo;
+        Status = EInvitationStatus.Cancelled;
+        Reason = reason;
 
         return Result.Success();
     }
 
-    public Result Erro(string? motivo)
+    public Result Error(string? reason)
     {
-        Status = EConviteStatus.Erro;
-        Motivo = motivo ?? "Ocorreu um erro interno.";
+        Status = EInvitationStatus.Error;
+        Reason = reason ?? "An internal error occurred.";
 
         return Result.Success();
     }
 }
 
-public enum EConviteStatus
+public enum EInvitationStatus
 {
-    Pendente = 0,
-    Aceito = 1,
-    Recusado = 2,
-    Expirado = 3,
-    Cancelado = 4,
-    Erro = 5
+    Pending = 0,
+    Accepted = 1,
+    Declined = 2,
+    Expired = 3,
+    Cancelled = 4,
+    Error = 5
 }

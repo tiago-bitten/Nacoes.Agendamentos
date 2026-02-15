@@ -4,7 +4,8 @@ namespace Infrastructure.Notifications;
 
 internal sealed class TemplateRenderer : ITemplateRenderer
 {
-    private static readonly string AssemblyLocation = Path.GetDirectoryName(typeof(TemplateRenderer).Assembly.Location)!;
+    private static readonly string AssemblyLocation =
+        Path.GetDirectoryName(typeof(TemplateRenderer).Assembly.Location)!;
     private static readonly string BasePath = Path.Combine(AssemblyLocation, "Notifications", "Templates", "Emails");
 
     public string Render(string templateName, Dictionary<string, string> placeholders)

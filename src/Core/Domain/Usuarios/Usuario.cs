@@ -1,100 +1,108 @@
 using Domain.Shared.Entities;
 using Domain.Shared.Results;
 using Domain.Shared.ValueObjects;
+using Domain.Usuarios.DomainEvents;
 
 namespace Domain.Usuarios;
 
-public sealed class Usuario : RemovableEntity, IAggregateRoot
+public sealed class User : RemovableEntity, IAggregateRoot
 {
-    private readonly List<UsuarioMinisterio> _ministerios = [];
+    public const int NameMaxLength = 100;
+    public const int PasswordMinLength = 4;
 
-    private Usuario() { }
+    private readonly List<UserMinistry> _ministries = [];
 
-    private Usuario(string nome, Email email, EAuthType authType, Celular? celular = null, string? senha = null)
+    private User() { }
+
+    private User(string name, Email email, EAuthType authType, PhoneNumber? phoneNumber = null, string? password = null)
     {
-        Nome = nome;
+        Name = name;
         Email = email;
-        Celular = celular;
+        PhoneNumber = phoneNumber;
         AuthType = authType;
-        Senha = senha;
+        Password = password;
     }
 
-    public string Nome { get; private set; } = null!;
+    public string Name { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
-    public string? Senha { get; private set; }
-    public Celular? Celular { get; private set; }
+    public string? Password { get; private set; }
+    public PhoneNumber? PhoneNumber { get; private set; }
     public EAuthType AuthType { get; private set; }
 
-    public IReadOnlyList<UsuarioMinisterio> Ministerios => _ministerios.AsReadOnly();
+    public IReadOnlyList<UserMinistry> Ministries => _ministries.AsReadOnly();
 
-    public static Result<Usuario> Criar(
-        string nome,
+    public static Result<User> Create(
+        string name,
         Email email,
         EAuthType authType,
-        List<Guid> ministeriosIds,
-        Celular? celular = null,
-        string? senha = null)
+        List<Guid> ministryIds,
+        PhoneNumber? phoneNumber = null,
+        string? password = null)
     {
-        if (string.IsNullOrWhiteSpace(nome))
+        name = name.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
         {
-            return UsuarioErrors.NomeObrigatorio;
+            return UserErrors.NameRequired;
         }
 
-        if (authType is not EAuthType.Local && !string.IsNullOrWhiteSpace(senha))
+        if (authType is not EAuthType.Local && !string.IsNullOrWhiteSpace(password))
         {
-            return UsuarioErrors.SenhaNaoNecessaria;
+            return UserErrors.PasswordNotRequired;
         }
 
-        if (ministeriosIds.Count == 0)
+        if (ministryIds.Count == 0)
         {
-            return UsuarioErrors.MinisteriosObrigatorio;
+            return UserErrors.MinistriesRequired;
         }
 
-        var usuario = new Usuario(nome, email, authType, celular, senha);
+        var user = new User(name, email, authType, phoneNumber, password);
 
-        foreach (var ministerioId in ministeriosIds)
+        foreach (var ministryId in ministryIds)
         {
-            var usuarioMinisterioVinculoResult = usuario.VincularMinisterio(ministerioId);
-            if (usuarioMinisterioVinculoResult.IsFailure)
+            var linkResult = user.LinkMinistry(ministryId);
+            if (linkResult.IsFailure)
             {
-                return usuarioMinisterioVinculoResult.Error;
+                return linkResult.Error;
             }
         }
 
-        return usuario;
+        user.Raise(new UserAddedDomainEvent(user.Id));
+
+        return user;
     }
 
-    public Result VincularMinisterio(Guid ministerioId)
+    public Result LinkMinistry(Guid ministryId)
     {
-        var existeVinculo = _ministerios.SingleOrDefault(x => x.MinisterioId == ministerioId);
-        if (existeVinculo is null)
+        var existingLink = _ministries.SingleOrDefault(x => x.MinistryId == ministryId);
+        if (existingLink is null)
         {
-            _ministerios.Add(new UsuarioMinisterio(ministerioId));
+            _ministries.Add(new UserMinistry(ministryId));
             return Result.Success();
         }
 
-        return existeVinculo.Restore();
+        return existingLink.Restore();
     }
 
-    public Result DesvincularMinisterio(Guid ministerioId)
+    public Result UnlinkMinistry(Guid ministryId)
     {
-        var usuarioMinisterio = _ministerios.SingleOrDefault(x => x.MinisterioId == ministerioId);
-        if (usuarioMinisterio is null)
+        var userMinistry = _ministries.SingleOrDefault(x => x.MinistryId == ministryId);
+        if (userMinistry is null)
         {
-            return UsuarioErrors.MinisterioNaoVinculadoAoUsuario;
+            return UserErrors.MinistryNotLinkedToUser;
         }
 
-        return usuarioMinisterio.Remove();
+        return userMinistry.Remove();
     }
 
-    public Result DefinirSenha(string senha)
+    public Result SetPassword(string password)
     {
-        if (senha.Length < 4)
+        if (password.Length < PasswordMinLength)
         {
-            return UsuarioErrors.SenhaCurta;
+            return UserErrors.PasswordTooShort;
         }
 
-        Senha = senha;
+        Password = password;
 
         return Result.Success();
     }

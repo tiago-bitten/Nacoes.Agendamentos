@@ -3,67 +3,67 @@ using Domain.Shared.Results;
 
 namespace Domain.Eventos.Suspensoes;
 
-public sealed class EventoSuspensao : RemovableEntity
+public sealed class EventSuspension : RemovableEntity
 {
-    private EventoSuspensao() { }
+    private EventSuspension() { }
 
-    private EventoSuspensao(DateOnly? dataEncerramento, EStatusEventoSuspensao status)
+    private EventSuspension(DateOnly? endDate, EEventSuspensionStatus status)
     {
-        DataEncerramento = dataEncerramento;
+        EndDate = endDate;
         Status = status;
     }
 
-    public Guid EventoId { get; private set; }
-    public DateOnly? DataEncerramento { get; private set; }
-    public DateTimeOffset? DataConclusaoEncerramento { get; private set; }
-    public EStatusEventoSuspensao Status { get; private set; }
+    public Guid EventId { get; private set; }
+    public DateOnly? EndDate { get; private set; }
+    public DateTimeOffset? CompletionDate { get; private set; }
+    public EEventSuspensionStatus Status { get; private set; }
 
-    internal static Result<EventoSuspensao> Criar(DateOnly? dataFinal)
+    internal static Result<EventSuspension> Create(DateOnly? endDate)
     {
-        var dataHoje = DateOnly.FromDateTime(DateTimeOffset.UtcNow.DateTime);
+        var today = DateOnly.FromDateTime(DateTimeOffset.UtcNow.DateTime);
 
-        if (dataFinal == dataHoje)
+        if (endDate == today)
         {
-            return EventoSuspensaoErrors.DataFinalNaoPodeSerHoje;
+            return EventSuspensionErrors.EndDateCannotBeToday;
         }
 
-        if (dataFinal < dataHoje)
+        if (endDate < today)
         {
-            return EventoSuspensaoErrors.DataFinalNaoPodeSerAnterioraDataHoje;
+            return EventSuspensionErrors.EndDateCannotBeBeforeToday;
         }
 
-        return new EventoSuspensao(dataFinal, EStatusEventoSuspensao.Ativo);
+        return new EventSuspension(endDate, EEventSuspensionStatus.Active);
     }
 
-    internal Result Cancelar()
+    internal Result Cancel()
     {
-        if (Status is EStatusEventoSuspensao.Cancelado)
+        if (Status is EEventSuspensionStatus.Cancelled)
         {
-            return EventoSuspensaoErrors.NaoEstaDisponivelParaCancelar;
+            return EventSuspensionErrors.NotAvailableToCancel;
         }
 
-        Status = EStatusEventoSuspensao.Cancelado;
+        Status = EEventSuspensionStatus.Cancelled;
 
         return Result.Success();
     }
 
-    internal Result Encerrar()
+    internal Result Close()
     {
-        if (Status is not EStatusEventoSuspensao.Ativo)
+        if (Status is not EEventSuspensionStatus.Active)
         {
-            return EventoSuspensaoErrors.NaoEstaDisponivelParaEncerrar;
+            return EventSuspensionErrors.NotAvailableToClose;
         }
 
-        Status = EStatusEventoSuspensao.Encerrado;
-        DataConclusaoEncerramento = DateTimeOffset.UtcNow;
+        Status = EEventSuspensionStatus.Closed;
+        CompletionDate = DateTimeOffset.UtcNow;
 
         return Result.Success();
     }
 }
 
-public enum EStatusEventoSuspensao
+public enum EEventSuspensionStatus
 {
-    Ativo = 0,
-    Cancelado = 1,
-    Encerrado = 2
+    Active = 0,
+    Cancelled = 1,
+    Closed = 2
 }

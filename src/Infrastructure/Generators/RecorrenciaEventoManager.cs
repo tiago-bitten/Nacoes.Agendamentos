@@ -8,105 +8,108 @@ using Domain.Shared.ValueObjects;
 
 namespace Infrastructure.Generators;
 
-internal sealed class RecorrenciaEventoManager(
+internal sealed class EventRecurrenceManager(
     INacoesDbContext context,
-    IHorarioGeneratorFactory horarioGeneratorFactory)
-    : IRecorrenciaEventoManager
+    IScheduleGeneratorFactory scheduleGeneratorFactory)
+    : IEventRecurrenceManager
 {
-    public const int QuantidadeMaximaDias = 365;
+    public const int MaxDays = 365;
 
-    public async Task GenerateInstancesAsync(Evento eventoMaster, CancellationToken cancellationToken = default)
+    public async Task GenerateInstancesAsync(Event masterEvent, CancellationToken ct = default)
     {
-        if (eventoMaster.Recorrencia.Tipo is ETipoRecorrenciaEvento.Nenhuma)
+        if (masterEvent.Recurrence.Type is EEventRecurrenceType.None)
         {
             return;
         }
 
-        var horarioGenerator = horarioGeneratorFactory.Create(eventoMaster.Recorrencia.Tipo);
+        var scheduleGenerator = scheduleGeneratorFactory.Create(masterEvent.Recurrence.Type);
 
-        var dataFinal = DateOnly.FromDateTime(DateTimeOffset.UtcNow.DateTime).AddDays(QuantidadeMaximaDias);
+        var endDate = DateOnly.FromDateTime(DateTimeOffset.UtcNow.DateTime).AddDays(MaxDays);
 
-        if (eventoMaster.Recorrencia.DataFinal < dataFinal)
+        if (masterEvent.Recurrence.EndDate < endDate)
         {
-            dataFinal = eventoMaster.Recorrencia.DataFinal.Value;
+            endDate = masterEvent.Recurrence.EndDate.Value;
         }
 
-        var dataInicio = eventoMaster.Horario.DataInicial;
+        var startDate = masterEvent.Schedule.StartDate;
 
-        var horarios = new List<Horario>();
-        while (DateOnly.FromDateTime(dataInicio.DateTime) <= dataFinal)
+        var schedules = new List<Schedule>();
+        while (DateOnly.FromDateTime(startDate.DateTime) <= endDate)
         {
-            var horarioResult = horarioGenerator.GenerateAsync(eventoMaster, dataInicio);
-            if (horarioResult.IsFailure)
+            var scheduleResult = scheduleGenerator.Generate(masterEvent, startDate);
+            if (scheduleResult.IsFailure)
             {
                 continue;
             }
 
-            var horario = horarioResult.Value;
-            horarios.Add(horario);
+            var schedule = scheduleResult.Value;
+            schedules.Add(schedule);
 
-            dataInicio = horario.DataInicial;
+            startDate = schedule.StartDate;
         }
 
-        foreach (var horario in horarios)
+        foreach (var schedule in schedules)
         {
-            var eventoInstanceResult = Evento.Criar(eventoMaster.Descricao, horario, eventoMaster.Recorrencia.Copiar(), eventoMaster.QuantidadeMaximaReservas);
-            if (eventoInstanceResult.IsFailure)
+            var eventInstanceResult = Event.Create(
+                masterEvent.Description,
+                schedule,
+                masterEvent.Recurrence.Copy(),
+                masterEvent.MaxReservationCount);
+            if (eventInstanceResult.IsFailure)
             {
                 continue;
             }
 
-            var eventoInstance = eventoInstanceResult.Value;
+            var eventInstance = eventInstanceResult.Value;
 
-            await context.Eventos.AddAsync(eventoInstance, cancellationToken);
+            await context.Events.AddAsync(eventInstance, ct);
         }
 
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(ct);
     }
 
-    public async Task UpdateInstancesAsync(Evento eventoAlterado, CancellationToken cancellationToken = default)
+    public async Task UpdateInstancesAsync(Event updatedEvent, CancellationToken ct = default)
     {
-        var statusEventosDisponivel = new[]
+        var availableEventStatuses = new[]
         {
-            EStatusEvento.Aberto,
-            EStatusEvento.Lotado,
-            EStatusEvento.Suspenso
+            EEventStatus.Open,
+            EEventStatus.Full,
+            EEventStatus.Suspended
         };
 
-        var eventos = await context.Eventos
-            .Where(x => x.Recorrencia.Id == eventoAlterado.Recorrencia.Id &&
-                        statusEventosDisponivel.Contains(x.Status) &&
-                        x.Horario.DataInicial > eventoAlterado.Horario.DataInicial &&
-                        x.Id != eventoAlterado.Id)
-            .ToListAsync(cancellationToken);
+        var events = await context.Events
+            .Where(x => x.Recurrence.Id == updatedEvent.Recurrence.Id &&
+                        availableEventStatuses.Contains(x.Status) &&
+                        x.Schedule.StartDate > updatedEvent.Schedule.StartDate &&
+                        x.Id != updatedEvent.Id)
+            .ToListAsync(ct);
 
 
-        var horarioAtualizado = eventoAlterado.Horario;
-        var recorrenciaAtualizada = eventoAlterado.Recorrencia;
+        var updatedSchedule = updatedEvent.Schedule;
+        var updatedRecurrence = updatedEvent.Recurrence;
 
-        var erros = new List<Error>();
+        var errors = new List<Error>();
 
-        foreach (var evento in eventos)
+        foreach (var @event in events)
         {
-            var atualizarHorarioResult = evento.AtualizarHorario(horarioAtualizado);
-            var atualizarRecorrenciaResult = evento.AtualizarRecorrencia(recorrenciaAtualizada);
+            var updateScheduleResult = @event.UpdateSchedule(updatedSchedule);
+            var updateRecurrenceResult = @event.UpdateRecurrence(updatedRecurrence);
 
-            if (atualizarHorarioResult.IsFailure)
+            if (updateScheduleResult.IsFailure)
             {
-                erros.Add(atualizarHorarioResult.Error);
+                errors.Add(updateScheduleResult.Error);
             }
 
-            if (atualizarRecorrenciaResult.IsFailure)
+            if (updateRecurrenceResult.IsFailure)
             {
-                erros.Add(atualizarRecorrenciaResult.Error);
+                errors.Add(updateRecurrenceResult.Error);
             }
         }
 
-        if (erros.Count > 0)
+        if (errors.Count > 0)
         {
-            // WarningContext
         }
 
-        await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(ct);
     }
 }

@@ -14,32 +14,32 @@ namespace Application.Authentication.Strategies;
 internal sealed class GoogleAuthStrategy(INacoesDbContext context, IOptions<AuthenticationSettings> authSettings)
     : IAuthStrategy
 {
-    public async Task<Result<Usuario>> AutenticarAsync(LoginCommand command)
+    public async Task<Result<User>> AuthenticateAsync(LoginCommand command, CancellationToken ct)
     {
         try
         {
-            var payload = await GoogleJsonWebSignature.ValidateAsync(command.TokenExterno!, GoogleSettings);
+            var payload = await GoogleJsonWebSignature.ValidateAsync(command.ExternalToken!, GoogleSettings);
 
-            var usuario = await context.Usuarios
-                .ApplySpec(new UsuarioComEmailAddressSpec(payload.Email!))
+            var user = await context.Users
+                .ApplySpec(new UserWithEmailAddressSpec(payload.Email!))
                 .Where(x => x.AuthType == EAuthType.Google)
                 .AsNoTracking()
-                .SingleOrDefaultAsync();
-            if (usuario is null)
+                .SingleOrDefaultAsync(ct);
+            if (user is null)
             {
-                return UsuarioErrors.NaoEncontrado;
+                return UserErrors.NotFound;
             }
 
-            return usuario;
+            return user;
         }
         catch (InvalidJwtException ex)
         {
-            return GoogleAuthStrategyErrors.JwtInvalido(ex.Message);
+            return GoogleAuthStrategyErrors.InvalidJwt(ex.Message);
         }
 
         catch (Exception)
         {
-            return UsuarioErrors.SenhaInvalida;
+            return UserErrors.InvalidPassword;
         }
     }
 
@@ -52,6 +52,6 @@ internal sealed class GoogleAuthStrategy(INacoesDbContext context, IOptions<Auth
 
 public static class GoogleAuthStrategyErrors
 {
-    public static Error JwtInvalido(string googleMessage)
-        => Error.Problem("Login.Google.JwtInvalido", $"Erro: {googleMessage}");
+    public static Error InvalidJwt(string googleMessage)
+        => Error.Problem("Login.Google.InvalidJwt", $"Error: {googleMessage}");
 }

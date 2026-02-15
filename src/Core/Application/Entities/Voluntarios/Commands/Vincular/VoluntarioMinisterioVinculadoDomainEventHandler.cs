@@ -4,11 +4,15 @@ using Domain.Voluntarios.DomainEvents;
 
 namespace Application.Entities.Voluntarios.Commands.Vincular;
 
-internal sealed class VoluntarioMinisterioVinculadoDomainEventHandler(IHistoricoRegister historicoRegister)
-    : IDomainEventHandler<VoluntarioMinisterioVinculadoDomainEvent>
+internal sealed class VolunteerMinistryLinkedDomainEventHandler(IAuditLogRegister auditLogRegister)
+    : IDomainEventHandler<VolunteerMinistryLinkedDomainEvent>
 {
-    public Task Handle(VoluntarioMinisterioVinculadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public Task Handle(
+        VolunteerMinistryLinkedDomainEvent domainEvent,
+        CancellationToken ct)
     {
-        return historicoRegister.AuditAsync(domainEvent.VoluntarioId, acao: $"Voluntário vinculado ao ministério {domainEvent.NomeMinisterio}.");
+        return auditLogRegister.AuditAsync(
+            domainEvent.VolunteerId,
+            action: $"Volunteer linked to ministry {domainEvent.MinistryName}.");
     }
 }

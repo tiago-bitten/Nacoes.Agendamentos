@@ -3,7 +3,7 @@ using Application.Shared.Pagination;
 
 namespace Application.Entities.Voluntarios.Queries.Recuperar;
 
-public sealed record RecuperarVoluntariosQuery : BaseQueryParam, IQuery<PagedResponse<VoluntarioResponse>>
+public sealed record GetVolunteersQuery : BaseQueryParam, IQuery<PagedResponse<VolunteerResponse>>
 {
 
 }

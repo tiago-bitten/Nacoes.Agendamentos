@@ -5,14 +5,14 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Entities.Voluntarios.Mappings;
 
-public static class VoluntarioMapper
+public static class VolunteerMapper
 {
-    public static Result<Voluntario> ToDomain(this AdicionarVoluntarioCommand command)
-        => Voluntario.Criar(
-            command.Nome,
+    public static Result<Volunteer> ToDomain(this AddVolunteerCommand command)
+        => Volunteer.Create(
+            command.Name,
             string.IsNullOrWhiteSpace(command.Email) ? null : new Email(command.Email),
-            command.Celular is null ? null : new Celular(command.Celular.Ddd, command.Celular.Numero),
+            command.PhoneNumber is null ? null : new PhoneNumber(command.PhoneNumber.AreaCode, command.PhoneNumber.Number),
             string.IsNullOrWhiteSpace(command.Cpf) ? null : new CPF(command.Cpf),
-            !command.DataNascimento.HasValue ? null : new DataNascimento(command.DataNascimento.Value),
-            command.OrigemCadastro);
+            !command.BirthDate.HasValue ? null : new BirthDate(command.BirthDate.Value),
+            command.RegistrationOrigin);
 }

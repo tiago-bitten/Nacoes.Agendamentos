@@ -11,19 +11,19 @@ internal sealed class Login : IEndpoint
 {
     public record Request(
         string? Email,
-        string? Senha,
-        string? TokenExterno,
+        string? Password,
+        string? ExternalToken,
         EAuthType AuthType);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/v1/auth/login", async (
+        app.MapPost("v1/auth/login", async (
             [FromBody] Request request,
             [FromServices] ICommandHandler<LoginCommand, LoginResponse> handler,
-            CancellationToken cancellationToken) =>
+            CancellationToken ct) =>
         {
-            var command = new LoginCommand(request.Email, request.Senha, request.TokenExterno, request.AuthType);
-            var result = await handler.HandleAsync(command, cancellationToken);
+            var command = new LoginCommand(request.Email, request.Password, request.ExternalToken, request.AuthType);
+            var result = await handler.HandleAsync(command, ct);
 
             return result.Match(Results.Ok, CustomResults.Problem);
         }).WithTags(Tags.Auth);

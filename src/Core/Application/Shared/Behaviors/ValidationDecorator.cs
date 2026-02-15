@@ -11,13 +11,13 @@ internal static class ValidationDecorator
                                                               IEnumerable<IValidator<TCommand>> validators)
         : ICommandHandler<TCommand, TResponse> where TCommand : ICommand<TResponse>
     {
-        public async Task<Result<TResponse>> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        public async Task<Result<TResponse>> HandleAsync(TCommand command, CancellationToken ct)
         {
             var validationFailures = await ValidateAsync(command, validators);
 
             if (validationFailures.Length is 0)
             {
-                return await innerHandler.HandleAsync(command, cancellationToken);
+                return await innerHandler.HandleAsync(command, ct);
             }
 
             return CreateValidationError(validationFailures);
@@ -28,13 +28,13 @@ internal static class ValidationDecorator
                                                        IEnumerable<IValidator<TCommand>> validators)
         : ICommandHandler<TCommand> where TCommand : ICommand
     {
-        public async Task<Result> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        public async Task<Result> HandleAsync(TCommand command, CancellationToken ct)
         {
             var validationFailures = await ValidateAsync(command, validators);
 
             if (validationFailures.Length is 0)
             {
-                return await innerHandler.HandleAsync(command, cancellationToken);
+                return await innerHandler.HandleAsync(command, ct);
             }
 
             return CreateValidationError(validationFailures);
@@ -52,8 +52,8 @@ internal static class ValidationDecorator
 
         var context = new ValidationContext<TCommand>(command);
 
-        var validationRusultsTasks = enumerable.Select(validator => validator.ValidateAsync(context));
-        var validationResults = await Task.WhenAll(validationRusultsTasks);
+        var validationResultsTasks = enumerable.Select(validator => validator.ValidateAsync(context));
+        var validationResults = await Task.WhenAll(validationResultsTasks);
 
         var validationFailures = validationResults
             .Where(validationResult => !validationResult.IsValid)
@@ -65,7 +65,7 @@ internal static class ValidationDecorator
     private static Error CreateValidationError(ValidationFailure[] validationFailures)
     {
         var isSingleError = validationFailures.Length is 1;
-        var firstErrorMessage = isSingleError ? "É obrigatório informar" : "São obrigatórios";
+        var firstErrorMessage = isSingleError ? "Required field" : "Required fields";
         var validationMessages = validationFailures.Select(x => x.ErrorMessage)
                                                    .ToArray()
                                                    .ToSingleMessage();

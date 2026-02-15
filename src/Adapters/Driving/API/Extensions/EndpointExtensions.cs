@@ -4,7 +4,7 @@ using API.Endpoints;
 
 namespace API.Extensions;
 
-public static class EndpointExtensions
+internal static class EndpointExtensions
 {
     public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
     {

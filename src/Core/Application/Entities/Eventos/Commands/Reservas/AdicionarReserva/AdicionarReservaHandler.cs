@@ -4,12 +4,14 @@ using Domain.Shared.Results;
 
 namespace Application.Entities.Eventos.Commands.Reservas.AdicionarReserva;
 
-internal sealed class AdicionarReservaHandler(
+internal sealed class AddReservationHandler(
     INacoesDbContext context)
-    : ICommandHandler<AdicionarReservaCommand, Guid>
+    : ICommandHandler<AddReservationCommand, Guid>
 {
-    public async Task<Result<Guid>> HandleAsync(AdicionarReservaCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> HandleAsync(
+        AddReservationCommand command,
+        CancellationToken ct)
     {
-        throw new NotImplementedException();
+        return Result.Failure<Guid>(Error.Problem("reservation.notimplemented", "Feature not implemented."));
     }
 }

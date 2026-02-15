@@ -3,8 +3,8 @@ using Domain.Shared.Specifications;
 
 namespace Domain.Voluntarios.Specs;
 
-public class VoluntarioPorVinculoMinisterioSpec(Guid voluntarioMinisterioId) : Specification<Voluntario>
+public sealed class VolunteerByMinistryLinkSpec(Guid volunteerMinistryId) : Specification<Volunteer>
 {
-    public override Expression<Func<Voluntario, bool>> ToExpression()
-        => voluntario => voluntario.Ministerios.Any(x => x.Id == voluntarioMinisterioId);
+    public override Expression<Func<Volunteer, bool>> ToExpression()
+        => volunteer => volunteer.Ministries.Any(x => x.Id == volunteerMinistryId);
 }

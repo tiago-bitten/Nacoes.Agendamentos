@@ -4,16 +4,16 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Generators.RecorrenciaEvento.Strategies;
 
-internal sealed class HorarioSemanalGeneratorStrategy : IHorarioGeneratorStrategy
+internal sealed class WeeklyScheduleGeneratorStrategy : IScheduleGeneratorStrategy
 {
-    private const int QuantidadeDiasSemana = 7;
+    private const int DaysPerWeek = 7;
 
-    public Result<Horario> GenerateAsync(Evento eventoMaster, DateTimeOffset dataInicioAnterior)
+    public Result<Schedule> Generate(Event masterEvent, DateTimeOffset previousStartDate)
     {
-        var dataInicial = dataInicioAnterior.AddDays(eventoMaster.Recorrencia.Intervalo!.Value * QuantidadeDiasSemana);
+        var startDate = previousStartDate.AddDays(masterEvent.Recurrence.Interval!.Value * DaysPerWeek);
 
-        var dataFinal = dataInicial.AddSeconds(eventoMaster.Horario.DuracaoEmSegundos);
+        var endDate = startDate.AddSeconds(masterEvent.Schedule.DurationInSeconds);
 
-        return new Horario(dataInicial, dataFinal);
+        return new Schedule(startDate, endDate);
     }
 }

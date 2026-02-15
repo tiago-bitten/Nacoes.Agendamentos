@@ -12,53 +12,53 @@ internal sealed class RecuperarPorId : IEndpoint
     public sealed record Response
     {
         public Guid Id { get; init; }
-        public string Nome { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
         public string Email { get; init; } = string.Empty;
-        public List<MinisterioItem> Ministerios { get; init; } = [];
+        public List<MinistryItem> Ministries { get; init; } = [];
 
-        public sealed record MinisterioItem
+        public sealed record MinistryItem
         {
             public Guid Id { get; init; }
-            public string Nome { get; init; } = string.Empty;
-            public string Cor { get; init; } = string.Empty;
+            public string Name { get; init; } = string.Empty;
+            public string Color { get; init; } = string.Empty;
         }
     }
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v1/usuarios/{id:guid}", async (
+        app.MapGet("v1/users/{id:guid}", async (
             [FromServices] INacoesDbContext context,
             [FromRoute] Guid id,
-            CancellationToken cancellationToken) =>
+            CancellationToken ct) =>
         {
             Result<Response> result;
 
             try
             {
-                var usuario = await context.Usuarios
+                var user = await context.Users
                     .AsNoTracking()
                     .Select(x => new Response
                     {
                         Id = x.Id,
-                        Nome = x.Nome,
+                        Name = x.Name,
                         Email = x.Email,
-                        Ministerios = x.Ministerios.Select(m => new Response.MinisterioItem
+                        Ministries = x.Ministries.Select(m => new Response.MinistryItem
                         {
                             Id = m.Id,
-                            Nome = m.Ministerio.Nome,
-                            Cor = m.Ministerio.Cor.ToCssString()
+                            Name = m.Ministry.Name,
+                            Color = m.Ministry.Color.ToCssString()
                         }).ToList()
-                    }).SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+                    }).SingleOrDefaultAsync(x => x.Id == id, ct);
 
-                result = Result<Response>.Success(usuario);
+                result = Result<Response>.Success(user);
             }
             catch (Exception ex)
             {
-                var error = Error.Problem("RecuperarUsuarioPorId", ex.Message);
+                var error = Error.Problem("GetUserById", ex.Message);
                 result = Result<Response>.Failure(error);
             }
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Usuarios);
+        }).WithTags(Tags.Users);
     }
 }

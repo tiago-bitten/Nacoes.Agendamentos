@@ -1,7 +1,7 @@
 namespace Domain.Historicos.Interfaces;
 
-public interface IHistoricoRepository
+public interface IAuditLogRepository
 {
-    Task AddAsync(Historico historico);
-    Task<List<Historico>> RecuperarPorEntidadeIdAsync(Guid domainId);
+    Task AddAsync(AuditLog auditLog, CancellationToken ct = default);
+    Task<List<AuditLog>> GetByEntityIdAsync(Guid entityId, CancellationToken ct = default);
 }

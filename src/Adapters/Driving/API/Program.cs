@@ -7,13 +7,15 @@ using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Suporte ao DATABASE_URL do Railway (converte URI para formato Npgsql)
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 if (!string.IsNullOrEmpty(databaseUrl))
 {
     var uri = new Uri(databaseUrl);
     var userInfo = uri.UserInfo.Split(':');
-    var connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]}";
+    var connectionString =
+        $"Host={uri.Host};Port={uri.Port};" +
+        $"Database={uri.AbsolutePath.TrimStart('/')};" +
+        $"Username={userInfo[0]};Password={userInfo[1]}";
     builder.Configuration["ConnectionStrings:Postgres"] = connectionString;
 }
 
@@ -53,8 +55,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
-
-// app.UseAuthorization();
 
 await app.RunAsync();
 

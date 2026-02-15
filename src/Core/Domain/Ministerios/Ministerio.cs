@@ -1,55 +1,66 @@
 using Domain.Shared.Entities;
 using Domain.Shared.Results;
 using Domain.Shared.ValueObjects;
+using Domain.Ministerios.DomainEvents;
 
 namespace Domain.Ministerios;
 
-public sealed class Ministerio : RemovableEntity, IAggregateRoot
+public sealed class Ministry : RemovableEntity, IAggregateRoot
 {
-    private readonly List<Atividade> _atividades = [];
+    public const int NameMaxLength = 100;
+    public const int DescriptionMaxLength = 500;
 
-    internal Ministerio() { }
+    private readonly List<Activity> _activities = [];
 
-    private Ministerio(string nome, string? descricao, Cor cor)
+    private Ministry() { }
+
+    private Ministry(string name, string? description, Color color)
     {
-        Nome = nome;
-        Descricao = descricao;
-        Cor = cor;
+        Name = name;
+        Description = description;
+        Color = color;
     }
 
-    public string Nome { get; private set; } = null!;
-    public string? Descricao { get; private set; }
-    public Cor Cor { get; private set; } = null!;
+    public string Name { get; private set; } = null!;
+    public string? Description { get; private set; }
+    public Color Color { get; private set; } = null!;
 
-    public IReadOnlyCollection<Atividade> Atividades => _atividades.AsReadOnly();
+    public IReadOnlyCollection<Activity> Activities => _activities.AsReadOnly();
 
-    public void AtualizarNome(string nome) => Nome = nome;
+    public void UpdateName(string name) => Name = name;
 
-    public void AtualizarDescricao(string descricao) => Descricao = descricao;
+    public void UpdateDescription(string description) => Description = description;
 
-    public void AtualizarCor(Cor cor) => Cor = cor;
+    public void UpdateColor(Color color) => Color = color;
 
-    public static Result<Ministerio> Criar(string nome, string? descricao, Cor cor)
+    public static Result<Ministry> Create(string name, string? description, Color color)
     {
-        if (string.IsNullOrWhiteSpace(nome))
+        name = name.Trim();
+        description = description?.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
         {
-            return MinisterioErrors.NomeObrigatorio;
+            return MinistryErrors.NameRequired;
         }
 
-        return new Ministerio(nome, descricao, cor);
+        var ministry = new Ministry(name, description, color);
+
+        ministry.Raise(new MinistryAddedDomainEvent(ministry.Id));
+
+        return ministry;
     }
 
-    public Result<Atividade> AdicionarAtividade(string nome, string? descricao)
+    public Result<Activity> AddActivity(string name, string? description)
     {
-        var atividadeResult = Atividade.Criar(nome, descricao);
-        if (atividadeResult.IsFailure)
+        var activityResult = Activity.Create(name, description);
+        if (activityResult.IsFailure)
         {
-            return atividadeResult.Error;
+            return activityResult.Error;
         }
 
-        var atividade = atividadeResult.Value;
-        _atividades.Add(atividade);
+        var activity = activityResult.Value;
+        _activities.Add(activity);
 
-        return Result<Atividade>.Success(atividade);
+        return Result<Activity>.Success(activity);
     }
 }

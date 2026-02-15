@@ -3,47 +3,48 @@ using Domain.Voluntarios;
 
 namespace Application.Entities.Voluntarios.Commands.Adicionar;
 
-public sealed class AdicionarVoluntarioCommandValidator : AbstractValidator<AdicionarVoluntarioCommand>
+internal sealed class AddVolunteerCommandValidator : AbstractValidator<AddVolunteerCommand>
 {
-    public AdicionarVoluntarioCommandValidator()
+    public AddVolunteerCommandValidator()
     {
-        RuleFor(x => x.Nome)
+        RuleFor(x => x.Name)
             .NotEmpty()
             .NotNull()
-            .WithMessage("nome");
+            .MaximumLength(Volunteer.NameMaxLength)
+            .WithMessage("name");
 
-        When(x => x.OrigemCadastro is not EOrigemCadastroVoluntario.Sistema, () =>
+        When(x => x.RegistrationOrigin is not EVolunteerRegistrationOrigin.System, () =>
         {
             RuleFor(x => x.Email)
                 .NotNull()
                 .NotEmpty()
-                .WithMessage("e-mail");
+                .WithMessage("email");
 
             RuleFor(x => x.Cpf)
                 .NotNull()
                 .NotEmpty()
                 .WithMessage("CPF");
 
-            RuleFor(x => x.DataNascimento)
+            RuleFor(x => x.BirthDate)
                 .NotNull()
-                .WithMessage("data de nascimento");
+                .WithMessage("birth date");
         });
 
         RuleFor(x => x.Email)
-            .EmailAddress().WithMessage("e-mail")
+            .EmailAddress().WithMessage("email")
             .When(x => !string.IsNullOrWhiteSpace(x.Email));
 
-        When(x => x.Celular is not null, () =>
+        When(x => x.PhoneNumber is not null, () =>
         {
-            RuleFor(x => x.Celular!.Ddd)
+            RuleFor(x => x.PhoneNumber!.AreaCode)
                 .NotEmpty()
                 .NotNull()
-                .WithMessage("DDD do celular é");
+                .WithMessage("phone number area code");
 
-            RuleFor(x => x.Celular!.Numero)
+            RuleFor(x => x.PhoneNumber!.Number)
                 .NotEmpty()
                 .NotNull()
-                .WithMessage("número do celular");
+                .WithMessage("phone number");
         });
     }
 }

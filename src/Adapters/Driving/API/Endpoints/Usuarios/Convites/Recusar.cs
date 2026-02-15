@@ -10,16 +10,16 @@ internal sealed class Recusar : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("api/v1/usuarios-convites/{id:guid}/recusar", async (
+        app.MapPut("v1/user-invitations/{id:guid}/decline", async (
             [FromRoute] Guid id,
-            [FromServices] ICommandHandler<RecusarUsuarioConviteCommand> handler,
-            CancellationToken cancellationToken) =>
+            [FromServices] ICommandHandler<DeclineUserInvitationCommand> handler,
+            CancellationToken ct) =>
         {
-            var command = new RecusarUsuarioConviteCommand(id);
+            var command = new DeclineUserInvitationCommand(id);
 
-            var result = await handler.HandleAsync(command, cancellationToken);
+            var result = await handler.HandleAsync(command, ct);
 
             return result.Match(Results.NoContent, CustomResults.Problem);
-        }).WithTags(Tags.Convites);
+        }).WithTags(Tags.Invitations);
     }
 }

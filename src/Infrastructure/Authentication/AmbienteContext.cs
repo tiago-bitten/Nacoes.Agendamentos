@@ -9,12 +9,12 @@ using Infrastructure.Extensions;
 
 namespace Infrastructure.Authentication;
 
-internal sealed class AmbienteContext(
+internal sealed class EnvironmentContext(
     IHttpContextAccessor context,
-    IOptions<AmbienteSettings> settings)
-    : IAmbienteContext
+    IOptions<EnvironmentSettings> settings)
+    : IEnvironmentContext
 {
-    private readonly AmbienteSettings _ambienteSettings = settings.Value;
+    private readonly EnvironmentSettings _environmentSettings = settings.Value;
 
     public Guid UserId => ClaimHelper.GetUserId(context);
     public bool IsUserAuthenticated => ClaimHelper.GetIsAuthenticated(context);
@@ -23,13 +23,13 @@ internal sealed class AmbienteContext(
 
     public void StartBotSession()
     {
-        var claims = ClaimHelper.InvokeBot(_ambienteSettings.GetTipoEnum());
+        var claims = ClaimHelper.InvokeBot(_environmentSettings.GetTypeEnum());
         context.SetUser(claims, authenticationType: "Bot");
     }
 
     public void StartExternalSession(Guid id, string? email)
     {
-        var claims = ClaimHelper.InvokeExternal(id, email, _ambienteSettings.GetTipoEnum());
+        var claims = ClaimHelper.InvokeExternal(id, email, _environmentSettings.GetTypeEnum());
         context.SetUser(claims, authenticationType: "External");
     }
 }

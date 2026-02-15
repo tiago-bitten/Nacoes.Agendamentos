@@ -7,10 +7,10 @@ public static class PageExtensions
     public static async Task<PagedResponse<T>> ToPagedResponseAsync<T>(
         this IQueryable<T> query,
         int limit, string? cursor,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
         where T : ICursorResponse
     {
-        var total = await query.CountAsync(cancellationToken);
+        var total = await query.CountAsync(ct);
 
         query = query.OrderByDescending(item => item.CreatedAt).ThenByDescending(item => item.Id);
 
@@ -19,7 +19,7 @@ public static class PageExtensions
             var decoded = Cursor.Decode(cursor);
             if (decoded is null)
             {
-                throw new ArgumentException($"O cursor {cursor} não é válido", nameof(cursor));
+                throw new ArgumentException($"The cursor {cursor} is not valid", nameof(cursor));
             }
 
             DateTimeOffset cursorDate = decoded.Value.Date;
@@ -29,7 +29,7 @@ public static class PageExtensions
                                         (item.CreatedAt == cursorDate && item.Id < cursorId));
         }
 
-        var items = await query.Take(limit + 1).ToListAsync(cancellationToken);
+        var items = await query.Take(limit + 1).ToListAsync(ct);
         var hasNext = items.Count > limit;
         var nextCursor = string.Empty;
 

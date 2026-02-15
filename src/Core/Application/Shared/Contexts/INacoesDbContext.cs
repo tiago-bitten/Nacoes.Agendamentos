@@ -11,17 +11,17 @@ namespace Application.Shared.Contexts;
 
 public interface INacoesDbContext
 {
-    DbSet<Usuario> Usuarios { get; set; }
-    DbSet<UsuarioConvite> Convites { get; set; }
-    DbSet<Evento> Eventos { get; set; }
-    DbSet<Reserva> Agendamentos { get; set; }
-    DbSet<Voluntario> Voluntarios { get; set; }
-    DbSet<VoluntarioMinisterio> VoluntariosMinisterios { get; set; }
-    DbSet<Historico> Historicos { get; set; }
-    DbSet<Ministerio> Ministerios { get; set; }
-    DbSet<Atividade> Atividades { get; set; }
-    DbSet<UsuarioConviteMinisterio> ConvitesMinisterios { get; set; }
+    DbSet<User> Users { get; set; }
+    DbSet<UserInvitation> Invitations { get; set; }
+    DbSet<Event> Events { get; set; }
+    DbSet<Reservation> Reservations { get; set; }
+    DbSet<Volunteer> Volunteers { get; set; }
+    DbSet<VolunteerMinistry> VolunteerMinistries { get; set; }
+    DbSet<AuditLog> AuditLogs { get; set; }
+    DbSet<Ministry> Ministries { get; set; }
+    DbSet<Activity> Activities { get; set; }
+    DbSet<UserInvitationMinistry> InvitationMinistries { get; set; }
 
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-    Task PublishDomainEventsAsync(CancellationToken cancellationToken = default);
+    Task<int> SaveChangesAsync(CancellationToken ct = default);
+    Task PublishDomainEventsAsync(CancellationToken ct = default);
 }

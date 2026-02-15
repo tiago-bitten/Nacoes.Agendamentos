@@ -2,41 +2,55 @@ using Domain.Shared.Results;
 
 namespace Domain.Usuarios;
 
-public static class UsuarioConviteErrors
+public static class UserInvitationErrors
 {
-    public static readonly Error TokenInvalido =
-        Error.Problem("UsuarioConvite.TokenInvalido", "Token inválido.");
+    public static readonly Error InvalidToken =
+        Error.Problem("user_invitation.invalid_token", "Invalid token.");
 
-    public static readonly Error StatusInvalidoParaAceitar =
-        Error.Problem("UsuarioConvite.StatusInvalidoParaAceitar", "Apenas convites com a situação pendente podem ser aceitos.");
+    public static readonly Error InvalidStatusToAccept =
+        Error.Problem(
+            "user_invitation.invalid_status_to_accept",
+            "Only pending invitations can be accepted.");
 
-    public static readonly Error StatusInvalidoParaRecusar =
-        Error.Problem("UsuarioConvite.StatusInvalidoParaRecusar", "Apenas convites com a situação pendente podem ser recusados.");
+    public static readonly Error InvalidStatusToDecline =
+        Error.Problem(
+            "user_invitation.invalid_status_to_decline",
+            "Only pending invitations can be declined.");
 
-    public static readonly Error StatusInvalidoParaExpirar =
-        Error.Problem("UsuarioConvite.StatusInvalidoParaExpirar", "Apenas convites com a situação pendente podem ser expirados.");
+    public static readonly Error InvalidStatusToExpire =
+        Error.Problem(
+            "user_invitation.invalid_status_to_expire",
+            "Only pending invitations can be expired.");
 
-    public static readonly Error DataExpiracaoNaoAtingida =
-        Error.Problem("UsuarioConvite.DataExpiracaoNaoAtingida", "A data de expiração do convite não foi atingida, não é possível expirá-lo.");
+    public static readonly Error ExpirationDateNotReached =
+        Error.Problem(
+            "user_invitation.expiration_date_not_reached",
+            "The invitation expiration date has not been reached.");
 
-    public static readonly Error StatusInvalidoParaCancelar =
-        Error.Problem("UsuarioConvite.StatusInvalidoParaCancelar", "Apenas convites com a situação pendente podem ser cancelados.");
+    public static readonly Error InvalidStatusToCancel =
+        Error.Problem(
+            "user_invitation.invalid_status_to_cancel",
+            "Only pending invitations can be cancelled.");
 
-    public static readonly Error MotivoObrigatorio =
-        Error.Problem("UsuarioConvite.MotivoObrigatorio", "O motivo do cancelamento do convite é obrigatório.");
+    public static readonly Error ReasonRequired =
+        Error.Problem("user_invitation.reason_required", "The cancellation reason is required.");
 
-    public static readonly Error ConviteNaoEncontrado =
-        Error.NotFound("UsuarioConvite.ConviteNaoEncontrado", "Convite não encontrado.");
+    public static readonly Error InvitationNotFound =
+        Error.NotFound("user_invitation.not_found", "Invitation not found.");
 
-    public static readonly Error ConvitePendente =
-        Error.Problem("UsuarioConvite.ConvitePendente", "Já existe um convite pendente.");
+    public static readonly Error PendingInvitationExists =
+        Error.Problem("user_invitation.pending_exists", "A pending invitation already exists.");
 
-    public static readonly Error StatusInvalidoParaPendenciar =
-        Error.Problem("UsuarioConvite.StatusInvalidoParaPendenciar", "Apenas convites com a situação enviado podem ser pendenciados.");
+    public static readonly Error InvalidStatusToPend =
+        Error.Problem(
+            "user_invitation.invalid_status_to_pend",
+            "Only sent invitations can be set to pending.");
 
-    public static readonly Error StatusInvalidoParaEnviar =
-        Error.Problem("UsuarioConvite.StatusInvalidoParaEnviar", "Apenas convites com a situação gerado podem ser enviados.");
+    public static readonly Error InvalidStatusToSend =
+        Error.Problem(
+            "user_invitation.invalid_status_to_send",
+            "Only generated invitations can be sent.");
 
-    public static readonly Error ConviteEnviado =
-        Error.Problem("UsuarioConvite.ConviteEnviado", "Já existe um convite sendo enviado. Por favor, aguarde.");
+    public static readonly Error InvitationAlreadySent =
+        Error.Problem("user_invitation.already_sent", "An invitation is already being sent. Please wait.");
 }

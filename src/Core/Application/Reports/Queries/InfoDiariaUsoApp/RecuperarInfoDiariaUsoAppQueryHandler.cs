@@ -5,30 +5,30 @@ using Domain.Shared.Results;
 
 namespace Application.Reports.Queries.InfoDiariaUsoApp;
 
-public sealed class RecuperarInfoDiariaUsoAppQueryHandler(INacoesDbContext context)
-    : IQueryHandler<RecuperarInfoDiariaUsoAppQuery, RecuperarInfoDiariaUsoAppResponse>
+internal sealed class GetDailyAppUsageInfoQueryHandler(INacoesDbContext context)
+    : IQueryHandler<GetDailyAppUsageInfoQuery, GetDailyAppUsageInfoResponse>
 {
-    public async Task<Result<RecuperarInfoDiariaUsoAppResponse>> Handle(RecuperarInfoDiariaUsoAppQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<GetDailyAppUsageInfoResponse>> Handle(GetDailyAppUsageInfoQuery query,
+        CancellationToken ct = default)
     {
-        var dataHoje = DateTimeOffset.UtcNow.AddHours(-3); // todo: criar extensao para fuso brasilia
+        var today = DateTimeOffset.UtcNow.AddHours(-3);
 
-        var queryOrigensCadastrosVoluntarios = context.Voluntarios
-            .Where(x => x.CreatedAt.Date == dataHoje.Date)
-            .GroupBy(x => x.OrigemCadastro)
-            .Select(x => new RecuperarInfoDiariaUsoAppResponse.VoluntarioInfo.VoluntarioInfoOrigem
+        var volunteerRegistrationOriginsQuery = context.Volunteers
+            .Where(x => x.CreatedAt.Date == today.Date)
+            .GroupBy(x => x.RegistrationOrigin)
+            .Select(x => new GetDailyAppUsageInfoResponse.VolunteerInfo.VolunteerOriginInfo
             {
-                Origem = x.Key,
-                Quantidade = x.Count()
+                Origin = x.Key,
+                Count = x.Count()
             });
 
-        var response = new RecuperarInfoDiariaUsoAppResponse
+        var response = new GetDailyAppUsageInfoResponse
         {
-            Data = dataHoje,
-            Voluntarios = new RecuperarInfoDiariaUsoAppResponse.VoluntarioInfo
+            Date = today,
+            Volunteers = new GetDailyAppUsageInfoResponse.VolunteerInfo
             {
-                Origens = await queryOrigensCadastrosVoluntarios.ToListAsync(cancellationToken),
-                QuantidadeTotal = await queryOrigensCadastrosVoluntarios.SumAsync(x => x.Quantidade, cancellationToken)
+                Origins = await volunteerRegistrationOriginsQuery.ToListAsync(ct),
+                TotalCount = await volunteerRegistrationOriginsQuery.SumAsync(x => x.Count, ct)
             }
         };
 

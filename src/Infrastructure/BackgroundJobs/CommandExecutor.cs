@@ -4,9 +4,12 @@ using Domain.Shared.Results;
 
 namespace Infrastructure.BackgroundJobs;
 
-public class CommandExecutor(IServiceProvider serviceProvider) : ICommandExecutor
+internal sealed class CommandExecutor(IServiceProvider serviceProvider) : ICommandExecutor
 {
-    public async Task ExecuteCommandAsync<TCommand>(TCommand command) where TCommand : ICommand
+    public async Task ExecuteCommandAsync<TCommand>(
+        TCommand command,
+        CancellationToken ct = default)
+        where TCommand : ICommand
     {
         var handlerType = typeof(ICommandHandler<>).MakeGenericType(typeof(TCommand));
 
@@ -15,10 +18,13 @@ public class CommandExecutor(IServiceProvider serviceProvider) : ICommandExecuto
             throw new InvalidOperationException($"No handler found for command {typeof(TCommand).Name}.");
         }
 
-        await handler.HandleAsync(command, CancellationToken.None);
+        await handler.HandleAsync(command, ct);
     }
 
-    public async Task<Result<TResponse>> ExecuteCommandAsync<TCommand, TResponse>(TCommand command) where TCommand : ICommand<TResponse>
+    public async Task<Result<TResponse>> ExecuteCommandAsync<TCommand, TResponse>(
+        TCommand command,
+        CancellationToken ct = default)
+        where TCommand : ICommand<TResponse>
     {
         var handlerType = typeof(ICommandHandler<,>).MakeGenericType(typeof(TCommand), typeof(TResponse));
 
@@ -27,6 +33,6 @@ public class CommandExecutor(IServiceProvider serviceProvider) : ICommandExecuto
             throw new InvalidOperationException($"No handler found for command {typeof(TCommand).Name} with response {typeof(TResponse).Name}.");
         }
 
-        return await handler.HandleAsync(command, CancellationToken.None);
+        return await handler.HandleAsync(command, ct);
     }
 }

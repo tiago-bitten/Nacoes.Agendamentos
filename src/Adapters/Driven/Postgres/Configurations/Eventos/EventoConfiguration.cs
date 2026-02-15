@@ -5,42 +5,51 @@ using Postgres.Abstracts;
 
 namespace Postgres.Configurations.Eventos;
 
-internal sealed class EventoConfiguration : EntityIdConfiguration<Evento>
+internal sealed class EventoConfiguration : EntityIdConfiguration<Event>
 {
-    public override void Configure(EntityTypeBuilder<Evento> builder)
+    public override void Configure(EntityTypeBuilder<Event> builder)
     {
         base.Configure(builder);
 
-        builder.Property(a => a.Descricao)
+        builder.ToTable("eventos");
+
+        builder.Property(a => a.Description)
+            .HasColumnName("descricao")
+            .HasMaxLength(Event.DescriptionMaxLength)
             .IsRequired();
 
-        builder.OwnsOne(a => a.Horario, horarioBuilder =>
+        builder.OwnsOne(a => a.Schedule, scheduleBuilder =>
         {
-            horarioBuilder.Property(h => h.DataInicial)
+            scheduleBuilder.Property(h => h.StartDate)
+                .HasColumnName("data_inicial")
                 .IsRequired();
 
-            horarioBuilder.Property(h => h.DataFinal)
+            scheduleBuilder.Property(h => h.EndDate)
+                .HasColumnName("data_final")
                 .IsRequired();
         });
 
-        builder.Property(a => a.QuantidadeMaximaReservas);
+        builder.Property(a => a.MaxReservationCount)
+            .HasColumnName("quantidade_maxima_reservas");
 
-        builder.Property(a => a.QuantidadeReservas)
+        builder.Property(a => a.ReservationCount)
+            .HasColumnName("quantidade_reservas")
             .IsRequired();
 
         builder.Property(a => a.Status)
+            .HasColumnName("status")
             .IsRequired();
 
-        builder.OwnsOne(a => a.Recorrencia, recorrenciaBuilder =>
+        builder.OwnsOne(a => a.Recurrence, recurrenceBuilder =>
         {
-            recorrenciaBuilder.Property(r => r.Tipo)
+            recurrenceBuilder.Property(r => r.Type)
                 .IsRequired()
                 .HasColumnName("tipo_recorrencia");
 
-            recorrenciaBuilder.Property(r => r.Intervalo)
+            recurrenceBuilder.Property(r => r.Interval)
                 .HasColumnName("intervalo_recorrencia");
 
-            recorrenciaBuilder.Property(r => r.DataFinal)
+            recurrenceBuilder.Property(r => r.EndDate)
                 .HasColumnName("data_final_recorrencia");
         });
     }

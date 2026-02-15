@@ -6,27 +6,29 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Entities.Ministerios.Commands.Adicionar;
 
-internal sealed class AdicionarMinisterioHandler(
+internal sealed class AddMinistryHandler(
     INacoesDbContext context)
-    : ICommandHandler<AdicionarMinisterioCommand, Guid>
+    : ICommandHandler<AddMinistryCommand, Guid>
 {
-    public async Task<Result<Guid>> HandleAsync(AdicionarMinisterioCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid>> HandleAsync(
+        AddMinistryCommand command,
+        CancellationToken ct)
     {
-        var ministerioResult = Ministerio.Criar(
-            command.Nome,
-            command.Descricao,
-            new Cor(command.Cor.Valor, command.Cor.Tipo));
+        var ministryResult = Ministry.Create(
+            command.Name,
+            command.Description,
+            new Color(command.Color.Value, command.Color.Type));
 
-        if (ministerioResult.IsFailure)
+        if (ministryResult.IsFailure)
         {
-            return ministerioResult.Error;
+            return ministryResult.Error;
         }
 
-        var ministerio = ministerioResult.Value;
+        var ministry = ministryResult.Value;
 
-        await context.Ministerios.AddAsync(ministerio, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.Ministries.AddAsync(ministry, ct);
+        await context.SaveChangesAsync(ct);
 
-        return ministerio.Id;
+        return ministry.Id;
     }
 }

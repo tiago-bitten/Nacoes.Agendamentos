@@ -5,11 +5,11 @@ using Domain.Voluntarios.DomainEvents;
 
 namespace Application.Entities.Voluntarios.Commands.Adicionar;
 
-internal sealed class VoluntarioAdicionadoDomainEventHandler(IHistoricoRegister historicoRegister)
-    : IDomainEventHandler<VoluntarioAdicionadoDomainEvent>
+internal sealed class VolunteerAddedDomainEventHandler(IAuditLogRegister auditLogRegister)
+    : IDomainEventHandler<VolunteerAddedDomainEvent>
 {
-    public Task Handle(VoluntarioAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public Task Handle(VolunteerAddedDomainEvent domainEvent, CancellationToken ct)
     {
-        return historicoRegister.AuditAsync(domainEvent.VoluntarioId, acao: "Voluntário adicionado.");
+        return auditLogRegister.AuditAsync(domainEvent.VolunteerId, action: "Volunteer added.");
     }
 }

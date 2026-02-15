@@ -10,19 +10,21 @@ internal sealed class LoginHandler(
     ITokenGenerator tokenGenerator)
     : ICommandHandler<LoginCommand, LoginResponse>
 {
-    public async Task<Result<LoginResponse>> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse>> HandleAsync(
+        LoginCommand command,
+        CancellationToken ct)
     {
-        var strategy = authStrategyFactory.Criar(command.AuthType);
+        var strategy = authStrategyFactory.Create(command.AuthType);
 
-        var usuarioResult = await strategy.AutenticarAsync(command);
-        if (usuarioResult.IsFailure)
+        var userResult = await strategy.AuthenticateAsync(command, ct);
+        if (userResult.IsFailure)
         {
-            return usuarioResult.Error;
+            return userResult.Error;
         }
 
-        var usuario = usuarioResult.Value;
+        var user = userResult.Value;
 
-        var authToken = tokenGenerator.GenerateAuth(usuario);
+        var authToken = tokenGenerator.GenerateAuth(user);
         var refreshToken = tokenGenerator.GenerateRefresh();
 
         return new LoginResponse(authToken, refreshToken);

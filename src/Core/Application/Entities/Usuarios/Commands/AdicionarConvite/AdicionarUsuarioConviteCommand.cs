@@ -2,7 +2,7 @@ using Application.Shared.Messaging;
 
 namespace Application.Entities.Usuarios.Commands.AdicionarConvite;
 
-public sealed record AdicionarUsuarioConviteCommand(
-    string Nome,
+public sealed record AddUserInvitationCommand(
+    string Name,
     string EmailAddress,
-    List<Guid> MinisteriosIds) : ICommand<UsuarioConviteResponse>;
+    List<Guid> MinistryIds) : ICommand<UserInvitationResponse>;

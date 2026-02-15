@@ -2,10 +2,10 @@ using FluentValidation;
 
 namespace Application.Entities.Usuarios.Commands.RecusarConvite;
 
-public sealed class RecusarUsuarioConviteCommandValidator : AbstractValidator<RecusarUsuarioConviteCommand>
+internal sealed class DeclineUserInvitationCommandValidator : AbstractValidator<DeclineUserInvitationCommand>
 {
-    public RecusarUsuarioConviteCommandValidator()
+    public DeclineUserInvitationCommandValidator()
     {
-        RuleFor(x => x.UsuarioConviteId).NotNull().NotEmpty();
+        RuleFor(x => x.UserInvitationId).NotNull().NotEmpty();
     }
 }

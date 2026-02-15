@@ -5,13 +5,17 @@ using Postgres.Abstracts;
 
 namespace Postgres.Configurations.Usuarios;
 
-internal class UsuarioConfiguration : EntityIdConfiguration<Usuario>
+internal sealed class UserConfiguration : EntityIdConfiguration<User>
 {
-    public override void Configure(EntityTypeBuilder<Usuario> builder)
+    public override void Configure(EntityTypeBuilder<User> builder)
     {
         base.Configure(builder);
 
-        builder.Property(u => u.Nome);
+        builder.ToTable("usuarios");
+
+        builder.Property(u => u.Name)
+            .HasColumnName("nome")
+            .HasMaxLength(User.NameMaxLength);
 
         builder.OwnsOne(u => u.Email, emailBuilder =>
         {
@@ -28,16 +32,22 @@ internal class UsuarioConfiguration : EntityIdConfiguration<Usuario>
                         .HasColumnName("email_data_expiracao_codigo_confirmacao");
         });
 
-        builder.Property(u => u.Senha);
+        builder.Property(u => u.Password)
+            .HasColumnName("senha");
 
-        builder.OwnsOne(u => u.Celular, celularBuilder =>
+        builder.OwnsOne(u => u.PhoneNumber, celularBuilder =>
         {
-            celularBuilder.Property(c => c.Numero);
+            celularBuilder.Property(c => c.Number)
+                .HasColumnName("numero");
 
-            celularBuilder.Property(c => c.Ddd);
+            celularBuilder.Property(c => c.AreaCode)
+                .HasColumnName("ddd");
         });
 
         builder.Property(u => u.AuthType)
-               .HasConversion<string>();
+               .HasColumnName("auth_type")
+               .HasConversion(
+                   v => v == EAuthType.Local ? "Local" : "Google",
+                   v => v == "Local" ? EAuthType.Local : EAuthType.Google);
     }
 }

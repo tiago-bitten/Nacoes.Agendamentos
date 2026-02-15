@@ -1,3 +1,3 @@
 namespace Application.Common.Dtos;
 
-public record CelularItemDto(string Ddd, string Numero);
+public record PhoneNumberItemDto(string AreaCode, string Number);

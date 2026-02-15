@@ -4,7 +4,7 @@ using Application.Shared.Ports.BackgroundJobs;
 
 namespace Infrastructure.CronJobs;
 
-internal class HangfireCronJobScheduler(IServiceProvider serviceProvider,
+internal sealed class HangfireCronJobScheduler(IServiceProvider serviceProvider,
                                         IBackgroundJobManager manager)
     : ICronJobScheduler
 {

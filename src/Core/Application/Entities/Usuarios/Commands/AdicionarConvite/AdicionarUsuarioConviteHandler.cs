@@ -11,41 +11,43 @@ using Domain.Usuarios.Specs;
 
 namespace Application.Entities.Usuarios.Commands.AdicionarConvite;
 
-internal sealed class AdicionarUsuarioConviteHandler(
+internal sealed class AddUserInvitationHandler(
     INacoesDbContext context,
-    IAmbienteContext ambienteContext,
+    IEnvironmentContext environmentContext,
     ILinkFactory linkFactory)
-    : ICommandHandler<AdicionarUsuarioConviteCommand, UsuarioConviteResponse>
+    : ICommandHandler<AddUserInvitationCommand, UserInvitationResponse>
 {
-    public async Task<Result<UsuarioConviteResponse>> HandleAsync(AdicionarUsuarioConviteCommand command, CancellationToken cancellationToken = default)
+    public async Task<Result<UserInvitationResponse>> HandleAsync(
+        AddUserInvitationCommand command,
+        CancellationToken ct)
     {
-        var existeConvitePendente = await context.Convites
-            .ApplySpec(new ConvitesPendentesSpec())
+        var pendingInvitationExists = await context.Invitations
+            .ApplySpec(new PendingInvitationsSpec())
             .Where(x => x.Email.Address == command.EmailAddress)
-            .AnyAsync(cancellationToken);
+            .AnyAsync(ct);
 
-        if (existeConvitePendente)
+        if (pendingInvitationExists)
         {
-            return UsuarioConviteErrors.ConvitePendente;
+            return UserInvitationErrors.PendingInvitationExists;
         }
 
-        var usuarioConviteResult = UsuarioConvite.Criar(
-            command.Nome,
+        var invitationResult = UserInvitation.Create(
+            command.Name,
             command.EmailAddress,
-            ambienteContext.UserId,
-            command.MinisteriosIds);
-        if (usuarioConviteResult.IsFailure)
+            environmentContext.UserId,
+            command.MinistryIds);
+        if (invitationResult.IsFailure)
         {
-            return usuarioConviteResult.Error;
+            return invitationResult.Error;
         }
 
-        var usuarioConvite = usuarioConviteResult.Value;
+        var invitation = invitationResult.Value;
 
-        var link = linkFactory.Create(usuarioConvite.Path);
-        var response = new UsuarioConviteResponse(link);
+        var link = linkFactory.Create(invitation.Path);
+        var response = new UserInvitationResponse(link);
 
-        await context.Convites.AddAsync(usuarioConvite, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await context.Invitations.AddAsync(invitation, ct);
+        await context.SaveChangesAsync(ct);
 
         return response;
     }

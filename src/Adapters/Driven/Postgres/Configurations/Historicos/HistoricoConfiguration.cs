@@ -5,29 +5,39 @@ using Postgres.Abstracts;
 
 namespace Postgres.Configurations.Historicos;
 
-internal sealed class HistoricoConfiguration : EntityIdConfiguration<Historico>
+internal sealed class HistoricoConfiguration : EntityIdConfiguration<AuditLog>
 {
-    public override void Configure(EntityTypeBuilder<Historico> builder)
+    public override void Configure(EntityTypeBuilder<AuditLog> builder)
     {
         base.Configure(builder);
 
-        builder.Property(h => h.EntidadeId)
+        builder.ToTable("historicos");
+
+        builder.Property(h => h.EntityId)
+               .HasColumnName("entidade_id")
                .IsRequired(false);
 
-        builder.Property(h => h.Data)
+        builder.Property(h => h.Date)
+               .HasColumnName("data")
                .IsRequired();
 
-        builder.Property(h => h.UsuarioId)
+        builder.Property(h => h.UserId)
+               .HasColumnName("usuario_id")
                .HasColumnType("uuid")
                .IsRequired(false);
 
-        builder.Property(h => h.Acao)
+        builder.Property(h => h.Action)
+               .HasColumnName("acao")
+               .HasMaxLength(AuditLog.ActionMaxLength)
                .IsRequired();
 
-        builder.Property(h => h.UsuarioAcao)
+        builder.Property(h => h.UserAction)
+               .HasColumnName("usuario_acao")
                .IsRequired();
 
-        builder.Property(h => h.Detalhes)
+        builder.Property(h => h.Details)
+               .HasColumnName("detalhes")
+               .HasMaxLength(AuditLog.DetailsMaxLength)
                .IsRequired(false);
 
         builder.Ignore(h => h.IsRemoved);

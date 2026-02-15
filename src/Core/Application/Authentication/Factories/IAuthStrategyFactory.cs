@@ -5,5 +5,5 @@ namespace Application.Authentication.Factories;
 
 public interface IAuthStrategyFactory
 {
-    IAuthStrategy Criar(EAuthType tipo);
+    IAuthStrategy Create(EAuthType type);
 }

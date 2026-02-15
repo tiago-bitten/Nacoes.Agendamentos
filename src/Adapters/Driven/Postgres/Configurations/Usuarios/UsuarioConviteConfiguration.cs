@@ -5,13 +5,17 @@ using Postgres.Abstracts;
 
 namespace Postgres.Configurations.Usuarios;
 
-internal sealed class UsuarioConviteConfiguration : EntityIdConfiguration<UsuarioConvite>
+internal sealed class UsuarioConviteConfiguration : EntityIdConfiguration<UserInvitation>
 {
-    public override void Configure(EntityTypeBuilder<UsuarioConvite> builder)
+    public override void Configure(EntityTypeBuilder<UserInvitation> builder)
     {
         base.Configure(builder);
 
-        builder.Property(u => u.Nome)
+        builder.ToTable("usuario_convites");
+
+        builder.Property(u => u.Name)
+               .HasColumnName("nome")
+               .HasMaxLength(UserInvitation.NameMaxLength)
                .IsRequired();
 
         builder.OwnsOne(u => u.Email, emailBuilder =>
@@ -25,31 +29,51 @@ internal sealed class UsuarioConviteConfiguration : EntityIdConfiguration<Usuari
             emailBuilder.Ignore(e => e.IsConfirmed);
         });
 
-        builder.Property(u => u.EnviadoPorId)
+        builder.Property(u => u.SentById)
+               .HasColumnName("enviado_por_id")
                .IsRequired();
 
-        builder.Property(u => u.EnviadoParaId)
+        builder.Property(u => u.SentToId)
+               .HasColumnName("enviado_para_id")
                .IsRequired(false);
 
         builder.Property(u => u.Status)
-               .HasConversion<string>()
+               .HasColumnName("status")
+               .HasConversion(
+                   v => v == EInvitationStatus.Pending ? "Pendente"
+                       : v == EInvitationStatus.Accepted ? "Aceito"
+                       : v == EInvitationStatus.Declined ? "Recusado"
+                       : v == EInvitationStatus.Expired ? "Expirado"
+                       : v == EInvitationStatus.Cancelled ? "Cancelado"
+                       : "Erro",
+                   v => v == "Pendente" ? EInvitationStatus.Pending
+                       : v == "Aceito" ? EInvitationStatus.Accepted
+                       : v == "Recusado" ? EInvitationStatus.Declined
+                       : v == "Expirado" ? EInvitationStatus.Expired
+                       : v == "Cancelado" ? EInvitationStatus.Cancelled
+                       : EInvitationStatus.Error)
                .IsRequired();
 
-        builder.Property(u => u.Motivo)
+        builder.Property(u => u.Reason)
+               .HasColumnName("motivo")
+               .HasMaxLength(UserInvitation.ReasonMaxLength)
                .IsRequired(false);
 
-        builder.Property(u => u.DataExpiracao)
+        builder.Property(u => u.ExpirationDate)
+               .HasColumnName("data_expiracao")
                .IsRequired();
 
         builder.Property(u => u.Token)
+               .HasColumnName("token")
+               .HasMaxLength(UserInvitation.TokenMaxLength)
                .IsRequired();
 
-        builder.HasOne(u => u.EnviadoPor)
+        builder.HasOne(u => u.SentBy)
                .WithMany()
-               .HasForeignKey(u => u.EnviadoPorId);
+               .HasForeignKey(u => u.SentById);
 
-        builder.HasOne(u => u.EnviadoPara)
+        builder.HasOne(u => u.SentTo)
                .WithMany()
-               .HasForeignKey(u => u.EnviadoParaId);
+               .HasForeignKey(u => u.SentToId);
     }
 }

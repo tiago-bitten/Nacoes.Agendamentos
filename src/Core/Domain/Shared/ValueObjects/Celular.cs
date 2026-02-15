@@ -2,39 +2,39 @@ using System.Text.RegularExpressions;
 
 namespace Domain.Shared.ValueObjects;
 
-public sealed record class Celular : IEquatable<Celular>
+public sealed record class PhoneNumber : IEquatable<PhoneNumber>
 {
-    public string Ddd { get; }
-    public string Numero { get; }
+    public string AreaCode { get; }
+    public string Number { get; }
 
-    public Celular(string ddd, string numero)
+    public PhoneNumber(string areaCode, string number)
     {
-        ddd = Normalizar(ddd);
-        numero = Normalizar(numero);
+        areaCode = Normalize(areaCode);
+        number = Normalize(number);
 
-        if (!Regex.IsMatch(ddd, @"^\d{2}$"))
+        if (!Regex.IsMatch(areaCode, @"^\d{2}$"))
         {
-            throw new ArgumentException("DDD deve conter 2 dígitos numéricos.", nameof(ddd));
+            throw new ArgumentException("Area code must contain 2 numeric digits.", nameof(areaCode));
         }
 
-        if (!Regex.IsMatch(numero, @"^\d{9}$"))
+        if (!Regex.IsMatch(number, @"^\d{9}$"))
         {
-            throw new ArgumentException("Número de celular deve conter 9 dígitos numéricos.", nameof(numero));
+            throw new ArgumentException("Phone number must contain 9 numeric digits.", nameof(number));
         }
 
-        Ddd = ddd;
-        Numero = numero;
+        AreaCode = areaCode;
+        Number = number;
     }
 
-    private static string Normalizar(string valor) =>
-        Regex.Replace(valor, @"\D", "");
+    private static string Normalize(string value) =>
+        Regex.Replace(value, @"\D", "");
 
     public override string ToString() =>
-        $"({Ddd}) {Numero[..5]}-{Numero[5..]}";
+        $"({AreaCode}) {Number[..5]}-{Number[5..]}";
 
-    public bool Equals(Celular? other) =>
-        other is not null && Ddd == other.Ddd && Numero == other.Numero;
+    public bool Equals(PhoneNumber? other) =>
+        other is not null && AreaCode == other.AreaCode && Number == other.Number;
 
     public override int GetHashCode() =>
-        HashCode.Combine(Ddd, Numero);
+        HashCode.Combine(AreaCode, Number);
 }

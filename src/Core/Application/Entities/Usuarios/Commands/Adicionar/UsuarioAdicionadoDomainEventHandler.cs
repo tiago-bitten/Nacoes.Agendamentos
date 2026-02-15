@@ -5,11 +5,11 @@ using Domain.Usuarios.DomainEvents;
 
 namespace Application.Entities.Usuarios.Commands.Adicionar;
 
-internal sealed class UsuarioAdicionadoDomainEventHandler(IHistoricoRegister historicoRegister)
-    : IDomainEventHandler<UsuarioAdicionadoDomainEvent>
+internal sealed class UserAddedDomainEventHandler(IAuditLogRegister auditLogRegister)
+    : IDomainEventHandler<UserAddedDomainEvent>
 {
-    public Task Handle(UsuarioAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public Task Handle(UserAddedDomainEvent domainEvent, CancellationToken ct)
     {
-        return historicoRegister.AuditAsync(domainEvent.UsuarioId, acao: "Usuário adicionado.");
+        return auditLogRegister.AuditAsync(domainEvent.UserId, action: "User added.");
     }
 }

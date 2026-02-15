@@ -2,23 +2,25 @@ using Domain.Shared.Results;
 
 namespace Domain.Voluntarios.Errors;
 
-public static class VoluntarioErrors
+public static class VolunteerErrors
 {
-    public static readonly Error NaoEncontrado =
-        Error.NotFound("Voluntario.NaoEncontrado", "Voluntario não encontrado.");
+    public static readonly Error NotFound =
+        Error.NotFound("volunteer.not_found", "Volunteer not found.");
 
-    public static readonly Error NomeObrigatorio =
-        Error.Problem("Voluntario.NomeObrigatorio", "O nome do voluntário é obrigatório.");
+    public static readonly Error NameRequired =
+        Error.Problem("volunteer.name_required", "The volunteer name is required.");
 
-    public static Error DadosPessoaisObrigatorio(string dados) =>
-        Error.Problem("Voluntario.DadosPessoaisObrigatorio", $"Os seguintes dados pessoais são obrigatórios: {dados}");
+    public static readonly Error PersonalDataRequired =
+        Error.Problem(
+            "volunteer.personal_data_required",
+            "Personal data is required for non-system registration.");
 
-    public static readonly Error AutenticacaoInvalida =
-        Error.Problem("Voluntario.AutenticacaoInvalida", "É necessário informar o CPF e a data de nascimento.");
+    public static readonly Error InvalidAuthentication =
+        Error.Problem("volunteer.invalid_authentication", "CPF and birth date are required.");
 
-    public static readonly Error VoluntarioLoginNaoEncontrado =
-        Error.NotFound("Voluntario.LoginNaoEncontrado", "Não foi possível localizar seu cadastro.");
+    public static readonly Error LoginNotFound =
+        Error.NotFound("volunteer.login_not_found", "Could not find your registration.");
 
-    public static readonly Error DeveCriarConta =
-        Error.Problem("Voluntario.DeveCriarConta", "Para prosseguir, é necessário criar uma conta.");
+    public static readonly Error MustCreateAccount =
+        Error.Problem("volunteer.must_create_account", "You need to create an account to proceed.");
 }

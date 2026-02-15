@@ -6,5 +6,5 @@ using Domain.Usuarios;
 namespace Application.Authentication.Strategies;
 public interface IAuthStrategy
 {
-    Task<Result<Usuario>> AutenticarAsync(LoginCommand command);
+    Task<Result<User>> AuthenticateAsync(LoginCommand command, CancellationToken ct);
 }

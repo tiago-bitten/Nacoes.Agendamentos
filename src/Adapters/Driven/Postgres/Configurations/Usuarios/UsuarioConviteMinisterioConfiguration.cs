@@ -1,27 +1,32 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Usuarios;
 using Postgres.Abstracts;
 
 namespace Postgres.Configurations.Usuarios;
 
-internal sealed class UsuarioConviteMinisterioConfiguration : EntityIdConfiguration<UsuarioConviteMinisterio>
+internal sealed class UsuarioConviteMinisterioConfiguration : EntityIdConfiguration<UserInvitationMinistry>
 {
-    public override void Configure(EntityTypeBuilder<UsuarioConviteMinisterio> builder)
+    public override void Configure(EntityTypeBuilder<UserInvitationMinistry> builder)
     {
         base.Configure(builder);
 
-        builder.Property(u => u.ConviteId)
+        builder.ToTable("usuario_convite_ministerios");
+
+        builder.Property(u => u.InvitationId)
+            .HasColumnName("convite_id")
             .IsRequired();
 
-        builder.Property(u => u.MinisterioId)
+        builder.Property(u => u.MinistryId)
+            .HasColumnName("ministerio_id")
             .IsRequired();
 
-        builder.HasOne(u => u.Convite)
-            .WithMany(u => u.Ministerios)
-            .HasForeignKey(u => u.ConviteId);
+        builder.HasOne(u => u.Invitation)
+            .WithMany(u => u.Ministries)
+            .HasForeignKey(u => u.InvitationId);
 
-        builder.HasOne(u => u.Ministerio)
+        builder.HasOne(u => u.Ministry)
             .WithMany()
-            .HasForeignKey(u => u.MinisterioId);
+            .HasForeignKey(u => u.MinistryId);
     }
 }

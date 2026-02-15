@@ -5,11 +5,11 @@ using Domain.Ministerios.DomainEvents;
 
 namespace Application.Entities.Ministerios.Commands.AdicionarAtividade;
 
-internal sealed class AtividadeAdicionadaDomainEventHandler(IHistoricoRegister historicoRegister)
-    : IDomainEventHandler<AtividadeAdicionadaDomainEvent>
+internal sealed class ActivityAddedDomainEventHandler(IAuditLogRegister auditLogRegister)
+    : IDomainEventHandler<ActivityAddedDomainEvent>
 {
-    public Task Handle(AtividadeAdicionadaDomainEvent domainEvent, CancellationToken cancellationToken)
+    public Task Handle(ActivityAddedDomainEvent domainEvent, CancellationToken ct)
     {
-        return historicoRegister.AuditAsync(domainEvent.AtividadeId, acao: "Atividade adicionada.");
+        return auditLogRegister.AuditAsync(domainEvent.ActivityId, action: "Activity added.");
     }
 }

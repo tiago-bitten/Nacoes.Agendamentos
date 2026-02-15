@@ -1,21 +1,31 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Ministerios;
 using Postgres.Abstracts;
 
 namespace Postgres.Configurations.Ministerios;
 
-internal class AtividadeConfiguration : EntityIdConfiguration<Atividade>
+internal sealed class AtividadeConfiguration : EntityIdConfiguration<Activity>
 {
-    public override void Configure(EntityTypeBuilder<Atividade> builder)
+    public override void Configure(EntityTypeBuilder<Activity> builder)
     {
         base.Configure(builder);
 
-        builder.Property(a => a.Nome);
+        builder.ToTable("atividades");
 
-        builder.Property(a => a.Descricao);
+        builder.Property(a => a.Name)
+            .HasColumnName("nome")
+            .HasMaxLength(Activity.NameMaxLength);
 
-        builder.HasOne(a => a.Ministerio)
-            .WithMany(m => m.Atividades)
-            .HasForeignKey(a => a.MinisterioId);
+        builder.Property(a => a.Description)
+            .HasColumnName("descricao")
+            .HasMaxLength(Activity.DescriptionMaxLength);
+
+        builder.Property(a => a.MinistryId)
+            .HasColumnName("ministerio_id");
+
+        builder.HasOne(a => a.Ministry)
+            .WithMany(m => m.Activities)
+            .HasForeignKey(a => a.MinistryId);
     }
 }

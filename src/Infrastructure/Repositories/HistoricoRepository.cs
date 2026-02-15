@@ -5,21 +5,17 @@ using Domain.Historicos.Interfaces;
 
 namespace Infrastructure.Repositories;
 
-internal sealed class HistoricoRepository(INacoesDbContext context) : IHistoricoRepository
+internal sealed class AuditLogRepository(INacoesDbContext context) : IAuditLogRepository
 {
-    private DbSet<Historico> Historicos => context.Historicos;
+    private DbSet<AuditLog> AuditLogs => context.AuditLogs;
 
-    #region Add
-    public async Task AddAsync(Historico historico)
+    public async Task AddAsync(AuditLog auditLog, CancellationToken ct = default)
     {
-        await Historicos.AddAsync(historico);
+        await AuditLogs.AddAsync(auditLog, ct);
     }
-    #endregion
 
-    #region RecuperarPorEntidadeId
-    public Task<List<Historico>> RecuperarPorEntidadeIdAsync(Guid entidadeId)
+    public Task<List<AuditLog>> GetByEntityIdAsync(Guid entityId, CancellationToken ct = default)
     {
-        return Historicos.Where(h => h.EntidadeId == entidadeId).ToListAsync();
+        return AuditLogs.Where(h => h.EntityId == entityId).ToListAsync(ct);
     }
-    #endregion
 }

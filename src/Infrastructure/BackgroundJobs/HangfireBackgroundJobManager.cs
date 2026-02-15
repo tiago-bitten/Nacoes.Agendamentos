@@ -21,7 +21,11 @@ internal sealed class HangfireBackgroundJobManager : IBackgroundJobManager
         BackgroundJob.Enqueue(queue, methodCall);
     }
 
-    public void Schedule<T>(string jobId, Expression<Action> methodCall, string cronExpression, string queue = "default")
+    public void Schedule<T>(
+        string jobId,
+        Expression<Action> methodCall,
+        string cronExpression,
+        string queue = "default")
     {
         RecurringJob.AddOrUpdate(jobId, queue, methodCall, cronExpression, new RecurringJobOptions
         {
@@ -29,7 +33,11 @@ internal sealed class HangfireBackgroundJobManager : IBackgroundJobManager
         });
     }
 
-    public void Schedule<T>(string jobId, Expression<Action<T>> methodCall, string cronExpression, string queue = "default")
+    public void Schedule<T>(
+        string jobId,
+        Expression<Action<T>> methodCall,
+        string cronExpression,
+        string queue = "default")
     {
         RecurringJob.AddOrUpdate(jobId, queue, methodCall, cronExpression, new RecurringJobOptions
         {
@@ -37,7 +45,11 @@ internal sealed class HangfireBackgroundJobManager : IBackgroundJobManager
         });
     }
 
-    public void Schedule<T>(string jobId, Expression<Func<T, Task>> methodCall, string cronExpression, string queue = "default")
+    public void Schedule<T>(
+        string jobId,
+        Expression<Func<T, Task>> methodCall,
+        string cronExpression,
+        string queue = "default")
     {
         RecurringJob.AddOrUpdate(jobId, queue, methodCall, cronExpression, new RecurringJobOptions
         {

@@ -1,11 +1,12 @@
 using FluentValidation;
+using Domain.Ministerios;
 
 namespace Application.Entities.Ministerios.Commands.Adicionar;
 
-public sealed class AdicionarMinisterioCommandValidator : AbstractValidator<AdicionarMinisterioCommand>
+internal sealed class AddMinistryCommandValidator : AbstractValidator<AddMinistryCommand>
 {
-    public AdicionarMinisterioCommandValidator()
+    public AddMinistryCommandValidator()
     {
-        RuleFor(x => x.Nome).NotEmpty();
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(Ministry.NameMaxLength);
     }
 }

@@ -3,8 +3,8 @@ using Domain.Shared.Specifications;
 
 namespace Domain.Usuarios.Specs;
 
-public sealed class ConvitesPendentesSpec : Specification<UsuarioConvite>
+public sealed class PendingInvitationsSpec : Specification<UserInvitation>
 {
-    public override Expression<Func<UsuarioConvite, bool>> ToExpression()
-        => x => x.Status == EConviteStatus.Pendente;
+    public override Expression<Func<UserInvitation, bool>> ToExpression()
+        => x => x.Status == EInvitationStatus.Pending;
 }

@@ -6,23 +6,22 @@ using Domain.Eventos.DomainEvents;
 
 namespace Application.Entities.Eventos.Commands.Adicionar;
 
-public sealed class EventoMasterAdicionadoDomainEventHandler(
+internal sealed class MasterEventAddedDomainEventHandler(
     INacoesDbContext context,
-    IRecorrenciaEventoManager recorrenciaEventoManager)
-    : IDomainEventHandler<EventoMasterAdicionadoDomainEvent>
+    IEventRecurrenceManager eventRecurrenceManager)
+    : IDomainEventHandler<MasterEventAddedDomainEvent>
 {
-    public async Task Handle(EventoMasterAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public async Task Handle(MasterEventAddedDomainEvent domainEvent, CancellationToken ct)
     {
-        var evento = await context.Eventos
+        var @event = await context.Events
             .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == domainEvent.EventoId, cancellationToken);
+            .SingleOrDefaultAsync(x => x.Id == domainEvent.EventId, ct);
 
-        if (evento is null)
+        if (@event is null)
         {
-            Console.WriteLine("Evento não encontrado.");
             return;
         }
 
-        await recorrenciaEventoManager.GenerateInstancesAsync(evento, cancellationToken);
+        await eventRecurrenceManager.GenerateInstancesAsync(@event, ct);
     }
 }

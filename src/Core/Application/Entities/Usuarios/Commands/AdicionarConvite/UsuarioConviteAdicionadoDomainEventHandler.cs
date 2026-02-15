@@ -8,50 +8,52 @@ using Domain.Usuarios.DomainEvents;
 
 namespace Application.Entities.Usuarios.Commands.AdicionarConvite;
 
-internal sealed class UsuarioConviteAdicionadoDomainEventHandler(INacoesDbContext context,
-                                                                 IEmailSenderFactory emailSenderFactory,
-                                                                 ITemplateRenderer templateRenderer,
-                                                                 IHistoricoRegister historicoRegister)
-    : IDomainEventHandler<UsuarioConviteAdicionadoDomainEvent>
+internal sealed class UserInvitationAddedDomainEventHandler(INacoesDbContext context,
+                                                             IEmailSenderFactory emailSenderFactory,
+                                                             ITemplateRenderer templateRenderer,
+                                                             IAuditLogRegister auditLogRegister)
+    : IDomainEventHandler<UserInvitationAddedDomainEvent>
 {
     private IEmailSender EmailSender => emailSenderFactory.Create();
 
-    public async Task Handle(UsuarioConviteAdicionadoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public async Task Handle(UserInvitationAddedDomainEvent domainEvent, CancellationToken ct)
     {
-        await historicoRegister.AuditAsync(domainEvent.UsuarioConviteId, acao: "Convite gerado.");
-        var usuarioConvite = await context.Convites
+        await auditLogRegister.AuditAsync(domainEvent.UserInvitationId, action: "Invitation generated.");
+        var invitation = await context.Invitations
             .AsNoTracking()
-            .Include(x => x.EnviadoPor)
-            .SingleOrDefaultAsync(x => x.Id == domainEvent.UsuarioConviteId, cancellationToken);
+            .Include(x => x.SentBy)
+            .SingleOrDefaultAsync(x => x.Id == domainEvent.UserInvitationId, ct);
         try
         {
-            if (usuarioConvite is null)
+            if (invitation is null)
             {
                 return;
             }
-            await historicoRegister.AuditAsync(usuarioConvite, acao: "Convite enviado por e-mail.");
-            var (email, title, html) = GetTemplate(usuarioConvite);
+            await auditLogRegister.AuditAsync(invitation, action: "Invitation sent by email.");
+            var (email, title, html) = GetTemplate(invitation);
             await EmailSender.SendAsync(email, title, html);
 
-            await historicoRegister.AuditAsync(usuarioConvite, acao: "Convite entregue na caixa de e-mail.");
+            await auditLogRegister.AuditAsync(invitation, action: "Invitation delivered to inbox.");
         }
         catch (Exception ex)
         {
-            // TODO: historicoRegister tem que ser mais flexivel, não precisa receber a entidae, pode ser só id
-            await historicoRegister.AuditAsync(usuarioConvite!, acao: "Ocorreu um erro durante o envio do convite por e-mail.", detalhes: ex.Message);
+            await auditLogRegister.AuditAsync(
+                invitation!,
+                action: "An error occurred while sending the invitation by email.",
+                details: ex.Message);
         }
     }
 
-    private (string Email, string Title, string Html) GetTemplate(UsuarioConvite usuarioConvite)
+    private (string Email, string Title, string Html) GetTemplate(UserInvitation invitation)
     {
-        var title = "Convite - Igreja Nações";
+        var title = "Invitation - Igreja Nacoes";
         var html = templateRenderer.Render("ConviteUsuario", new Dictionary<string, string>()
         {
-            { "NOME_CONVIDADO", usuarioConvite.Nome },
-            { "NOME_USUARIO", usuarioConvite.EnviadoPor.Nome },
+            { "NOME_CONVIDADO", invitation.Name },
+            { "NOME_USUARIO", invitation.SentBy.Name },
             { "LINK", "http://localhost:4200/convites" }
         });
 
-        return (usuarioConvite.Email.Address, title, html);
+        return (invitation.Email.Address, title, html);
     }
 }

@@ -4,14 +4,14 @@ using Domain.Shared.ValueObjects;
 
 namespace Application.Generators.RecorrenciaEvento.Strategies;
 
-internal sealed class HorarioMensalGeneratorStrategy : IHorarioGeneratorStrategy
+internal sealed class MonthlyScheduleGeneratorStrategy : IScheduleGeneratorStrategy
 {
-    public Result<Horario> GenerateAsync(Evento eventoMaster, DateTimeOffset dataInicioAnterior)
+    public Result<Schedule> Generate(Event masterEvent, DateTimeOffset previousStartDate)
     {
-        var dataInicial = dataInicioAnterior.AddMonths(eventoMaster.Recorrencia.Intervalo!.Value);
+        var startDate = previousStartDate.AddMonths(masterEvent.Recurrence.Interval!.Value);
 
-        var dataFinal = dataInicial.AddSeconds(eventoMaster.Horario.DuracaoEmSegundos);
+        var endDate = startDate.AddSeconds(masterEvent.Schedule.DurationInSeconds);
 
-        return new Horario(dataInicial, dataFinal);
+        return new Schedule(startDate, endDate);
     }
 }

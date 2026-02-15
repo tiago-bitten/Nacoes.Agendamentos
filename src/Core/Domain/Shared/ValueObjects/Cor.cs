@@ -1,130 +1,146 @@
 namespace Domain.Shared.ValueObjects;
 
-public enum ETipoCor
+public enum EColorType
 {
     Hex = 0,
     Rgb = 1,
     Hsl = 2
 }
 
-public sealed record class Cor
+public sealed record class Color
 {
-    public string Valor { get; }
-    public ETipoCor Tipo { get; }
+    public string Value { get; }
+    public EColorType Type { get; }
 
-    public Cor(string valor, ETipoCor tipo)
+    public Color(string value, EColorType type)
     {
-        if (string.IsNullOrWhiteSpace(valor))
+        if (string.IsNullOrWhiteSpace(value))
         {
-            throw new ArgumentException("Valor da cor não pode ser vazio.", nameof(valor));
+            throw new ArgumentException("Color value cannot be empty.", nameof(value));
         }
 
-        Valor = valor;
-        Tipo = tipo;
+        Value = value;
+        Type = type;
     }
 
-    public static Cor Default => new("#1F77B4", ETipoCor.Hex);
+    public static Color Default => new("#1F77B4", EColorType.Hex);
 
     public string ToCssString()
     {
-        return Tipo switch
+        return Type switch
         {
-            ETipoCor.Hex => NormalizarHex(Valor),
-            ETipoCor.Rgb => NormalizarRgb(Valor),
-            ETipoCor.Hsl => NormalizarHsl(Valor),
-            _ => Valor
+            EColorType.Hex => NormalizeHex(Value),
+            EColorType.Rgb => NormalizeRgb(Value),
+            EColorType.Hsl => NormalizeHsl(Value),
+            _ => Value
         };
     }
 
-    private static string NormalizarHex(string hex)
+    private static string NormalizeHex(string hex)
     {
-        if (!hex.StartsWith($"#")) hex = "#" + hex;
-        if (hex.Length != 7) throw new ArgumentException("Formato Hex inválido.");
+        if (!hex.StartsWith($"#"))
+        {
+            hex = "#" + hex;
+        }
+
+        if (hex.Length != 7)
+        {
+            throw new ArgumentException("Invalid Hex format.");
+        }
+
         return hex.ToUpperInvariant();
     }
 
-    private static string NormalizarRgb(string rgb)
+    private static string NormalizeRgb(string rgb)
     {
-        var valores = rgb.Replace("rgb(", "").Replace(")", "").Split(',');
-        if (valores.Length != 3) throw new ArgumentException("Formato RGB inválido.");
-        int r = int.Parse(valores[0].Trim());
-        int g = int.Parse(valores[1].Trim());
-        int b = int.Parse(valores[2].Trim());
+        var values = rgb.Replace("rgb(", "").Replace(")", "").Split(',');
+        if (values.Length != 3)
+        {
+            throw new ArgumentException("Invalid RGB format.");
+        }
+
+        int r = int.Parse(values[0].Trim());
+        int g = int.Parse(values[1].Trim());
+        int b = int.Parse(values[2].Trim());
         return $"rgb({r}, {g}, {b})";
     }
 
-    private static string NormalizarHsl(string hsl)
+    private static string NormalizeHsl(string hsl)
     {
-        var valores = hsl.Replace("hsl(", "").Replace(")", "").Replace("%", "").Split(',');
-        if (valores.Length != 3) throw new ArgumentException("Formato HSL inválido.");
-        int h = int.Parse(valores[0].Trim());
-        int s = int.Parse(valores[1].Trim());
-        int l = int.Parse(valores[2].Trim());
+        var values = hsl.Replace("hsl(", "").Replace(")", "").Replace("%", "").Split(',');
+        if (values.Length != 3)
+        {
+            throw new ArgumentException("Invalid HSL format.");
+        }
+
+        int h = int.Parse(values[0].Trim());
+        int s = int.Parse(values[1].Trim());
+        int l = int.Parse(values[2].Trim());
         return $"hsl({h}, {s}%, {l}%)";
     }
 
-    public Cor ConverterPara(ETipoCor novoTipo)
+    public Color ConvertTo(EColorType newType)
     {
-        if (novoTipo == Tipo)
+        if (newType == Type)
         {
             return this;
         }
 
-        return novoTipo switch
+        return newType switch
         {
-            ETipoCor.Hex => ConverterParaHex(),
-            ETipoCor.Rgb => ConverterParaRgb(),
-            ETipoCor.Hsl => ConverterParaHsl(),
-            _ => throw new NotSupportedException($"Conversão para o tipo {novoTipo} não suportada.")
+            EColorType.Hex => ConvertToHex(),
+            EColorType.Rgb => ConvertToRgb(),
+            EColorType.Hsl => ConvertToHsl(),
+            _ => throw new NotSupportedException($"Conversion to type {newType} is not supported.")
         };
     }
 
-    private Cor ConverterParaHex()
+    private Color ConvertToHex()
     {
-        return Tipo switch
+        return Type switch
         {
-            ETipoCor.Rgb => new Cor(RgbParaHex(Valor), ETipoCor.Hex),
-            ETipoCor.Hsl => new Cor(RgbParaHex(HslParaRgb(Valor)), ETipoCor.Hex),
-            _ => throw new NotSupportedException("Conversão para Hex não suportada para este tipo.")
+            EColorType.Rgb => new Color(RgbToHex(Value), EColorType.Hex),
+            EColorType.Hsl => new Color(RgbToHex(HslToRgb(Value)), EColorType.Hex),
+            _ => throw new NotSupportedException("Conversion to Hex is not supported for this type.")
         };
     }
 
-    private Cor ConverterParaRgb()
+    private Color ConvertToRgb()
     {
-        return Tipo switch
+        return Type switch
         {
-            ETipoCor.Hex => new Cor(HexParaRgb(Valor), ETipoCor.Rgb),
-            ETipoCor.Hsl => new Cor(HslParaRgb(Valor), ETipoCor.Rgb),
-            _ => throw new NotSupportedException("Conversão para Rgb não suportada para este tipo.")
+            EColorType.Hex => new Color(HexToRgb(Value), EColorType.Rgb),
+            EColorType.Hsl => new Color(HslToRgb(Value), EColorType.Rgb),
+            _ => throw new NotSupportedException("Conversion to Rgb is not supported for this type.")
         };
     }
 
-    private Cor ConverterParaHsl()
+    private Color ConvertToHsl()
     {
-        return Tipo switch
+        return Type switch
         {
-            ETipoCor.Rgb => new Cor(RgbParaHsl(Valor), ETipoCor.Hsl),
-            ETipoCor.Hex => new Cor(RgbParaHsl(HexParaRgb(Valor)), ETipoCor.Hsl),
-            _ => throw new NotSupportedException("Conversão para Hsl não suportada para este tipo.")
+            EColorType.Rgb => new Color(RgbToHsl(Value), EColorType.Hsl),
+            EColorType.Hex => new Color(RgbToHsl(HexToRgb(Value)), EColorType.Hsl),
+            _ => throw new NotSupportedException("Conversion to Hsl is not supported for this type.")
         };
     }
 
-    private static string RgbParaHex(string rgb)
+    private static string RgbToHex(string rgb)
     {
-        var valores = rgb.Replace("rgb(", "").Replace(")", "").Split(',');
-        if (valores.Length != 3)
+        var values = rgb.Replace("rgb(", "").Replace(")", "").Split(',');
+        if (values.Length != 3)
         {
-            throw new ArgumentException("Formato RGB inválido.");
+            throw new ArgumentException("Invalid RGB format.");
         }
 
-        int r = int.Parse(valores[0].Trim());
-        int g = int.Parse(valores[1].Trim());
-        int b = int.Parse(valores[2].Trim());
+        int r = int.Parse(values[0].Trim());
+        int g = int.Parse(values[1].Trim());
+        int b = int.Parse(values[2].Trim());
 
         return $"#{r:X2}{g:X2}{b:X2}";
     }
 
-    private static string HexParaRgb(string hex)
+    private static string HexToRgb(string hex)
     {
         if (hex.StartsWith("#"))
         {
@@ -133,7 +149,7 @@ public sealed record class Cor
 
         if (hex.Length != 6)
         {
-            throw new ArgumentException("Formato Hex inválido.");
+            throw new ArgumentException("Invalid Hex format.");
         }
 
         var r = Convert.ToInt32(hex.Substring(0, 2), 16);
@@ -143,17 +159,17 @@ public sealed record class Cor
         return $"rgb({r}, {g}, {b})";
     }
 
-    private static string RgbParaHsl(string rgb)
+    private static string RgbToHsl(string rgb)
     {
-        var valores = rgb.Replace("rgb(", "").Replace(")", "").Split(',');
-        if (valores.Length != 3)
+        var values = rgb.Replace("rgb(", "").Replace(")", "").Split(',');
+        if (values.Length != 3)
         {
-            throw new ArgumentException("Formato RGB inválido.");
+            throw new ArgumentException("Invalid RGB format.");
         }
 
-        double r = int.Parse(valores[0].Trim()) / 255.0;
-        double g = int.Parse(valores[1].Trim()) / 255.0;
-        double b = int.Parse(valores[2].Trim()) / 255.0;
+        double r = int.Parse(values[0].Trim()) / 255.0;
+        double g = int.Parse(values[1].Trim()) / 255.0;
+        double b = int.Parse(values[2].Trim()) / 255.0;
 
         double max = Math.Max(r, Math.Max(g, b));
         double min = Math.Min(r, Math.Min(g, b));
@@ -165,64 +181,92 @@ public sealed record class Cor
             s = l > 0.5 ? d / (2.0 - max - min) : d / (max + min);
 
             if (max == r)
+            {
                 h = (g - b) / d + (g < b ? 6 : 0);
+            }
             else if (max == g)
+            {
                 h = (b - r) / d + 2;
+            }
             else
+            {
                 h = (r - g) / d + 4;
+            }
 
             h /= 6;
         }
 
-        int H = (int)(h * 360);
-        int S = (int)(s * 100);
-        int L = (int)(l * 100);
+        int hValue = (int)(h * 360);
+        int sValue = (int)(s * 100);
+        int lValue = (int)(l * 100);
 
-        return $"hsl({H}, {S}%, {L}%)";
+        return $"hsl({hValue}, {sValue}%, {lValue}%)";
     }
 
-    private static string HslParaRgb(string hsl)
+    private static string HslToRgb(string hsl)
     {
-        var valores = hsl.Replace("hsl(", "").Replace(")", "").Replace("%", "").Split(',');
-        if (valores.Length != 3)
+        var values = hsl.Replace("hsl(", "").Replace(")", "").Replace("%", "").Split(',');
+        if (values.Length != 3)
         {
-            throw new ArgumentException("Formato HSL inválido.");
+            throw new ArgumentException("Invalid HSL format.");
         }
 
-        double h = double.Parse(valores[0].Trim()) / 360.0;
-        double s = double.Parse(valores[1].Trim()) / 100.0;
-        double l = double.Parse(valores[2].Trim()) / 100.0;
+        double h = double.Parse(values[0].Trim()) / 360.0;
+        double s = double.Parse(values[1].Trim()) / 100.0;
+        double l = double.Parse(values[2].Trim()) / 100.0;
 
         double r, g, b;
 
         if (s == 0)
+        {
             r = g = b = l;
+        }
         else
         {
             double q = l < 0.5 ? l * (1 + s) : l + s - l * s;
             double p = 2 * l - q;
-            r = HueParaRgb(p, q, h + 1.0 / 3);
-            g = HueParaRgb(p, q, h);
-            b = HueParaRgb(p, q, h - 1.0 / 3);
+            r = HueToRgb(p, q, h + 1.0 / 3);
+            g = HueToRgb(p, q, h);
+            b = HueToRgb(p, q, h - 1.0 / 3);
         }
 
-        int R = (int)(r * 255);
-        int G = (int)(g * 255);
-        int B = (int)(b * 255);
+        int rValue = (int)(r * 255);
+        int gValue = (int)(g * 255);
+        int bValue = (int)(b * 255);
 
-        return $"rgb({R}, {G}, {B})";
+        return $"rgb({rValue}, {gValue}, {bValue})";
     }
 
-    private static double HueParaRgb(double p, double q, double t)
+    private static double HueToRgb(double p, double q, double t)
     {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1.0 / 6) return p + (q - p) * 6 * t;
-        if (t < 1.0 / 2) return q;
-        if (t < 2.0 / 3) return p + (q - p) * (2.0 / 3 - t) * 6;
+        if (t < 0)
+        {
+            t += 1;
+        }
+
+        if (t > 1)
+        {
+            t -= 1;
+        }
+
+        if (t < 1.0 / 6)
+        {
+            return p + (q - p) * 6 * t;
+        }
+
+        if (t < 1.0 / 2)
+        {
+            return q;
+        }
+
+        if (t < 2.0 / 3)
+        {
+            return p + (q - p) * (2.0 / 3 - t) * 6;
+        }
+
         return p;
     }
 
     public override string ToString() => ToCssString();
-    public override int GetHashCode() => HashCode.Combine(Valor, Tipo);
+    public override int GetHashCode() => HashCode.Combine(Value, Type);
 }

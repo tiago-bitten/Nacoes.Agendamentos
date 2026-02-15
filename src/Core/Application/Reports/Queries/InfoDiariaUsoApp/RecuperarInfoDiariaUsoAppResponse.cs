@@ -2,20 +2,20 @@ using Domain.Voluntarios;
 
 namespace Application.Reports.Queries.InfoDiariaUsoApp;
 
-public record RecuperarInfoDiariaUsoAppResponse
+public record GetDailyAppUsageInfoResponse
 {
-    public required DateTimeOffset Data { get; init; }
-    public required VoluntarioInfo Voluntarios { get; init; }
+    public required DateTimeOffset Date { get; init; }
+    public required VolunteerInfo Volunteers { get; init; }
 
-    public record VoluntarioInfo
+    public record VolunteerInfo
     {
-        public required List<VoluntarioInfoOrigem> Origens { get; init; } = [];
-        public required int QuantidadeTotal { get; init; }
+        public required List<VolunteerOriginInfo> Origins { get; init; } = [];
+        public required int TotalCount { get; init; }
 
-        public record VoluntarioInfoOrigem
+        public record VolunteerOriginInfo
         {
-            public required EOrigemCadastroVoluntario Origem { get; init; }
-            public required int Quantidade { get; init; }
+            public required EVolunteerRegistrationOrigin Origin { get; init; }
+            public required int Count { get; init; }
         }
     }
 }

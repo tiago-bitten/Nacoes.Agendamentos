@@ -8,17 +8,17 @@ namespace API.Endpoints.Auth;
 
 internal sealed class LoginExterno : IEndpoint
 {
-    public sealed record Request(string Cpf, DateOnly DataNascimento);
+    public sealed record Request(string Cpf, DateOnly BirthDate);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/v1/auth/login-externo", async (
+        app.MapPost("v1/auth/external-login", async (
             [FromBody] Request request,
-            [FromServices] ICommandHandler<LoginExternoCommand> handler,
-            CancellationToken cancellationToken) =>
+            [FromServices] ICommandHandler<ExternalLoginCommand> handler,
+            CancellationToken ct) =>
         {
-            var command = new LoginExternoCommand(request.Cpf, request.DataNascimento);
-            var result = await handler.HandleAsync(command, cancellationToken);
+            var command = new ExternalLoginCommand(request.Cpf, request.BirthDate);
+            var result = await handler.HandleAsync(command, ct);
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         }).WithTags(Tags.Auth);

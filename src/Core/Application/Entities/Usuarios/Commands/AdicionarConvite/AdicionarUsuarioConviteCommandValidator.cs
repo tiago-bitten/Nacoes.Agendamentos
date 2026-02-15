@@ -1,13 +1,14 @@
 using FluentValidation;
+using Domain.Usuarios;
 
 namespace Application.Entities.Usuarios.Commands.AdicionarConvite;
 
-public sealed class AdicionarUsuarioConviteCommandValidator : AbstractValidator<AdicionarUsuarioConviteCommand>
+internal sealed class AddUserInvitationCommandValidator : AbstractValidator<AddUserInvitationCommand>
 {
-    public AdicionarUsuarioConviteCommandValidator()
+    public AddUserInvitationCommandValidator()
     {
-        RuleFor(x => x.Nome).NotEmpty();
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(UserInvitation.NameMaxLength);
         RuleFor(x => x.EmailAddress).NotEmpty().EmailAddress();
-        RuleFor(x => x.MinisteriosIds).NotNull().NotEmpty();
+        RuleFor(x => x.MinistryIds).NotNull().NotEmpty();
     }
 }

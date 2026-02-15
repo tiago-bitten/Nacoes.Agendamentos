@@ -9,20 +9,20 @@ namespace API.Endpoints.Ministerios;
 
 internal sealed class Adicionar : IEndpoint
 {
-    public sealed record Request(string Nome, string? Descricao, CorDto Cor);
+    public sealed record Request(string Name, string? Description, ColorDto Color);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/v1/ministerios", async (
+        app.MapPost("v1/ministries", async (
             [FromBody] Request request,
-            [FromServices] ICommandHandler<AdicionarMinisterioCommand, Guid> handler,
-            CancellationToken cancellationToken) =>
+            [FromServices] ICommandHandler<AddMinistryCommand, Guid> handler,
+            CancellationToken ct) =>
         {
-            var command = new AdicionarMinisterioCommand(request.Nome, request.Descricao, request.Cor);
+            var command = new AddMinistryCommand(request.Name, request.Description, request.Color);
 
-            var result = await handler.HandleAsync(command, cancellationToken);
+            var result = await handler.HandleAsync(command, ct);
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Ministerios);
+        }).WithTags(Tags.Ministries);
     }
 }

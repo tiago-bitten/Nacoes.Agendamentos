@@ -11,13 +11,13 @@ internal static class LoggingDecorator
         ILogger<CommandHandler<TCommand, TResponse>> logger
     ) : ICommandHandler<TCommand, TResponse> where TCommand : ICommand<TResponse>
     {
-        public async Task<Result<TResponse>> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        public async Task<Result<TResponse>> HandleAsync(TCommand command, CancellationToken ct)
         {
             var commandName = typeof(TCommand).Name;
 
             logger.LogInformation("Executing command {CommandName}...", commandName);
 
-            var result = await innerHandler.HandleAsync(command, cancellationToken);
+            var result = await innerHandler.HandleAsync(command, ct);
 
             if (result.IsSuccess)
             {
@@ -37,13 +37,13 @@ internal static class LoggingDecorator
         ILogger<CommandBaseHandler<TCommand>> logger
     ) : ICommandHandler<TCommand> where TCommand : ICommand
     {
-        public async Task<Result> HandleAsync(TCommand command, CancellationToken cancellationToken)
+        public async Task<Result> HandleAsync(TCommand command, CancellationToken ct)
         {
             var commandName = typeof(TCommand).Name;
 
             logger.LogInformation("Executing command {CommandName}...", commandName);
 
-            var result = await innerHandler.HandleAsync(command, cancellationToken);
+            var result = await innerHandler.HandleAsync(command, ct);
 
             if (result.IsSuccess)
             {

@@ -3,8 +3,8 @@ using Domain.Usuarios;
 
 namespace Application.Authentication.Commands.Login;
 
-public record LoginCommand(
+public sealed record LoginCommand(
     string? Email,
-    string? Senha,
-    string? TokenExterno,
+    string? Password,
+    string? ExternalToken,
     EAuthType AuthType) : ICommand<LoginResponse>;

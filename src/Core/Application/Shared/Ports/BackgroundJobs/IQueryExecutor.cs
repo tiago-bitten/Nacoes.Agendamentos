@@ -5,5 +5,5 @@ namespace Application.Shared.Ports.BackgroundJobs;
 
 public interface IQueryExecutor
 {
-    Task<Result<TResponse>> ExecuteQueryAsync<TQuery, TResponse>(TQuery command) where TQuery : IQuery<TResponse>;
+    Task<Result<TResponse>> ExecuteQueryAsync<TQuery, TResponse>(TQuery command, CancellationToken ct = default) where TQuery : IQuery<TResponse>;
 }

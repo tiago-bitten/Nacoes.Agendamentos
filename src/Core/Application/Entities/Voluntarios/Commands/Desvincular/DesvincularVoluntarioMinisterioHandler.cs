@@ -9,43 +9,43 @@ using Domain.Voluntarios.Specs;
 
 namespace Application.Entities.Voluntarios.Commands.Desvincular;
 
-internal sealed class DesvincularVoluntarioMinisterioHandler(
+internal sealed class UnlinkVolunteerMinistryHandler(
     INacoesDbContext context)
-    : ICommandHandler<DesvincularVoluntarioMinisterioCommand>
+    : ICommandHandler<UnlinkVolunteerMinistryCommand>
 {
     public async Task<Result> HandleAsync(
-        DesvincularVoluntarioMinisterioCommand command,
-        CancellationToken cancellation = default)
+        UnlinkVolunteerMinistryCommand command,
+        CancellationToken ct)
     {
-        var voluntarioMinisterio = await context.Voluntarios
-            .ApplySpec(new VoluntarioPorVinculoMinisterioSpec(command.VoluntarioMinisterioId))
+        var volunteerMinistry = await context.Volunteers
+            .ApplySpec(new VolunteerByMinistryLinkSpec(command.VolunteerMinistryId))
             .Select(x => new
             {
-                Voluntario = x,
-                Ministerio = x.Ministerios
+                Volunteer = x,
+                Ministry = x.Ministries
                     .Select(y => new
                     {
-                        Id = y.MinisterioId,
-                        y.Ministerio.Nome
+                        Id = y.MinistryId,
+                        y.Ministry.Name
                     }).Single()
-            }).FirstOrDefaultAsync(cancellation);
+            }).FirstOrDefaultAsync(ct);
 
-        if (voluntarioMinisterio is null)
+        if (volunteerMinistry is null)
         {
-            return VoluntarioErrors.NaoEncontrado;
+            return VolunteerErrors.NotFound;
         }
 
-        var voluntario = voluntarioMinisterio.Voluntario;
-        var ministerio = voluntarioMinisterio.Ministerio;
+        var volunteer = volunteerMinistry.Volunteer;
+        var ministry = volunteerMinistry.Ministry;
 
-        var vinculoResult = voluntario.DesvincularMinisterio(ministerio.Id);
-        if (vinculoResult.IsFailure)
+        var unlinkResult = volunteer.UnlinkMinistry(ministry.Id);
+        if (unlinkResult.IsFailure)
         {
-            return vinculoResult.Error;
+            return unlinkResult.Error;
         }
 
-        voluntario.Raise(new VoluntarioMinisterioDesvinculadoDomainEvent(voluntario.Id, ministerio.Nome));
-        await context.SaveChangesAsync(cancellation);
+        volunteer.Raise(new VolunteerMinistryUnlinkedDomainEvent(volunteer.Id, ministry.Name));
+        await context.SaveChangesAsync(ct);
 
         return Result.Success();
     }

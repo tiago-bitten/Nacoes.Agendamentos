@@ -11,7 +11,7 @@ internal sealed class DomainEventsDispatcher(IServiceProvider serviceProvider) :
 
     public async Task DispatchAsync(
         IEnumerable<IDomainEvent> domainEvents,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
     {
         foreach (var domainEvent in domainEvents)
         {
@@ -33,14 +33,14 @@ internal sealed class DomainEventsDispatcher(IServiceProvider serviceProvider) :
 
                 var handlerWrapper = HandlerWrapper.Create(handler, domainEventType);
 
-                await handlerWrapper.Handle(domainEvent, cancellationToken);
+                await handlerWrapper.Handle(domainEvent, ct);
             }
         }
     }
 
     private abstract class HandlerWrapper
     {
-        public abstract Task Handle(IDomainEvent domainEvent, CancellationToken cancellationToken);
+        public abstract Task Handle(IDomainEvent domainEvent, CancellationToken ct);
 
         public static HandlerWrapper Create(object handler, Type domainEventType)
         {
@@ -56,9 +56,9 @@ internal sealed class DomainEventsDispatcher(IServiceProvider serviceProvider) :
     {
         private readonly IDomainEventHandler<T> _handler = (IDomainEventHandler<T>)handler;
 
-        public override async Task Handle(IDomainEvent domainEvent, CancellationToken cancellationToken)
+        public override async Task Handle(IDomainEvent domainEvent, CancellationToken ct)
         {
-            await _handler.Handle((T)domainEvent, cancellationToken);
+            await _handler.Handle((T)domainEvent, ct);
         }
     }
 }

@@ -18,12 +18,12 @@ public sealed record Email : IEquatable<Email>
     {
         if (string.IsNullOrWhiteSpace(address))
         {
-            throw new ArgumentException("Endereço de email não pode ser vazio.", nameof(address));
+            throw new ArgumentException("Email address cannot be empty.", nameof(address));
         }
 
         if (!IsValidEmail(address))
         {
-            throw new ArgumentException("Endereço de email inválido.", nameof(address));
+            throw new ArgumentException("Invalid email address.", nameof(address));
         }
 
         Address = address;
@@ -49,12 +49,12 @@ public sealed record Email : IEquatable<Email>
     {
         if (code != ConfirmationCode)
         {
-            throw new InvalidOperationException("Código de confirmação inválido.");
+            throw new InvalidOperationException("Invalid confirmation code.");
         }
 
         if (ConfirmationCodeExpiration.HasValue && ConfirmationCodeExpiration.Value < DateTimeOffset.UtcNow)
         {
-            throw new InvalidOperationException("Código de confirmação expirado.");
+            throw new InvalidOperationException("Confirmation code has expired.");
         }
 
         return new Email(Address, true);

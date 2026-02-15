@@ -8,33 +8,34 @@ using Domain.Voluntarios.Specs;
 
 namespace Application.Entities.Voluntarios.Commands.Adicionar;
 
-internal sealed class AdicionarVoluntarioHandler(
+internal sealed class AddVolunteerHandler(
     INacoesDbContext context)
-    : ICommandHandler<AdicionarVoluntarioCommand, Guid>
+    : ICommandHandler<AddVolunteerCommand, Guid>
 {
-    public async Task<Result<Guid>> HandleAsync(AdicionarVoluntarioCommand command, CancellationToken cancellation = default)
+    public async Task<Result<Guid>> HandleAsync(
+        AddVolunteerCommand command,
+        CancellationToken ct)
     {
         if (!string.IsNullOrEmpty(command.Email))
         {
-            var existeVountarioComEmail = await context.Voluntarios
-                .ApplySpec(new VoluntarioComEmailAddressSpec(command.Email))
-                .AnyAsync(cancellation);
-            if (existeVountarioComEmail)
+            var volunteerWithEmailExists = await context.Volunteers
+                .ApplySpec(new VolunteerWithEmailAddressSpec(command.Email))
+                .AnyAsync(ct);
+            if (volunteerWithEmailExists)
             {
-                // TODO: Add WarningContext, voluntario pode ter email duplicado, pois pode ser dependente
             }
         }
 
-        var voluntarioResult = command.ToDomain();
-        if (voluntarioResult.IsFailure)
+        var volunteerResult = command.ToDomain();
+        if (volunteerResult.IsFailure)
         {
-            return voluntarioResult.Error;
+            return volunteerResult.Error;
         }
 
-        var voluntario = voluntarioResult.Value;
-        await context.Voluntarios.AddAsync(voluntario, cancellation);
-        await context.SaveChangesAsync(cancellation);
+        var volunteer = volunteerResult.Value;
+        await context.Volunteers.AddAsync(volunteer, ct);
+        await context.SaveChangesAsync(ct);
 
-        return voluntario.Id;
+        return volunteer.Id;
     }
 }

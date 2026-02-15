@@ -2,4 +2,4 @@ using Application.Shared.Messaging;
 
 namespace Application.Entities.Ministerios.Commands.AdicionarAtividade;
 
-public sealed record AdicionarAtividadeCommand(string Nome, string? Descricao, Guid MinisterioId) : ICommand<Guid>;
+public sealed record AddActivityCommand(string Name, string? Description, Guid MinistryId) : ICommand<Guid>;

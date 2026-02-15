@@ -3,18 +3,18 @@ using Domain.Ministerios;
 
 namespace Domain.Usuarios;
 
-public sealed class UsuarioMinisterio : RemovableEntity
+public sealed class UserMinistry : RemovableEntity
 {
-    private UsuarioMinisterio() { }
+    private UserMinistry() { }
 
-    internal UsuarioMinisterio(Guid ministerioId)
+    internal UserMinistry(Guid ministryId)
     {
-        MinisterioId = ministerioId;
+        MinistryId = ministryId;
     }
 
-    public Guid UsuarioId { get; private set; }
-    public Guid MinisterioId { get; private set; }
+    public Guid UserId { get; private set; }
+    public Guid MinistryId { get; private set; }
 
-    public Usuario Usuario { get; private set; } = null!;
-    public Ministerio Ministerio { get; private set; } = null!;
+    public User User { get; private set; } = null!;
+    public Ministry Ministry { get; private set; } = null!;
 }

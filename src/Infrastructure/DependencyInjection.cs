@@ -31,7 +31,9 @@ namespace Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddProjectDependencies(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddProjectDependencies(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddSettings(configuration);
         services.AddApplication();
@@ -56,7 +58,7 @@ public static class DependencyInjection
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
-        services.AddOptions<AmbienteSettings>()
+        services.AddOptions<EnvironmentSettings>()
                 .Bind(configuration.GetSection("Ambiente"))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
@@ -96,13 +98,13 @@ public static class DependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IHistoricoRegister, HistoricoRegister>();
+        services.AddScoped<IAuditLogRegister, AuditLogRegister>();
 
         services.AddScoped<ITemplateRenderer, TemplateRenderer>();
 
         services.AddScoped<ITimeZoneManager, TimeZoneManager>();
 
-        services.AddScoped<IRecorrenciaEventoManager, RecorrenciaEventoManager>();
+        services.AddScoped<IEventRecurrenceManager, EventRecurrenceManager>();
 
         var infraAssembly = typeof(DependencyInjection).Assembly;
         services.Scan(scan => scan.FromAssemblies(infraAssembly)
@@ -136,29 +138,14 @@ public static class DependencyInjection
 
                 options.Events = new JwtBearerEvents
                 {
-                    OnAuthenticationFailed = ctx =>
-                    {
-                        Console.WriteLine("=== JWT Authentication Failed ===");
-                        Console.WriteLine(ctx.Exception.ToString());
-                        return Task.CompletedTask;
-                    },
-                    OnChallenge = ctx =>
-                    {
-                        Console.WriteLine("=== JWT Challenge ===");
-                        Console.WriteLine(ctx.Error);
-                        Console.WriteLine(ctx.ErrorDescription);
-                        return Task.CompletedTask;
-                    },
-                    OnForbidden = ctx =>
-                    {
-                        Console.WriteLine("=== JWT Forbidden ===");
-                        return Task.CompletedTask;
-                    }
+                    OnAuthenticationFailed = _ => Task.CompletedTask,
+                    OnChallenge = _ => Task.CompletedTask,
+                    OnForbidden = _ => Task.CompletedTask
                 };
             });
 
         services.AddHttpContextAccessor();
-        services.AddScoped<IAmbienteContext, AmbienteContext>();
+        services.AddScoped<IEnvironmentContext, EnvironmentContext>();
         services.AddSingleton<ITokenGenerator, TokenGenerator>();
 
         return services;
@@ -166,7 +153,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IHistoricoRepository, HistoricoRepository>();
+        services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 
         return services;
     }

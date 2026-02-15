@@ -2,11 +2,11 @@ using FluentValidation;
 
 namespace Application.Entities.Voluntarios.Commands.Vincular;
 
-public sealed class VincularVoluntarioMinisterioCommandValidator : AbstractValidator<VincularVoluntarioMinisterioCommand>
+internal sealed class LinkVolunteerMinistryCommandValidator : AbstractValidator<LinkVolunteerMinistryCommand>
 {
-    public VincularVoluntarioMinisterioCommandValidator()
+    public LinkVolunteerMinistryCommandValidator()
     {
-        RuleFor(x => x.VoluntarioId).NotEmpty();
-        RuleFor(x => x.MinisterioId).NotEmpty();
+        RuleFor(x => x.VolunteerId).NotEmpty();
+        RuleFor(x => x.MinistryId).NotEmpty();
     }
 }

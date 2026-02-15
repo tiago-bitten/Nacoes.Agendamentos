@@ -7,41 +7,38 @@ using Domain.Usuarios.DomainEvents;
 
 namespace Application.Entities.Usuarios.Commands.AceitarConvite;
 
-internal sealed class UsuarioConviteAceitoDomainEventHandler(
+internal sealed class UserInvitationAcceptedDomainEventHandler(
     INacoesDbContext context,
-    IHistoricoRegister historicoRegister,
+    IAuditLogRegister auditLogRegister,
     IEmailSenderFactory emailSenderFactory,
     ITemplateRenderer templateRenderer)
-    : IDomainEventHandler<UsuarioConviteAceitoDomainEvent>, IDomainEvent
+    : IDomainEventHandler<UserInvitationAcceptedDomainEvent>
 {
     private IEmailSender EmailSender => emailSenderFactory.Create();
 
-    public async Task Handle(UsuarioConviteAceitoDomainEvent domainEvent, CancellationToken cancellationToken)
+    public async Task Handle(UserInvitationAcceptedDomainEvent domainEvent, CancellationToken ct)
     {
-        var usuarioConvite = await context.Convites
-            .Where(x => x.Id == domainEvent.UsuarioConviteId)
+        var invitation = await context.Invitations
+            .Where(x => x.Id == domainEvent.UserInvitationId)
             .Select(x => new
             {
-                x.Nome,
-                EmailEnviadoPor = x.EnviadoPor.Email
-            }).SingleOrDefaultAsync(cancellationToken);
-        if (usuarioConvite is null)
+                x.Name,
+                SentByEmail = x.SentBy.Email
+            }).SingleOrDefaultAsync(ct);
+        if (invitation is null)
         {
             return;
         }
 
-        await historicoRegister.AuditAsync(domainEvent.UsuarioConviteId, acao: "Convite aceito.");
-
-        // var (title, html) = GetTemplate(usuarioConvite.Nome);
-        // await EmailSender.SendAsync(usuarioConvite.EmailEnviadoPor, title, html);
+        await auditLogRegister.AuditAsync(domainEvent.UserInvitationId, action: "Invitation accepted.");
     }
 
-    private (string Title, string Html) GetTemplate(string nome)
+    private (string Title, string Html) GetTemplate(string name)
     {
-        var title = $"Convite aceito por {nome} - Igreja Nações";
+        var title = $"Invitation accepted by {name} - Igreja Nacoes";
         var html = templateRenderer.Render("ConviteAceito", new Dictionary<string, string>
         {
-            { "NOME", nome }
+            { "NOME", name }
         });
 
         return (title, html);

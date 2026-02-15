@@ -8,21 +8,21 @@ namespace API.Endpoints.Ministerios.Atividades;
 
 internal sealed class Adicionar : IEndpoint
 {
-    public sealed record Request(string Nome, string? Descricao);
+    public sealed record Request(string Name, string? Description);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/v1/ministerios/{ministerioId:guid}/atividades", async (
-            [FromRoute] Guid ministerioId,
+        app.MapPost("v1/ministries/{ministryId:guid}/activities", async (
+            [FromRoute] Guid ministryId,
             [FromBody] Request request,
-            [FromServices] ICommandHandler<AdicionarAtividadeCommand, Guid> handler,
-            CancellationToken cancellationToken) =>
+            [FromServices] ICommandHandler<AddActivityCommand, Guid> handler,
+            CancellationToken ct) =>
         {
-            var command = new AdicionarAtividadeCommand(request.Nome, request.Descricao, ministerioId);
+            var command = new AddActivityCommand(request.Name, request.Description, ministryId);
 
-            var result = await handler.HandleAsync(command, cancellationToken);
+            var result = await handler.HandleAsync(command, ct);
 
             return result.Match(Results.Ok, CustomResults.Problem);
-        }).WithTags(Tags.Atividades);
+        }).WithTags(Tags.Activities);
     }
 }

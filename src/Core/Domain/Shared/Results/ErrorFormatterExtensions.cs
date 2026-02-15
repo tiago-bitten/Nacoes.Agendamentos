@@ -17,7 +17,7 @@ public static class ErrorFormatterExtensions
         var lastItem = items.Last();
         var otherItems = items.Take(items.Count - 1);
 
-        return $"{string.Join(", ", otherItems)} e {lastItem}";
+        return $"{string.Join(", ", otherItems)} and {lastItem}";
     }
 
     public static string ToSingleMessage(this string[]? items) => ToSingleMessage(items?.ToList());

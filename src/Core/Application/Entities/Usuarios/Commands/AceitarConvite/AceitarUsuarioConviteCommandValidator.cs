@@ -3,15 +3,15 @@ using Domain.Usuarios;
 
 namespace Application.Entities.Usuarios.Commands.AceitarConvite;
 
-public sealed class AceitarUsuarioConviteCommandValidator : AbstractValidator<AceitarUsuarioConviteCommand>
+internal sealed class AcceptUserInvitationCommandValidator : AbstractValidator<AcceptUserInvitationCommand>
 {
-    public AceitarUsuarioConviteCommandValidator()
+    public AcceptUserInvitationCommandValidator()
     {
-        RuleFor(x => x.Senha).NotEmpty().When(x => x.AuthType is EAuthType.Local);
-        RuleFor(x => x.TokenExterno).NotEmpty().When(x => x.AuthType is not EAuthType.Local);
+        RuleFor(x => x.Password).NotEmpty().When(x => x.AuthType is EAuthType.Local);
+        RuleFor(x => x.ExternalToken).NotEmpty().When(x => x.AuthType is not EAuthType.Local);
         RuleFor(x => x.AuthType).NotNull();
-        RuleFor(x => x.UsuarioConviteId).NotNull();
-        RuleFor(x => x.Celular!.Ddd).NotEmpty().When(x => x.Celular is not null);
-        RuleFor(x => x.Celular!.Numero).NotEmpty().When(x => x.Celular is not null);
+        RuleFor(x => x.UserInvitationId).NotNull();
+        RuleFor(x => x.PhoneNumber!.AreaCode).NotEmpty().When(x => x.PhoneNumber is not null);
+        RuleFor(x => x.PhoneNumber!.Number).NotEmpty().When(x => x.PhoneNumber is not null);
     }
 }

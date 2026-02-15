@@ -4,32 +4,39 @@ using Domain.Shared.Entities;
 using Domain.Historicos;
 using Domain.Historicos.Interfaces;
 using Domain.Enums;
+using Domain.Shared.Results;
 
 namespace Infrastructure.Repositories;
 
-public sealed class HistoricoRegister(
-    IAmbienteContext ambienteContext,
+internal sealed class AuditLogRegister(
+    IEnvironmentContext environmentContext,
     INacoesDbContext context)
-    : IHistoricoRegister
+    : IAuditLogRegister
 {
-    public async Task AuditAsync(Guid entidadeId, string acao, string? detalhes)
+    public async Task AuditAsync(Guid entityId, string action, string? details, CancellationToken ct = default)
     {
-        if (!ambienteContext.IsUserAuthenticated)
+        if (!environmentContext.IsUserAuthenticated)
         {
-            throw new Exception("Usuário não identificado");
+            throw new Exception("User not identified");
         }
 
-        var usuarioId = ambienteContext.UserId;
-        var usuarioAcao = ambienteContext.UserContextType;
+        var userId = environmentContext.UserId;
+        var userAction = environmentContext.UserContextType;
 
-        var historico = Historico.Criar(entidadeId, usuarioId, acao, usuarioAcao, detalhes);
+        var auditLogResult = AuditLog.Create(entityId, userId, action, userAction, details);
+        if (auditLogResult.IsFailure)
+        {
+            return;
+        }
 
-        await context.Historicos.AddAsync(historico);
-        await context.SaveChangesAsync();
+        var auditLog = auditLogResult.Value;
+
+        await context.AuditLogs.AddAsync(auditLog, ct);
+        await context.SaveChangesAsync(ct);
     }
 
-    public Task AuditAsync<T>(T entidade, string acao, string? detalhes) where T : Entity
+    public Task AuditAsync<T>(T entity, string action, string? details, CancellationToken ct = default) where T : Entity
     {
-        return AuditAsync(entidade.Id, acao, detalhes);
+        return AuditAsync(entity.Id, action, details, ct);
     }
 }

@@ -2,8 +2,8 @@ using Domain.Shared.Entities;
 
 namespace Domain.Historicos.Interfaces;
 
-public interface IHistoricoRegister
+public interface IAuditLogRegister
 {
-    Task AuditAsync(Guid entidadeId, string acao, string? detalhes = null);
-    Task AuditAsync<T>(T entidade, string acao, string? detalhes = null) where T : Entity;
+    Task AuditAsync(Guid entityId, string action, string? details = null, CancellationToken ct = default);
+    Task AuditAsync<T>(T entity, string action, string? details = null, CancellationToken ct = default) where T : Entity;
 }

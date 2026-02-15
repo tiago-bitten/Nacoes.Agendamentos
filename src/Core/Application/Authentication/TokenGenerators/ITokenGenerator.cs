@@ -4,6 +4,6 @@ namespace Application.Authentication.TokenGenerators;
 
 public interface ITokenGenerator
 {
-    string GenerateAuth(Usuario usuario);
+    string GenerateAuth(User user);
     string GenerateRefresh();
 }

@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace Application.Entities.Usuarios.Queries.RecuperarConvitesPorToken;
 
-public sealed class RecuperarUsuarioConvitePorTokenValidator : AbstractValidator<RecuperarUsuarioConvitePorTokenQuery>
+internal sealed class GetUserInvitationByTokenQueryValidator : AbstractValidator<GetUserInvitationByTokenQuery>
 {
-    public RecuperarUsuarioConvitePorTokenValidator()
+    public GetUserInvitationByTokenQueryValidator()
     {
         RuleFor(x => x.Token).NotNull().NotEmpty();
     }

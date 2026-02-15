@@ -2,11 +2,11 @@ using FluentValidation;
 
 namespace Application.Authentication.Commands.LoginExterno;
 
-public sealed class LoginExternoCommandValidator : AbstractValidator<LoginExternoCommand>
+internal sealed class ExternalLoginCommandValidator : AbstractValidator<ExternalLoginCommand>
 {
-    public LoginExternoCommandValidator()
+    public ExternalLoginCommandValidator()
     {
-        RuleFor(x => x.DataNascimento).NotEmpty().NotNull();
+        RuleFor(x => x.BirthDate).NotEmpty().NotNull();
         RuleFor(x => x.Cpf).NotNull().NotEmpty();
     }
 }

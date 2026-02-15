@@ -2,7 +2,7 @@ using Domain.Shared.Results;
 
 namespace API.Infra;
 
-public static class CustomResults
+internal static class CustomResults
 {
     public static IResult NoContent() => Results.Ok();
 
@@ -16,27 +16,27 @@ public static class CustomResults
         return Results.Problem(
             title: GetTitle(result.Error),
             detail: GetDetail(result.Error),
-            type: GetType(result.Error.Tipo),
+            type: GetType(result.Error.Type),
             statusCode: result.Error.StatusCode,
             extensions: GetErrors(result));
 
         static string GetTitle(Error error) =>
-            error.Tipo switch
+            error.Type switch
             {
-                ErrorType.Validation => error.Codigo,
-                ErrorType.Problem => error.Codigo,
-                ErrorType.NotFound => error.Codigo,
-                ErrorType.Conflict => error.Codigo,
+                ErrorType.Validation => error.Code,
+                ErrorType.Problem => error.Code,
+                ErrorType.NotFound => error.Code,
+                ErrorType.Conflict => error.Code,
                 _ => "Server failure"
             };
 
         static string GetDetail(Error error) =>
-            error.Tipo switch
+            error.Type switch
             {
-                ErrorType.Validation => error.Descricao,
-                ErrorType.Problem => error.Descricao,
-                ErrorType.NotFound => error.Descricao,
-                ErrorType.Conflict => error.Descricao,
+                ErrorType.Validation => error.Description,
+                ErrorType.Problem => error.Description,
+                ErrorType.NotFound => error.Description,
+                ErrorType.Conflict => error.Description,
                 _ => "An unexpected error occurred"
             };
 
